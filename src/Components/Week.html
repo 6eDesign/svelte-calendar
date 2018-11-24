@@ -1,0 +1,49 @@
+<div class="week">
+  {#each days as day}
+    <div class="day" class:disabled="day.disabled == true">
+      <div class="day--label">
+        {day.date.getDate()}
+      </div>
+    </div>
+  {/each}
+</div>
+
+<style>
+  .week { 
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    justify-content: space-around;
+  }
+  .day { 
+    background: tomato;
+    margin: 2px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    flex: 1 0 auto;
+    height: auto;
+    display: flex; 
+    flex-basis: 0;
+  }
+  .day.disabled { 
+    background: #eee;
+  }
+  .day:before { 
+    content: '';
+    float: left;
+    padding-top: 100%;
+  }
+  .day--label { 
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+</style>

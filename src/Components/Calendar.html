@@ -1,0 +1,160 @@
+<div class="calendar">
+  <Title 
+    month={virtualMonth.getMonth()} 
+    year={virtualMonth.getFullYear()} 
+    on:monthSelected="changeMonth(event)" 
+  />
+  <div class="legend">
+    {#each dayDict as day}
+      <span>{day.abbrev}</span>
+    {/each}
+  </div>
+  <div class="weeks-container">
+    <VirtualList 
+      items={weeks} 
+      component={Week} 
+      bind:start=virtualStart 
+      bind:end=virtualEnd 
+    />
+  </div>
+</div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  .weeks-container { 
+    height: 311px;
+  }
+  .calendar { 
+    box-sizing: border-box;
+    min-height: 400px;
+    width: 450px;
+    box-sizing: content-box;
+    position: relative;
+    overflow: hidden;
+  }
+  .legend { 
+    background-color: #eee;
+    color: #333;
+    padding: 10px 0;
+    margin-bottom: 5px;
+  }
+  .legend span { 
+    width: 14.285714%;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row;
+    justify-content: space-around;
+    line-height:30px;
+  }
+  .flex-item {
+    background: tomato;
+    margin: 5px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.5em;
+    flex: 1 0 auto;
+    height:auto;
+    display: flex; 
+  }
+  .flex-item:before {
+    content:'';
+    float:left;
+    padding-top:100%;
+  }
+  .flex-item-inner { 
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+  }
+</style>
+
+<script>
+  import {dayDict} from './lib/dictionaries';
+  let today = new Date();
+  export default { 
+    data() { 
+      let today = new Date(); 
+      return { 
+        today,
+        dayDict,
+        virtualStart: 0, 
+        virtualEnd: 0,
+        start: new Date(1987, 9, 29), 
+        end: new Date(2020, 9, 29),
+        selected: today, 
+        month: today.getMonth(), 
+        year: today.getFullYear()
+      }
+    },
+    methods: { 
+      changeMonth(month) { 
+        console.log('month',month);
+        this.set({month});
+      }
+    },
+    oncreate() { 
+      let { selected } = this.get(); 
+      this.set({
+        month: selected.getMonth(), 
+        year: selected.getFullYear()
+      });
+    },
+    computed: { 
+      weeks: ({start, end}) => {
+        start.setHours(0,0,0,0);
+        end.setHours(0,0,0,0);
+        let date = new Date(start.getFullYear(), start.getMonth(), 1);
+        while(date.getDay() != 0) { 
+          date.setDate(date.getDate() - 1); 
+        }
+        let endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate()); 
+        while(endDate.getDay() != 0 && endDate.getMonth() == end.getMonth()) { 
+          endDate.setDate(date.getDate() + 1); 
+        }
+        const endYear = end.getFullYear(); 
+        const endMonth = end.getMonth(); 
+        let weeks = date.getDay() ? [{days: []}] : [];
+        while (date < endDate) {
+          if(date.getDay() == 0) weeks.unshift({days: []});
+          weeks[0].days.push({
+            date: new Date(date), 
+            disabled: date < start || date > end
+          })
+          date.setDate(date.getDate() + 1);
+        }
+        return weeks.reverse();
+      }, 
+      virtualMonth: ({virtualStart, virtualEnd, weeks}) => {
+        if(typeof virtualStart == 'undefined') return new Date();
+        let start = weeks[virtualStart].days[0].date.getTime(); 
+        let end = weeks[virtualEnd].days[6].date.getTime();  
+        const medianDate = new Date((start + end) / 2);
+        medianDate.setDate(1); 
+        medianDate.setHours(0,0,0,0);
+        return medianDate;
+      }
+    }, 
+    components: { 
+      Month: './Month.html',
+      Title: './Title.html'
+    }
+  }
+</script>

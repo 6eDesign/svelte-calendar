@@ -1,0 +1,17 @@
+<Calendar ref:cal {start} {end} format="mm/dd/yyyy" />
+
+<script>
+	export default { 
+		data() { 
+			return { 
+				start: new Date(), 
+			}
+		},
+		computed: { 
+			end: ({start}) => new Date(start.getTime() + (1000 * 3600 * 24 * 720))
+		}, 
+		components: { 
+			Calendar: './Components/Calendar.html'
+		}
+	}
+</script>

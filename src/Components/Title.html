@@ -1,0 +1,91 @@
+<div class="title" on:click="toggleMonthSelectorOpen()">
+  {monthDict[month].name} {year}
+  <div class="month-selector" class:open="monthSelectorOpen">
+    {#each monthDict as monthDefinition, index}
+      <div 
+        class="month-selector--month" 
+        class:selected="index==month"
+        on:click="monthSelected(event,index)"
+      >
+        <span>{monthDefinition.abbrev}</span>
+      </div>
+    {/each}
+  </div>
+</div>
+
+<style>
+  .title { 
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  .month-selector { 
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    background-color: #fff;
+    transition: all 300ms; 
+    transform: scale(1.2); 
+    opacity: 0; 
+    visibility: hidden;
+    z-index: 1;
+  }
+  .month-selector.open { 
+    transform: scale(1); 
+    visibility: visible;
+    opacity: 1;
+  }
+  .month-selector--month { 
+    width: 31.333%; 
+    margin: 1%; 
+    height: 23%;
+    display: inline-block;
+    border: 1px solid #eee;
+  }
+  .month-selector--month:hover { 
+    background: #eee;
+  }
+  .month-selector--month.selected { 
+    background: blue;
+    color: #fff;
+  }
+  .month-selector--month:before { 
+    content: ' ';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+  .month-selector--month span { 
+    vertical-align: middle; 
+    display: inline-block;
+  }
+</style>
+
+<script>
+  import {monthDict} from './lib/dictionaries';
+  export default { 
+    data() { 
+      return { 
+        monthDict, 
+        monthSelectorOpen: false
+      }
+    }, 
+    methods: { 
+      toggleMonthSelectorOpen() { 
+        let {monthSelectorOpen} = this.get(); 
+        monthSelectorOpen = !monthSelectorOpen;
+        this.set({monthSelectorOpen});
+      }, 
+      monthSelected(event,month) { 
+        event.stopPropagation(); 
+        this.fire('monthSelected', month);
+        this.toggleMonthSelectorOpen();
+      }
+    }
+  }
+</script>
