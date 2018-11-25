@@ -1,5 +1,19 @@
-<div class="title" on:click="toggleMonthSelectorOpen()">
-  {monthDict[month].name} {year}
+<div class="title">
+  <div class="heading-section">
+    <div class="control" 
+      class:enabled="canDecrementMonth"
+      on:click="fire('incrementMonth', -1)">
+      <i class="arrow left"></i>
+    </div>
+    <div class="label" on:click="toggleMonthSelectorOpen()">
+      {monthDict[month].name} {year}
+    </div> 
+    <div class="control"
+      class:enabled="canIncrementMonth"
+      on:click="fire('incrementMonth', 1)">
+      <i class="arrow right"></i>
+    </div>
+  </div>
   <div class="month-selector" class:open="monthSelectorOpen">
     {#each monthDict as monthDefinition, index}
       <div 
@@ -14,17 +28,20 @@
 </div>
 
 <style>
-  .title { 
-    text-align: center;
-    font-size: 1.1em;
+  .heading-section { 
+    font-size: 20px;;
+    padding: 24px 15px;
+    display: flex;
+    justify-content: space-between;
+    color: #3d4548;
     font-weight: bold;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+  }
+  .label { 
     cursor: pointer;
   }
   .month-selector { 
     position: absolute;
-    top: 0; 
+    top: 75px; 
     left: 0; 
     right: 0; 
     bottom: 0; 
@@ -34,6 +51,7 @@
     opacity: 0; 
     visibility: hidden;
     z-index: 1;
+    text-align: center;
   }
   .month-selector.open { 
     transform: scale(1); 
@@ -45,13 +63,15 @@
     margin: 1%; 
     height: 23%;
     display: inline-block;
-    border: 1px solid #eee;
+    border: 2px solid #eee;
+    color: #4a4a4a;
   }
   .month-selector--month:hover { 
-    background: #eee;
+    border-color: #f7901e;
+    cursor: pointer;
   }
   .month-selector--month.selected { 
-    background: blue;
+    background: #f7901e;
     color: #fff;
   }
   .month-selector--month:before { 
@@ -64,6 +84,38 @@
     vertical-align: middle; 
     display: inline-block;
   }
+
+  .control { 
+    padding: 0 8px;
+    opacity: 0.2;
+  }
+
+  .control.enabled { 
+    opacity: 1; 
+    cursor: pointer;
+  }
+
+  .arrow {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-style: solid;
+    border-color: #a9a9a9;
+    border-width: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+  }
+
+  .arrow.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+
+  .arrow.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+
 </style>
 
 <script>

@@ -1,22 +1,18 @@
 <div class="calendar">
-  <Title 
-    month={virtualMonth.getMonth()} 
-    year={virtualMonth.getFullYear()} 
+  <NavBar 
+    {month} 
+    {year}
+    {canIncrementMonth}
+    {canDecrementMonth}
     on:monthSelected="changeMonth(event)" 
+    on:incrementMonth="incrementMonth(event)"
   />
   <div class="legend">
     {#each dayDict as day}
       <span>{day.abbrev}</span>
     {/each}
   </div>
-  <div class="weeks-container">
-    <VirtualList 
-      items={weeks} 
-      component={Week} 
-      bind:start=virtualStart 
-      bind:end=virtualEnd 
-    />
-  </div>
+  <Months {months} {month} {year} {monthIndex}/>
 </div>
 
 <style>
@@ -31,15 +27,15 @@
   }
   .calendar { 
     box-sizing: border-box;
-    min-height: 400px;
     width: 450px;
+    max-width: 100%;
     box-sizing: content-box;
     position: relative;
     overflow: hidden;
+    user-select: none;
   }
   .legend { 
-    background-color: #eee;
-    color: #333;
+    color: #4a4a4a;
     padding: 10px 0;
     margin-bottom: 5px;
   }
@@ -88,6 +84,7 @@
 
 <script>
   import {dayDict} from './lib/dictionaries';
+  import {getMonths} from './lib/helpers';
   let today = new Date();
   export default { 
     data() { 
@@ -95,8 +92,6 @@
       return { 
         today,
         dayDict,
-        virtualStart: 0, 
-        virtualEnd: 0,
         start: new Date(1987, 9, 29), 
         end: new Date(2020, 9, 29),
         selected: today, 
@@ -104,10 +99,32 @@
         year: today.getFullYear()
       }
     },
+    computed: { 
+      months: ({start, end}) => getMonths(start,end),
+      monthIndex:  ({month,year,months}) => { 
+        for(let i = 0; i < months.length; ++i) { 
+          if(months[i].month == month && months[i].year == year) return i
+        }
+        return 0; 
+      },
+      canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,
+      canDecrementMonth: ({monthIndex,months}) => monthIndex > 0
+    },
     methods: { 
       changeMonth(month) { 
         console.log('month',month);
         this.set({month});
+      },
+      incrementMonth(direction) {
+        let { canIncrementMonth, canDecrementMonth, month, year } = this.get(); 
+        if(direction == 1 && !canIncrementMonth) return;
+        if(direction == -1 && !canDecrementMonth) return;
+        let current = new Date(year,month,1); 
+        current.setMonth(current.getMonth() + direction); 
+        this.set({
+          month: current.getMonth(),
+          year: current.getFullYear()
+        })
       }
     },
     oncreate() { 
@@ -117,44 +134,9 @@
         year: selected.getFullYear()
       });
     },
-    computed: { 
-      weeks: ({start, end}) => {
-        start.setHours(0,0,0,0);
-        end.setHours(0,0,0,0);
-        let date = new Date(start.getFullYear(), start.getMonth(), 1);
-        while(date.getDay() != 0) { 
-          date.setDate(date.getDate() - 1); 
-        }
-        let endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate()); 
-        while(endDate.getDay() != 0 && endDate.getMonth() == end.getMonth()) { 
-          endDate.setDate(date.getDate() + 1); 
-        }
-        const endYear = end.getFullYear(); 
-        const endMonth = end.getMonth(); 
-        let weeks = date.getDay() ? [{days: []}] : [];
-        while (date < endDate) {
-          if(date.getDay() == 0) weeks.unshift({days: []});
-          weeks[0].days.push({
-            date: new Date(date), 
-            disabled: date < start || date > end
-          })
-          date.setDate(date.getDate() + 1);
-        }
-        return weeks.reverse();
-      }, 
-      virtualMonth: ({virtualStart, virtualEnd, weeks}) => {
-        if(typeof virtualStart == 'undefined') return new Date();
-        let start = weeks[virtualStart].days[0].date.getTime(); 
-        let end = weeks[virtualEnd].days[6].date.getTime();  
-        const medianDate = new Date((start + end) / 2);
-        medianDate.setDate(1); 
-        medianDate.setHours(0,0,0,0);
-        return medianDate;
-      }
-    }, 
     components: { 
-      Month: './Month.html',
-      Title: './Title.html'
+      Months: './Months.html',
+      NavBar: './NavBar.html'
     }
   }
 </script>
