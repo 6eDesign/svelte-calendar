@@ -1,2 +1,1974 @@
-var app=function(){"use strict";function t(){}function e(t,e){for(var n in e)t[n]=e[n];return t}function n(t,e){for(var n in e)t[n]=1;return t}function r(t,e){return 0===e&&t(),()=>{--e||t()}}function o(t){t()}function a(t,e){t.appendChild(e)}function i(t,e,n){t.insertBefore(e,n)}function s(t){t.parentNode.removeChild(t)}function c(t,e){for(;t.firstChild;)e.appendChild(t.firstChild)}function h(t,e){for(var n=0;n<t.length;n+=1)t[n]&&t[n].d(e)}function l(){return document.createDocumentFragment()}function u(t){return document.createElement(t)}function m(t){return document.createTextNode(t)}function d(t,e,n,r){t.addEventListener(e,n,r)}function f(t,e,n,r){t.removeEventListener(e,n,r)}function g(t,e,n){null==n?t.removeAttribute(e):t.setAttribute(e,n)}function p(t,e){t.data=""+e}function v(t,e,n){t.style.setProperty(e,n)}function _(t,e,n){t.classList.toggle(e,!!n)}function y(t){return t}function b(e,n,r,a,i){let s,c,h,l=r.call(e,n,a),u=!1;return{t:i?0:1,running:!1,program:null,pending:null,run(t,e){"function"==typeof l?x.wait().then(()=>{l=l(),this._run(t,e)}):this._run(t,e)},_run(e,r){s=l.duration||300,c=l.easing||y;const o={start:window.performance.now()+(l.delay||0),b:e,callback:r||t};i&&!u&&(l.css&&l.delay&&(h=n.style.cssText,n.style.cssText+=l.css(0,1)),l.tick&&l.tick(0,1),u=!0),e||(o.group=M.current,M.current.remaining+=1),l.delay?this.pending=o:this.start(o),this.running||(this.running=!0,x.add(this))},start(t){if(e.fire(`${t.b?"intro":"outro"}.start`,{node:n}),t.a=this.t,t.delta=t.b-t.a,t.duration=s*Math.abs(t.b-t.a),t.end=t.start+t.duration,l.css){l.delay&&(n.style.cssText=h);const e=function({a:t,b:e,delta:n,duration:r},o,a){const i=16.666/r;let s="{\n";for(let e=0;e<=1;e+=i){const r=t+n*o(e);s+=100*e+`%{${a(r,1-r)}}\n`}return s+`100% {${a(e,1-e)}}\n}`}(t,c,l.css);x.addRule(e,t.name="__svelte_"+function(t){let e=5381,n=t.length;for(;n--;)e=(e<<5)-e^t.charCodeAt(n);return e>>>0}(e)),n.style.animation=(n.style.animation||"").split(", ").filter(e=>e&&(t.delta<0||!/__svelte/.test(e))).concat(`${t.name} ${t.duration}ms linear 1 forwards`).join(", ")}this.program=t,this.pending=null},update(t){const e=this.program;if(!e)return;const n=t-e.start;this.t=e.a+e.delta*c(n/e.duration),l.tick&&l.tick(this.t,1-this.t)},done(){const t=this.program;this.t=t.b,l.tick&&l.tick(this.t,1-this.t),e.fire(`${t.b?"intro":"outro"}.end`,{node:n}),t.b||t.invalidated?l.css&&x.deleteRule(n,t.name):(t.group.callbacks.push(()=>{t.callback(),l.css&&x.deleteRule(n,t.name)}),0==--t.group.remaining&&t.group.callbacks.forEach(o)),this.running=!!this.pending},abort(t){this.program&&(t&&l.tick&&l.tick(1,0),l.css&&x.deleteRule(n,this.program.name),this.program=this.pending=null,this.running=!1)},invalidate(){this.program&&(this.program.invalidated=!0)}}}let M={};function D(){M.current={remaining:0,callbacks:[]}}var x={running:!1,transitions:[],bound:null,stylesheet:null,activeRules:{},promise:null,add(t){this.transitions.push(t),this.running||(this.running=!0,requestAnimationFrame(this.bound||(this.bound=this.next.bind(this))))},addRule(t,e){if(!this.stylesheet){const t=u("style");document.head.appendChild(t),x.stylesheet=t.sheet}this.activeRules[e]||(this.activeRules[e]=!0,this.stylesheet.insertRule(`@keyframes ${e} ${t}`,this.stylesheet.cssRules.length))},next(){this.running=!1;const t=window.performance.now();let e=this.transitions.length;for(;e--;){const n=this.transitions[e];n.program&&t>=n.program.end&&n.done(),n.pending&&t>=n.pending.start&&n.start(n.pending),n.running?(n.update(t),this.running=!0):n.pending||this.transitions.splice(e,1)}if(this.running)requestAnimationFrame(this.bound);else if(this.stylesheet){let t=this.stylesheet.cssRules.length;for(;t--;)this.stylesheet.deleteRule(t);this.activeRules={}}},deleteRule(t,e){t.style.animation=t.style.animation.split(", ").filter(t=>t&&-1===t.indexOf(e)).join(", ")},wait:()=>(x.promise||(x.promise=Promise.resolve(),x.promise.then(()=>{x.promise=null})),x.promise)};function k(){return Object.create(null)}function w(t){t._lock=!0,I(t._beforecreate),I(t._oncreate),I(t._aftercreate),t._lock=!1}function N(t,e){t._handlers=k(),t._slots=k(),t._bind=e._bind,t._staged={},t.options=e,t.root=e.root||t,t.store=e.store||t.root.store,e.root||(t._beforecreate=[],t._oncreate=[],t._aftercreate=[])}function I(t){for(;t&&t.length;)t.shift()()}var q={destroy:function(e){this.destroy=t,this.fire("destroy"),this.set=t,this._fragment.d(!1!==e),this._fragment=null,this._state={}},get:function(){return this._state},fire:function(t,e){var n=t in this._handlers&&this._handlers[t].slice();if(n)for(var r=0;r<n.length;r+=1){var o=n[r];if(!o.__calling)try{o.__calling=!0,o.call(this,e)}finally{o.__calling=!1}}},on:function(t,e){var n=this._handlers[t]||(this._handlers[t]=[]);return n.push(e),{cancel:function(){var t=n.indexOf(e);~t&&n.splice(t,1)}}},set:function(t){this._set(e({},t)),this.root._lock||w(this.root)},_recompute:t,_set:function(t){var n=this._state,r={},o=!1;for(var a in t=e(this._staged,t),this._staged={},t)this._differs(t[a],n[a])&&(r[a]=o=!0);o&&(this._state=e(e({},n),t),this._recompute(r,this._state),this._bind&&this._bind(r,this._state),this._fragment&&(this.fire("state",{changed:r,current:this._state,previous:n}),this._fragment.p(r,this._state),this.fire("update",{changed:r,current:this._state,previous:n})))},_stage:function(t){e(this._staged,t)},_mount:function(t,e){this._fragment[this._fragment.i?"i":"m"](t,e||null)},_differs:function(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}};const O=[{name:"January",abbrev:"Jan"},{name:"February",abbrev:"Feb"},{name:"March",abbrev:"Mar"},{name:"April",abbrev:"Apr"},{name:"May",abbrev:"May"},{name:"June",abbrev:"Jun"},{name:"July",abbrev:"Jul"},{name:"August",abbrev:"Aug"},{name:"September",abbrev:"Sep"},{name:"October",abbrev:"Oct"},{name:"November",abbrev:"Nov"},{name:"December",abbrev:"Dec"}],S=[{name:"Sunday",abbrev:"Sun"},{name:"Monday",abbrev:"Mon"},{name:"Tuesday",abbrev:"Tue"},{name:"Wednesday",abbrev:"Wed"},{name:"Thursday",abbrev:"Thu"},{name:"Friday",abbrev:"Fri"},{name:"Saturday",abbrev:"Sat"}],j=(t,e,n)=>{let r=new Date(e,t,1);r.setDate(r.getDate()-r.getDay());let o=11==t?0:t+1,a=[];for(;r.getMonth()!=o||0!=r.getDay()||6!=a.length;)0==r.getDay()&&a.unshift({days:[]}),a[0].days.push({partOfMonth:r.getMonth()==t,date:new Date(r),...n(r)}),r.setDate(r.getDate()+1);return a.reverse(),{month:t,year:e,weeks:a}},C=(t,e)=>{let n=new Date;return n.setHours(0,0,0,0),r=>({selectable:r>=t&&r<=e,isToday:r.getTime()==n.getTime()})};function T(t,e){var n=e.delay;void 0===n&&(n=0);var r=e.duration;void 0===r&&(r=400);var o=+getComputedStyle(t).opacity;return{delay:n,duration:r,css:function(t){return"opacity: "+t*o}}}function R(t,e,n){const r=Object.create(t);return r.day=e[n],r}function Y(t,e){var n,r,o,c,h,l,d=e.day.date.getDate();return{c(){n=u("div"),r=u("div"),o=m(d),c=m("\r\n    "),r.className="day--label svelte-6xu817",n.className="day svelte-6xu817",_(n,"outside-month",!e.day.partOfMonth),_(n,"is-today",e.day.isToday)},m(t,e){i(t,n,e),a(n,r),a(r,o),a(n,c),l=!0},p(t,e){l&&!t.days||d===(d=e.day.date.getDate())||p(o,d),t.days&&(_(n,"outside-month",!e.day.partOfMonth),_(n,"is-today",e.day.isToday))},i(e,r){l||(t.root._intro&&(h&&h.invalidate(),t.root._aftercreate.push(()=>{h||(h=b(t,n,T,{},!0)),h.run(1)})),this.m(e,r))},o(e){l&&(h||(h=b(t,n,T,{},!1)),h.run(0,()=>{e(),h=null}),l=!1)},d(t){t&&(s(n),h&&h.abort())}}}function F(t){N(this,t),this._state=e({},t.data),this._intro=!!t.intro,this._fragment=function(t,e){for(var n,o,a=e.days,c=[],l=0;l<a.length;l+=1)c[l]=Y(t,R(e,a,l));function m(t,e,n){c[t]&&c[t].o(()=>{e&&(c[t].d(e),c[t]=null),n&&n()})}return{c(){n=u("div");for(var t=0;t<c.length;t+=1)c[t].c();n.className="week svelte-6xu817"},m(t,e){i(t,n,e);for(var r=0;r<c.length;r+=1)c[r].i(n,null);o=!0},p(e,r){if(e.days){a=r.days;for(var o=0;o<a.length;o+=1){const i=R(r,a,o);c[o]?c[o].p(e,i):(c[o]=Y(t,i),c[o].c()),c[o].i(n,null)}for(D();o<c.length;o+=1)m(o,1)}},i(t,e){o||this.m(t,e)},o(t){if(!o)return;const e=r(t,(c=c.filter(Boolean)).length);for(let t=0;t<c.length;t+=1)m(t,0,e);o=!1},d(t){t&&s(n),h(c,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),w(this)),this._intro=!0}function L(t,e,n){const r=Object.create(t);return r.week=e[n],r}function V(t,e){var n,r={days:e.week.days},o=new F({root:t.root,store:t.store,data:r});return{c(){o._fragment.c()},m(t,e){o._mount(t,e),n=!0},p(t,e){var n={};t.currentMonth&&(n.days=e.week.days),o._set(n)},i(t,e){n||this.m(t,e)},o(t){n&&(o&&o._fragment.o(t),n=!1)},d(t){o.destroy(t)}}}function A(t){N(this,t),this._state=e({monthDict:O},t.data),this._recompute({monthIndex:1,months:1},this._state),this._intro=!!t.intro,this._fragment=function(t,e){for(var n,o,a=e.currentMonth.weeks,c=[],l=0;l<a.length;l+=1)c[l]=V(t,L(e,a,l));function m(t,e,n){c[t]&&c[t].o(()=>{e&&(c[t].d(e),c[t]=null),n&&n()})}return{c(){n=u("div");for(var t=0;t<c.length;t+=1)c[t].c();n.className="months-container svelte-1rx4f47"},m(t,e){i(t,n,e);for(var r=0;r<c.length;r+=1)c[r].i(n,null);o=!0},p(e,r){if(e.currentMonth){a=r.currentMonth.weeks;for(var o=0;o<a.length;o+=1){const i=L(r,a,o);c[o]?c[o].p(e,i):(c[o]=V(t,i),c[o].c()),c[o].i(n,null)}for(D();o<c.length;o+=1)m(o,1)}},i(t,e){o||this.m(t,e)},o(t){if(!o)return;const e=r(t,(c=c.filter(Boolean)).length);for(let t=0;t<c.length;t+=1)m(t,0,e);o=!1},d(t){t&&s(n),h(c,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),w(this)),this._intro=!0}e(F.prototype,q),e(A.prototype,q),A.prototype._recompute=function(t,e){(t.monthIndex||t.months)&&this._differs(e.currentMonth,e.currentMonth=function({monthIndex:t,months:e}){return e[t]}(e))&&(t.currentMonth=!0)};var $={toggleMonthSelectorOpen(){let{monthSelectorOpen:t}=this.get();t=!t,this.set({monthSelectorOpen:t})},monthSelected(t,e){t.stopPropagation(),this.fire("monthSelected",e),this.toggleMonthSelectorOpen()}};function E(t){const{component:e,ctx:n}=this._svelte;e.monthSelected(t,n.index)}function H(t,e,n){const r=Object.create(t);return r.monthDefinition=e[n],r.index=n,r}function J(t,e){var n,r,o,c,h=e.monthDefinition.abbrev;return{c(){n=u("div"),r=u("span"),o=m(h),c=m("\r\n      "),r.className="svelte-u7jga",n._svelte={component:t,ctx:e},d(n,"click",E),n.className="month-selector--month svelte-u7jga",_(n,"selected",e.index==e.month)},m(t,e){i(t,n,e),a(n,r),a(r,o),a(n,c)},p(t,r){e=r,t.monthDict&&h!==(h=e.monthDefinition.abbrev)&&p(o,h),n._svelte.ctx=e,t.month&&_(n,"selected",e.index==e.month)},d(t){t&&s(n),f(n,"click",E)}}}function B(t){N(this,t),this._state=e({monthDict:O,monthSelectorOpen:!1},t.data),this._intro=!!t.intro,this._fragment=function(t,e){var n,r,c,l,g,v,y,b,M,D,x,k,w,N=e.monthDict[e.month].name;function I(e){t.fire("incrementMonth",-1)}function q(e){t.toggleMonthSelectorOpen()}function O(e){t.fire("incrementMonth",1)}for(var S=e.monthDict,j=[],C=0;C<S.length;C+=1)j[C]=J(t,H(e,S,C));return{c(){n=u("div"),r=u("div"),(c=u("div")).innerHTML='<i class="arrow left svelte-u7jga"></i>',l=m("\r\n    "),g=u("div"),v=m(N),y=m(" "),b=m(e.year),M=m(" \r\n    "),(D=u("div")).innerHTML='<i class="arrow right svelte-u7jga"></i>',x=m("\r\n  "),k=u("div");for(var t=0;t<j.length;t+=1)j[t].c();d(c,"click",I),c.className="control svelte-u7jga",_(c,"enabled",e.canDecrementMonth),d(g,"click",q),g.className="label svelte-u7jga",d(D,"click",O),D.className="control svelte-u7jga",_(D,"enabled",e.canIncrementMonth),r.className="heading-section svelte-u7jga",k.className="month-selector svelte-u7jga",_(k,"open",e.monthSelectorOpen),n.className="title"},m(t,e){i(t,n,e),a(n,r),a(r,c),a(r,l),a(r,g),a(g,v),a(g,y),a(g,b),a(r,M),a(r,D),a(n,x),a(n,k);for(var o=0;o<j.length;o+=1)j[o].m(k,null);w=!0},p(e,n){if(e.canDecrementMonth&&_(c,"enabled",n.canDecrementMonth),(e.monthDict||e.month)&&N!==(N=n.monthDict[n.month].name)&&p(v,N),e.year&&p(b,n.year),e.canIncrementMonth&&_(D,"enabled",n.canIncrementMonth),e.month||e.monthDict){S=n.monthDict;for(var r=0;r<S.length;r+=1){const o=H(n,S,r);j[r]?j[r].p(e,o):(j[r]=J(t,o),j[r].c(),j[r].m(k,null))}for(;r<j.length;r+=1)j[r].d(1);j.length=S.length}e.monthSelectorOpen&&_(k,"open",n.monthSelectorOpen)},i(t,e){w||this.m(t,e)},o:o,d(t){t&&s(n),f(c,"click",I),f(g,"click",q),f(D,"click",O),h(j,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor)),this._intro=!0}function P(t){let{open:e}=this.get();if(!e)return;let n=t.target;do{if(n==this.refs.popover)return!1}while(n=n.parentNode);this.set({open:!1})}e(B.prototype,q),e(B.prototype,$);var W={open(){let{contents:t}=this.refs,e=t.getBoundingClientRect(),n=window.pageYOffset+e.top,r=n<0?Math.abs(n)+15:0;this.set({open:!0,translateY:r})},close(){this.set({open:!1})}};function G(){document.removeEventListener("click",P)}function z(t){N(this,t),this.refs={},this._state=e({open:!1,translateY:150},t.data),this._intro=!!t.intro,this._handlers.destroy=[G],this._slotted=t.slots||{},this._fragment=function(t,e){var n,r,h,l,g,p,y,b=t._slotted.trigger,M=t._slotted.contents;function D(e){t.open()}return{c(){n=u("div"),r=u("div"),h=m("\r\n  "),l=u("div"),g=u("div"),p=u("div"),d(r,"click",D),r.className="trigger svelte-6pqq9v",p.className="contents-inner svelte-6pqq9v",g.className="contents svelte-6pqq9v",l.className="contents-wrapper svelte-6pqq9v",v(l,"transform","translate(-50%,-50%) translateY("+(e.open?e.translateY:0)+"px)"),_(l,"visible",e.open),n.className="popover svelte-6pqq9v"},m(e,o){i(e,n,o),a(n,r),b&&a(r,b),a(n,h),a(n,l),a(l,g),a(g,p),M&&a(p,M),t.refs.contents=l,t.refs.popover=n,y=!0},p(t,e){(t.open||t.translateY)&&v(l,"transform","translate(-50%,-50%) translateY("+(e.open?e.translateY:0)+"px)"),t.open&&_(l,"visible",e.open)},i(t,e){y||this.m(t,e)},o:o,d(e){e&&s(n),b&&c(r,b),f(r,"click",D),M&&c(p,M),t.refs.contents===l&&(t.refs.contents=null),t.refs.popover===n&&(t.refs.popover=null)}}}(this,this._state),this.root._oncreate.push(()=>{(function(){console.log(this.refs),document.addEventListener("click",P.bind(this))}).call(this),this.fire("update",{changed:n({},this._state),current:this._state})}),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),w(this)),this._intro=!0}function K({start:t,end:e}){return function(t,e){t.setHours(0,0,0,0),e.setHours(0,0,0,0);let n=new Date(e.getFullYear(),e.getMonth()+1,1),r=[],o=new Date(t.getFullYear(),t.getMonth(),1),a=C(t,e);for(;o<n;)r.push(j(o.getMonth(),o.getFullYear(),a)),o.setMonth(o.getMonth()+1);return r}(t,e)}e(z.prototype,q),e(z.prototype,W);var Q={changeMonth(t){console.log("month",t),this.set({month:t})},incrementMonth(t){let{canIncrementMonth:e,canDecrementMonth:n,month:r,year:o}=this.get();if(1==t&&!e)return;if(-1==t&&!n)return;let a=new Date(o,r,1);a.setMonth(a.getMonth()+t),this.set({month:a.getMonth(),year:a.getFullYear()})}};function U(t,e,n){const r=Object.create(t);return r.day=e[n],r}function X(t,e){var n,r,o=e.day.abbrev;return{c(){n=u("span"),r=m(o),n.className="svelte-1bqk2uc"},m(t,e){i(t,n,e),a(n,r)},p(t,e){t.dayDict&&o!==(o=e.day.abbrev)&&p(r,o)},d(t){t&&s(n)}}}function Z(t){N(this,t),this._state=e(function(){let t=new Date;return{today:t,dayDict:S,start:new Date(1987,9,29),end:new Date(2020,9,29),selected:t,month:t.getMonth(),year:t.getFullYear()}}(),t.data),this._recompute({start:1,end:1,month:1,year:1,months:1,monthIndex:1},this._state),this._intro=!!t.intro,this._fragment=function(t,e){var n,o,c,d,f,p,v,_,y,b={month:e.month,year:e.year,canIncrementMonth:e.canIncrementMonth,canDecrementMonth:e.canDecrementMonth},M=new B({root:t.root,store:t.store,data:b});M.on("monthSelected",function(e){t.changeMonth(e)}),M.on("incrementMonth",function(e){t.incrementMonth(e)});for(var D=e.dayDict,x=[],k=0;k<D.length;k+=1)x[k]=X(0,U(e,D,k));var w={months:e.months,month:e.month,year:e.year,monthIndex:e.monthIndex},N=new A({root:t.root,store:t.store,data:w}),I=new z({root:t.root,store:t.store,slots:{default:l(),contents:l(),trigger:l()}});return{c(){n=u("div"),(o=u("div")).innerHTML='<a href="#open-calendar" class="calendar-button svelte-1bqk2uc">Open Calendar</a>',c=m("\r\n    "),d=u("div"),f=u("div"),M._fragment.c(),p=m("\r\n        "),v=u("div");for(var t=0;t<x.length;t+=1)x[t].c();_=m("\r\n        "),N._fragment.c(),I._fragment.c(),g(o,"slot","trigger"),o.className="svelte-1bqk2uc",v.className="legend svelte-1bqk2uc",f.className="calendar svelte-1bqk2uc",g(d,"slot","contents"),d.className="svelte-1bqk2uc",n.className="datepicker svelte-1bqk2uc"},m(t,e){i(t,n,e),a(I._slotted.trigger,o),a(I._slotted.default,c),a(I._slotted.contents,d),a(d,f),M._mount(f,null),a(f,p),a(f,v);for(var r=0;r<x.length;r+=1)x[r].m(v,null);a(f,_),N._mount(f,null),I._mount(n,null),y=!0},p(t,e){var n={};if(t.month&&(n.month=e.month),t.year&&(n.year=e.year),t.canIncrementMonth&&(n.canIncrementMonth=e.canIncrementMonth),t.canDecrementMonth&&(n.canDecrementMonth=e.canDecrementMonth),M._set(n),t.dayDict){D=e.dayDict;for(var r=0;r<D.length;r+=1){const n=U(e,D,r);x[r]?x[r].p(t,n):(x[r]=X(0,n),x[r].c(),x[r].m(v,null))}for(;r<x.length;r+=1)x[r].d(1);x.length=D.length}var o={};t.months&&(o.months=e.months),t.month&&(o.month=e.month),t.year&&(o.year=e.year),t.monthIndex&&(o.monthIndex=e.monthIndex),N._set(o)},i(t,e){y||this.m(t,e)},o(t){y&&(t=r(t,3),M&&M._fragment.o(t),N&&N._fragment.o(t),I&&I._fragment.o(t),y=!1)},d(t){t&&s(n),M.destroy(),h(x,t),N.destroy(),I.destroy()}}}(this,this._state),this.root._oncreate.push(()=>{(function(){let{selected:t}=this.get();this.set({month:t.getMonth(),year:t.getFullYear()})}).call(this),this.fire("update",{changed:n({},this._state),current:this._state})}),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),w(this)),this._intro=!0}function tt(n){var o,a,c,h,l,d,f,g,p,v,_,y,b,M,D,x,k,I,q,O,S;N(this,n),this._state=e({start:new Date},n.data),this._recompute({start:1},this._state),this._intro=!!n.intro,this._fragment=(o=this,this._state,q=new Z({root:o.root,store:o.store,data:{format:"mm/dd/yyyy"}}),O=new Z({root:o.root,store:o.store}),S=new Z({root:o.root,store:o.store}),{c(){(a=u("h1")).textContent="Date Picker",c=m("\n"),(h=u("p")).textContent="Get your dates here, hot off the presses.",l=m("\n"),q._fragment.c(),d=m("\n\n\n"),(f=u("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",g=m("\n"),(p=u("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",v=m("\n\n"),O._fragment.c(),_=m("\n\n"),(y=u("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",b=m("\n"),(M=u("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",D=m("\n"),(x=u("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",k=m("\n\n"),S._fragment.c()},m(t,e){i(t,a,e),i(t,c,e),i(t,h,e),i(t,l,e),q._mount(t,e),i(t,d,e),i(t,f,e),i(t,g,e),i(t,p,e),i(t,v,e),O._mount(t,e),i(t,_,e),i(t,y,e),i(t,b,e),i(t,M,e),i(t,D,e),i(t,x,e),i(t,k,e),S._mount(t,e),I=!0},p:t,i(t,e){I||this.m(t,e)},o(t){I&&(t=r(t,3),q&&q._fragment.o(t),O&&O._fragment.o(t),S&&S._fragment.o(t),I=!1)},d(t){t&&(s(a),s(c),s(h),s(l)),q.destroy(t),t&&(s(d),s(f),s(g),s(p),s(v)),O.destroy(t),t&&(s(_),s(y),s(b),s(M),s(D),s(x),s(k)),S.destroy(t)}}),n.target&&(this._fragment.c(),this._mount(n.target,n.anchor),w(this)),this._intro=!0}return e(Z.prototype,q),e(Z.prototype,Q),Z.prototype._recompute=function(t,e){(t.start||t.end)&&this._differs(e.months,e.months=K(e))&&(t.months=!0),(t.month||t.year||t.months)&&this._differs(e.monthIndex,e.monthIndex=function({month:t,year:e,months:n}){for(let r=0;r<n.length;++r)if(n[r].month==t&&n[r].year==e)return r;return 0}(e))&&(t.monthIndex=!0),(t.monthIndex||t.months)&&(this._differs(e.canIncrementMonth,e.canIncrementMonth=function({monthIndex:t,months:e}){return t<e.length-1}(e))&&(t.canIncrementMonth=!0),this._differs(e.canDecrementMonth,e.canDecrementMonth=function({monthIndex:t,months:e}){return t>0}(e))&&(t.canDecrementMonth=!0))},e(tt.prototype,q),tt.prototype._recompute=function(t,e){t.start&&this._differs(e.end,e.end=function({start:t}){return new Date(t.getTime()+62208e6)}(e))&&(t.end=!0)},new tt({target:document.body,data:{}})}();
+var app = (function () {
+	'use strict';
+
+	function noop() {}
+
+	function assign(tar, src) {
+		for (var k in src) tar[k] = src[k];
+		return tar;
+	}
+
+	function assignTrue(tar, src) {
+		for (var k in src) tar[k] = 1;
+		return tar;
+	}
+
+	function callAfter(fn, i) {
+		if (i === 0) fn();
+		return () => {
+			if (!--i) fn();
+		};
+	}
+
+	function addLoc(element, file, line, column, char) {
+		element.__svelte_meta = {
+			loc: { file, line, column, char }
+		};
+	}
+
+	function run(fn) {
+		fn();
+	}
+
+	function append(target, node) {
+		target.appendChild(node);
+	}
+
+	function insert(target, node, anchor) {
+		target.insertBefore(node, anchor);
+	}
+
+	function detachNode(node) {
+		node.parentNode.removeChild(node);
+	}
+
+	function reinsertChildren(parent, target) {
+		while (parent.firstChild) target.appendChild(parent.firstChild);
+	}
+
+	function destroyEach(iterations, detach) {
+		for (var i = 0; i < iterations.length; i += 1) {
+			if (iterations[i]) iterations[i].d(detach);
+		}
+	}
+
+	function createFragment() {
+		return document.createDocumentFragment();
+	}
+
+	function createElement(name) {
+		return document.createElement(name);
+	}
+
+	function createText(data) {
+		return document.createTextNode(data);
+	}
+
+	function addListener(node, event, handler, options) {
+		node.addEventListener(event, handler, options);
+	}
+
+	function removeListener(node, event, handler, options) {
+		node.removeEventListener(event, handler, options);
+	}
+
+	function setAttribute(node, attribute, value) {
+		if (value == null) node.removeAttribute(attribute);
+		else node.setAttribute(attribute, value);
+	}
+
+	function setData(text, data) {
+		text.data = '' + data;
+	}
+
+	function setStyle(node, key, value) {
+		node.style.setProperty(key, value);
+	}
+
+	function toggleClass(element, name, toggle) {
+		element.classList.toggle(name, !!toggle);
+	}
+
+	function linear(t) {
+		return t;
+	}
+
+	function generateRule({ a, b, delta, duration }, ease, fn) {
+		const step = 16.666 / duration;
+		let keyframes = '{\n';
+
+		for (let p = 0; p <= 1; p += step) {
+			const t = a + delta * ease(p);
+			keyframes += p * 100 + `%{${fn(t, 1 - t)}}\n`;
+		}
+
+		return keyframes + `100% {${fn(b, 1 - b)}}\n}`;
+	}
+
+	// https://github.com/darkskyapp/string-hash/blob/master/index.js
+	function hash(str) {
+		let hash = 5381;
+		let i = str.length;
+
+		while (i--) hash = ((hash << 5) - hash) ^ str.charCodeAt(i);
+		return hash >>> 0;
+	}
+
+	function wrapTransition(component, node, fn, params, intro) {
+		let obj = fn.call(component, node, params);
+		let duration;
+		let ease;
+		let cssText;
+
+		let initialised = false;
+
+		return {
+			t: intro ? 0 : 1,
+			running: false,
+			program: null,
+			pending: null,
+
+			run(b, callback) {
+				if (typeof obj === 'function') {
+					transitionManager.wait().then(() => {
+						obj = obj();
+						this._run(b, callback);
+					});
+				} else {
+					this._run(b, callback);
+				}
+			},
+
+			_run(b, callback) {
+				duration = obj.duration || 300;
+				ease = obj.easing || linear;
+
+				const program = {
+					start: window.performance.now() + (obj.delay || 0),
+					b,
+					callback: callback || noop
+				};
+
+				if (intro && !initialised) {
+					if (obj.css && obj.delay) {
+						cssText = node.style.cssText;
+						node.style.cssText += obj.css(0, 1);
+					}
+
+					if (obj.tick) obj.tick(0, 1);
+					initialised = true;
+				}
+
+				if (!b) {
+					program.group = outros.current;
+					outros.current.remaining += 1;
+				}
+
+				if (obj.delay) {
+					this.pending = program;
+				} else {
+					this.start(program);
+				}
+
+				if (!this.running) {
+					this.running = true;
+					transitionManager.add(this);
+				}
+			},
+
+			start(program) {
+				component.fire(`${program.b ? 'intro' : 'outro'}.start`, { node });
+
+				program.a = this.t;
+				program.delta = program.b - program.a;
+				program.duration = duration * Math.abs(program.b - program.a);
+				program.end = program.start + program.duration;
+
+				if (obj.css) {
+					if (obj.delay) node.style.cssText = cssText;
+
+					const rule = generateRule(program, ease, obj.css);
+					transitionManager.addRule(rule, program.name = '__svelte_' + hash(rule));
+
+					node.style.animation = (node.style.animation || '')
+						.split(', ')
+						.filter(anim => anim && (program.delta < 0 || !/__svelte/.test(anim)))
+						.concat(`${program.name} ${program.duration}ms linear 1 forwards`)
+						.join(', ');
+				}
+
+				this.program = program;
+				this.pending = null;
+			},
+
+			update(now) {
+				const program = this.program;
+				if (!program) return;
+
+				const p = now - program.start;
+				this.t = program.a + program.delta * ease(p / program.duration);
+				if (obj.tick) obj.tick(this.t, 1 - this.t);
+			},
+
+			done() {
+				const program = this.program;
+				this.t = program.b;
+
+				if (obj.tick) obj.tick(this.t, 1 - this.t);
+
+				component.fire(`${program.b ? 'intro' : 'outro'}.end`, { node });
+
+				if (!program.b && !program.invalidated) {
+					program.group.callbacks.push(() => {
+						program.callback();
+						if (obj.css) transitionManager.deleteRule(node, program.name);
+					});
+
+					if (--program.group.remaining === 0) {
+						program.group.callbacks.forEach(run);
+					}
+				} else {
+					if (obj.css) transitionManager.deleteRule(node, program.name);
+				}
+
+				this.running = !!this.pending;
+			},
+
+			abort(reset) {
+				if (this.program) {
+					if (reset && obj.tick) obj.tick(1, 0);
+					if (obj.css) transitionManager.deleteRule(node, this.program.name);
+					this.program = this.pending = null;
+					this.running = false;
+				}
+			},
+
+			invalidate() {
+				if (this.program) {
+					this.program.invalidated = true;
+				}
+			}
+		};
+	}
+
+	let outros = {};
+
+	function groupOutros() {
+		outros.current = {
+			remaining: 0,
+			callbacks: []
+		};
+	}
+
+	var transitionManager = {
+		running: false,
+		transitions: [],
+		bound: null,
+		stylesheet: null,
+		activeRules: {},
+		promise: null,
+
+		add(transition) {
+			this.transitions.push(transition);
+
+			if (!this.running) {
+				this.running = true;
+				requestAnimationFrame(this.bound || (this.bound = this.next.bind(this)));
+			}
+		},
+
+		addRule(rule, name) {
+			if (!this.stylesheet) {
+				const style = createElement('style');
+				document.head.appendChild(style);
+				transitionManager.stylesheet = style.sheet;
+			}
+
+			if (!this.activeRules[name]) {
+				this.activeRules[name] = true;
+				this.stylesheet.insertRule(`@keyframes ${name} ${rule}`, this.stylesheet.cssRules.length);
+			}
+		},
+
+		next() {
+			this.running = false;
+
+			const now = window.performance.now();
+			let i = this.transitions.length;
+
+			while (i--) {
+				const transition = this.transitions[i];
+
+				if (transition.program && now >= transition.program.end) {
+					transition.done();
+				}
+
+				if (transition.pending && now >= transition.pending.start) {
+					transition.start(transition.pending);
+				}
+
+				if (transition.running) {
+					transition.update(now);
+					this.running = true;
+				} else if (!transition.pending) {
+					this.transitions.splice(i, 1);
+				}
+			}
+
+			if (this.running) {
+				requestAnimationFrame(this.bound);
+			} else if (this.stylesheet) {
+				let i = this.stylesheet.cssRules.length;
+				while (i--) this.stylesheet.deleteRule(i);
+				this.activeRules = {};
+			}
+		},
+
+		deleteRule(node, name) {
+			node.style.animation = node.style.animation
+				.split(', ')
+				.filter(anim => anim && anim.indexOf(name) === -1)
+				.join(', ');
+		},
+
+		wait() {
+			if (!transitionManager.promise) {
+				transitionManager.promise = Promise.resolve();
+				transitionManager.promise.then(() => {
+					transitionManager.promise = null;
+				});
+			}
+
+			return transitionManager.promise;
+		}
+	};
+
+	function blankObject() {
+		return Object.create(null);
+	}
+
+	function destroy(detach) {
+		this.destroy = noop;
+		this.fire('destroy');
+		this.set = noop;
+
+		this._fragment.d(detach !== false);
+		this._fragment = null;
+		this._state = {};
+	}
+
+	function destroyDev(detach) {
+		destroy.call(this, detach);
+		this.destroy = function() {
+			console.warn('Component was already destroyed');
+		};
+	}
+
+	function _differs(a, b) {
+		return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+	}
+
+	function fire(eventName, data) {
+		var handlers =
+			eventName in this._handlers && this._handlers[eventName].slice();
+		if (!handlers) return;
+
+		for (var i = 0; i < handlers.length; i += 1) {
+			var handler = handlers[i];
+
+			if (!handler.__calling) {
+				try {
+					handler.__calling = true;
+					handler.call(this, data);
+				} finally {
+					handler.__calling = false;
+				}
+			}
+		}
+	}
+
+	function flush(component) {
+		component._lock = true;
+		callAll(component._beforecreate);
+		callAll(component._oncreate);
+		callAll(component._aftercreate);
+		component._lock = false;
+	}
+
+	function get() {
+		return this._state;
+	}
+
+	function init(component, options) {
+		component._handlers = blankObject();
+		component._slots = blankObject();
+		component._bind = options._bind;
+		component._staged = {};
+
+		component.options = options;
+		component.root = options.root || component;
+		component.store = options.store || component.root.store;
+
+		if (!options.root) {
+			component._beforecreate = [];
+			component._oncreate = [];
+			component._aftercreate = [];
+		}
+	}
+
+	function on(eventName, handler) {
+		var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
+		handlers.push(handler);
+
+		return {
+			cancel: function() {
+				var index = handlers.indexOf(handler);
+				if (~index) handlers.splice(index, 1);
+			}
+		};
+	}
+
+	function set(newState) {
+		this._set(assign({}, newState));
+		if (this.root._lock) return;
+		flush(this.root);
+	}
+
+	function _set(newState) {
+		var oldState = this._state,
+			changed = {},
+			dirty = false;
+
+		newState = assign(this._staged, newState);
+		this._staged = {};
+
+		for (var key in newState) {
+			if (this._differs(newState[key], oldState[key])) changed[key] = dirty = true;
+		}
+		if (!dirty) return;
+
+		this._state = assign(assign({}, oldState), newState);
+		this._recompute(changed, this._state);
+		if (this._bind) this._bind(changed, this._state);
+
+		if (this._fragment) {
+			this.fire("state", { changed: changed, current: this._state, previous: oldState });
+			this._fragment.p(changed, this._state);
+			this.fire("update", { changed: changed, current: this._state, previous: oldState });
+		}
+	}
+
+	function _stage(newState) {
+		assign(this._staged, newState);
+	}
+
+	function setDev(newState) {
+		if (typeof newState !== 'object') {
+			throw new Error(
+				this._debugName + '.set was called without an object of data key-values to update.'
+			);
+		}
+
+		this._checkReadOnly(newState);
+		set.call(this, newState);
+	}
+
+	function callAll(fns) {
+		while (fns && fns.length) fns.shift()();
+	}
+
+	function _mount(target, anchor) {
+		this._fragment[this._fragment.i ? 'i' : 'm'](target, anchor || null);
+	}
+
+	var protoDev = {
+		destroy: destroyDev,
+		get,
+		fire,
+		on,
+		set: setDev,
+		_recompute: noop,
+		_set,
+		_stage,
+		_mount,
+		_differs
+	};
+
+	const monthDict = [
+	  {name: 'January', abbrev: 'Jan' },
+	  {name: 'February', abbrev: 'Feb' },
+	  {name: 'March', abbrev: 'Mar' },
+	  {name: 'April', abbrev: 'Apr' },
+	  {name: 'May', abbrev: 'May' },
+	  {name: 'June', abbrev: 'Jun' },
+	  {name: 'July', abbrev: 'Jul' },
+	  {name: 'August', abbrev: 'Aug' },
+	  {name: 'September', abbrev: 'Sep' },
+	  {name: 'October', abbrev: 'Oct' },
+	  {name: 'November', abbrev: 'Nov' },
+	  {name: 'December', abbrev: 'Dec' }
+	]; 
+
+	const dayDict = [
+	  {name: 'Sunday', abbrev: 'Sun'}, 
+	  {name: 'Monday', abbrev: 'Mon'}, 
+	  {name: 'Tuesday', abbrev: 'Tue'}, 
+	  {name: 'Wednesday', abbrev: 'Wed'}, 
+	  {name: 'Thursday', abbrev: 'Thu'}, 
+	  {name: 'Friday', abbrev: 'Fri'}, 
+	  {name: 'Saturday', abbrev: 'Sat'}
+	];
+
+	const getCalendarPage = (month,year,dayProps) => {
+	  let date = new Date(year,month,1);
+	  date.setDate(date.getDate() - date.getDay());
+	  let nextMonth = month == 11 ? 0 : month + 1; 
+	  // ensure days starts on Sunday
+	  // and end on saturday
+	  let weeks = []; 
+	  while(date.getMonth() != nextMonth || date.getDay() != 0 || weeks.length != 6) { 
+	    if(date.getDay() == 0) weeks.unshift({days: []});
+	    weeks[0].days.push({
+	      partOfMonth: date.getMonth() == month,
+	      date: new Date(date), 
+	      ...dayProps(date)
+	    }); 
+	    date.setDate(date.getDate() + 1);
+	  }
+	  weeks.reverse(); 
+	  return { month, year, weeks }
+	};
+
+	const getDayPropsHandler = (start,end) => {
+	  let today = new Date(); 
+	  today.setHours(0,0,0,0);
+	  return date => ({
+	    selectable: date >= start && date <= end,
+	    isToday: date.getTime() == today.getTime()
+	  });
+	};
+
+	function getMonths(start, end) { 
+	  start.setHours(0,0,0,0);
+	  end.setHours(0,0,0,0);
+	  let endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1); 
+	  let months = [ ]; 
+	  let date = new Date(start.getFullYear(),start.getMonth(),1);
+	  let dayPropsHandler = getDayPropsHandler(start,end);
+	  while(date < endDate) { 
+	    months.push(getCalendarPage(date.getMonth(),date.getFullYear(),dayPropsHandler)); 
+	    date.setMonth(date.getMonth() + 1); 
+	  }
+	  return months;
+	}
+
+	function fade ( node, ref ) {
+		var delay = ref.delay; if ( delay === void 0 ) delay = 0;
+		var duration = ref.duration; if ( duration === void 0 ) duration = 400;
+
+		var o = +getComputedStyle( node ).opacity;
+
+		return {
+			delay: delay,
+			duration: duration,
+			css: function (t) { return ("opacity: " + (t * o)); }
+		};
+	}
+
+	/* src\Components\Week.html generated by Svelte v2.15.3 */
+
+
+
+	const file = "src\\Components\\Week.html";
+
+	function get_each_context(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.day = list[i];
+		return child_ctx;
+	}
+
+	function create_main_fragment(component, ctx) {
+		var div, current;
+
+		var each_value = ctx.days;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block(component, get_each_context(ctx, each_value, i));
+		}
+
+		function outroBlock(i, detach, fn) {
+			if (each_blocks[i]) {
+				each_blocks[i].o(() => {
+					if (detach) {
+						each_blocks[i].d(detach);
+						each_blocks[i] = null;
+					}
+					if (fn) fn();
+				});
+			}
+		}
+
+		return {
+			c: function create() {
+				div = createElement("div");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+				div.className = "week svelte-6xu817";
+				addLoc(div, file, 0, 0, 0);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div, anchor);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].i(div, null);
+				}
+
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				if (changed.days) {
+					each_value = ctx.days;
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block(component, child_ctx);
+							each_blocks[i].c();
+						}
+						each_blocks[i].i(div, null);
+					}
+
+					groupOutros();
+					for (; i < each_blocks.length; i += 1) outroBlock(i, 1);
+				}
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				each_blocks = each_blocks.filter(Boolean);
+				const countdown = callAfter(outrocallback, each_blocks.length);
+				for (let i = 0; i < each_blocks.length; i += 1) outroBlock(i, 0, countdown);
+
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div);
+				}
+
+				destroyEach(each_blocks, detach);
+			}
+		};
+	}
+
+	// (2:2) {#each days as day}
+	function create_each_block(component, ctx) {
+		var div1, div0, text0_value = ctx.day.date.getDate(), text0, text1, div1_transition, current;
+
+		return {
+			c: function create() {
+				div1 = createElement("div");
+				div0 = createElement("div");
+				text0 = createText(text0_value);
+				text1 = createText("\r\n    ");
+				div0.className = "day--label svelte-6xu817";
+				addLoc(div0, file, 7, 6, 186);
+				div1.className = "day svelte-6xu817";
+				toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
+				toggleClass(div1, "is-today", ctx.day.isToday);
+				addLoc(div1, file, 2, 4, 47);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div1, anchor);
+				append(div1, div0);
+				append(div0, text0);
+				append(div1, text1);
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				if ((!current || changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
+					setData(text0, text0_value);
+				}
+
+				if (changed.days) {
+					toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
+					toggleClass(div1, "is-today", ctx.day.isToday);
+				}
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+				if (component.root._intro) {
+					if (div1_transition) div1_transition.invalidate();
+
+					component.root._aftercreate.push(() => {
+						if (!div1_transition) div1_transition = wrapTransition(component, div1, fade, {}, true);
+						div1_transition.run(1);
+					});
+				}
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				if (!div1_transition) div1_transition = wrapTransition(component, div1, fade, {}, false);
+				div1_transition.run(0, () => {
+					outrocallback();
+					div1_transition = null;
+				});
+
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div1);
+					if (div1_transition) div1_transition.abort();
+				}
+			}
+		};
+	}
+
+	function Week(options) {
+		this._debugName = '<Week>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this._state = assign({}, options.data);
+		if (!('days' in this._state)) console.warn("<Week> was created without expected data property 'days'");
+		this._intro = !!options.intro;
+
+		this._fragment = create_main_fragment(this, this._state);
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+
+		this._intro = true;
+	}
+
+	assign(Week.prototype, protoDev);
+
+	Week.prototype._checkReadOnly = function _checkReadOnly(newState) {
+	};
+
+	/* src\Components\Months.html generated by Svelte v2.15.3 */
+
+	function currentMonth({monthIndex,months}) {
+		return months[monthIndex];
+	}
+
+	function data() { 
+	  return { 
+	    monthDict
+	  }
+	}
+	const file$1 = "src\\Components\\Months.html";
+
+	function get_each_context$1(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.week = list[i];
+		return child_ctx;
+	}
+
+	function create_main_fragment$1(component, ctx) {
+		var div, current;
+
+		var each_value = ctx.currentMonth.weeks;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$1(component, get_each_context$1(ctx, each_value, i));
+		}
+
+		function outroBlock(i, detach, fn) {
+			if (each_blocks[i]) {
+				each_blocks[i].o(() => {
+					if (detach) {
+						each_blocks[i].d(detach);
+						each_blocks[i] = null;
+					}
+					if (fn) fn();
+				});
+			}
+		}
+
+		return {
+			c: function create() {
+				div = createElement("div");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+				div.className = "months-container svelte-1hl98t5";
+				addLoc(div, file$1, 0, 0, 0);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div, anchor);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].i(div, null);
+				}
+
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				if (changed.currentMonth) {
+					each_value = ctx.currentMonth.weeks;
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context$1(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block$1(component, child_ctx);
+							each_blocks[i].c();
+						}
+						each_blocks[i].i(div, null);
+					}
+
+					groupOutros();
+					for (; i < each_blocks.length; i += 1) outroBlock(i, 1);
+				}
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				each_blocks = each_blocks.filter(Boolean);
+				const countdown = callAfter(outrocallback, each_blocks.length);
+				for (let i = 0; i < each_blocks.length; i += 1) outroBlock(i, 0, countdown);
+
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div);
+				}
+
+				destroyEach(each_blocks, detach);
+			}
+		};
+	}
+
+	// (2:2) {#each currentMonth.weeks as week}
+	function create_each_block$1(component, ctx) {
+		var current;
+
+		var week_initial_data = { days: ctx.week.days };
+		var week = new Week({
+			root: component.root,
+			store: component.store,
+			data: week_initial_data
+		});
+
+		return {
+			c: function create() {
+				week._fragment.c();
+			},
+
+			m: function mount(target, anchor) {
+				week._mount(target, anchor);
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				var week_changes = {};
+				if (changed.currentMonth) week_changes.days = ctx.week.days;
+				week._set(week_changes);
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				if (week) week._fragment.o(outrocallback);
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				week.destroy(detach);
+			}
+		};
+	}
+
+	function Months(options) {
+		this._debugName = '<Months>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this._state = assign(data(), options.data);
+
+		this._recompute({ monthIndex: 1, months: 1 }, this._state);
+		if (!('monthIndex' in this._state)) console.warn("<Months> was created without expected data property 'monthIndex'");
+		if (!('months' in this._state)) console.warn("<Months> was created without expected data property 'months'");
+		this._intro = !!options.intro;
+
+		this._fragment = create_main_fragment$1(this, this._state);
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+
+		this._intro = true;
+	}
+
+	assign(Months.prototype, protoDev);
+
+	Months.prototype._checkReadOnly = function _checkReadOnly(newState) {
+		if ('currentMonth' in newState && !this._updatingReadonlyProperty) throw new Error("<Months>: Cannot set read-only property 'currentMonth'");
+	};
+
+	Months.prototype._recompute = function _recompute(changed, state) {
+		if (changed.monthIndex || changed.months) {
+			if (this._differs(state.currentMonth, (state.currentMonth = currentMonth(state)))) changed.currentMonth = true;
+		}
+	};
+
+	/* src\Components\NavBar.html generated by Svelte v2.15.3 */
+
+	function data$1() { 
+	  return { 
+	    monthDict, 
+	    monthSelectorOpen: false
+	  }
+	}
+	var methods = { 
+	  toggleMonthSelectorOpen() { 
+	    let {monthSelectorOpen} = this.get(); 
+	    monthSelectorOpen = !monthSelectorOpen;
+	    this.set({monthSelectorOpen});
+	  }, 
+	  monthSelected(event,month) { 
+	    event.stopPropagation(); 
+	    this.fire('monthSelected', month);
+	    this.toggleMonthSelectorOpen();
+	  }
+	};
+
+	const file$2 = "src\\Components\\NavBar.html";
+
+	function click_handler(event) {
+		const { component, ctx } = this._svelte;
+
+		component.monthSelected(event,ctx.index);
+	}
+
+	function get_each_context$2(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.monthDefinition = list[i];
+		child_ctx.index = i;
+		return child_ctx;
+	}
+
+	function create_main_fragment$2(component, ctx) {
+		var div5, div3, div0, i0, text0, div1, text1_value = ctx.monthDict[ctx.month].name, text1, text2, text3, text4, div2, i1, text5, div4, current;
+
+		function click_handler(event) {
+			component.fire('incrementMonth', -1);
+		}
+
+		function click_handler_1(event) {
+			component.toggleMonthSelectorOpen();
+		}
+
+		function click_handler_2(event) {
+			component.fire('incrementMonth', 1);
+		}
+
+		var each_value = ctx.monthDict;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$2(component, get_each_context$2(ctx, each_value, i));
+		}
+
+		return {
+			c: function create() {
+				div5 = createElement("div");
+				div3 = createElement("div");
+				div0 = createElement("div");
+				i0 = createElement("i");
+				text0 = createText("\r\n    ");
+				div1 = createElement("div");
+				text1 = createText(text1_value);
+				text2 = createText(" ");
+				text3 = createText(ctx.year);
+				text4 = createText(" \r\n    ");
+				div2 = createElement("div");
+				i1 = createElement("i");
+				text5 = createText("\r\n  ");
+				div4 = createElement("div");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+				i0.className = "arrow left svelte-u7jga";
+				addLoc(i0, file$2, 5, 6, 174);
+				addListener(div0, "click", click_handler);
+				div0.className = "control svelte-u7jga";
+				toggleClass(div0, "enabled", ctx.canDecrementMonth);
+				addLoc(div0, file$2, 2, 4, 58);
+				addListener(div1, "click", click_handler_1);
+				div1.className = "label svelte-u7jga";
+				addLoc(div1, file$2, 7, 4, 218);
+				i1.className = "arrow right svelte-u7jga";
+				addLoc(i1, file$2, 13, 6, 445);
+				addListener(div2, "click", click_handler_2);
+				div2.className = "control svelte-u7jga";
+				toggleClass(div2, "enabled", ctx.canIncrementMonth);
+				addLoc(div2, file$2, 10, 4, 331);
+				div3.className = "heading-section svelte-u7jga";
+				addLoc(div3, file$2, 1, 2, 23);
+				div4.className = "month-selector svelte-u7jga";
+				toggleClass(div4, "open", ctx.monthSelectorOpen);
+				addLoc(div4, file$2, 16, 2, 498);
+				div5.className = "title";
+				addLoc(div5, file$2, 0, 0, 0);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div5, anchor);
+				append(div5, div3);
+				append(div3, div0);
+				append(div0, i0);
+				append(div3, text0);
+				append(div3, div1);
+				append(div1, text1);
+				append(div1, text2);
+				append(div1, text3);
+				append(div3, text4);
+				append(div3, div2);
+				append(div2, i1);
+				append(div5, text5);
+				append(div5, div4);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(div4, null);
+				}
+
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				if (changed.canDecrementMonth) {
+					toggleClass(div0, "enabled", ctx.canDecrementMonth);
+				}
+
+				if ((changed.monthDict || changed.month) && text1_value !== (text1_value = ctx.monthDict[ctx.month].name)) {
+					setData(text1, text1_value);
+				}
+
+				if (changed.year) {
+					setData(text3, ctx.year);
+				}
+
+				if (changed.canIncrementMonth) {
+					toggleClass(div2, "enabled", ctx.canIncrementMonth);
+				}
+
+				if (changed.month || changed.monthDict) {
+					each_value = ctx.monthDict;
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context$2(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block$2(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(div4, null);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value.length;
+				}
+
+				if (changed.monthSelectorOpen) {
+					toggleClass(div4, "open", ctx.monthSelectorOpen);
+				}
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: run,
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div5);
+				}
+
+				removeListener(div0, "click", click_handler);
+				removeListener(div1, "click", click_handler_1);
+				removeListener(div2, "click", click_handler_2);
+
+				destroyEach(each_blocks, detach);
+			}
+		};
+	}
+
+	// (18:4) {#each monthDict as monthDefinition, index}
+	function create_each_block$2(component, ctx) {
+		var div, span, text0_value = ctx.monthDefinition.abbrev, text0, text1;
+
+		return {
+			c: function create() {
+				div = createElement("div");
+				span = createElement("span");
+				text0 = createText(text0_value);
+				text1 = createText("\r\n      ");
+				span.className = "svelte-u7jga";
+				addLoc(span, file$2, 23, 8, 764);
+
+				div._svelte = { component, ctx };
+
+				addListener(div, "click", click_handler);
+				div.className = "month-selector--month svelte-u7jga";
+				toggleClass(div, "selected", ctx.index==ctx.month);
+				addLoc(div, file$2, 18, 6, 614);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div, anchor);
+				append(div, span);
+				append(span, text0);
+				append(div, text1);
+			},
+
+			p: function update(changed, _ctx) {
+				ctx = _ctx;
+				if ((changed.monthDict) && text0_value !== (text0_value = ctx.monthDefinition.abbrev)) {
+					setData(text0, text0_value);
+				}
+
+				div._svelte.ctx = ctx;
+				if (changed.month) {
+					toggleClass(div, "selected", ctx.index==ctx.month);
+				}
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div);
+				}
+
+				removeListener(div, "click", click_handler);
+			}
+		};
+	}
+
+	function NavBar(options) {
+		this._debugName = '<NavBar>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this._state = assign(data$1(), options.data);
+		if (!('canDecrementMonth' in this._state)) console.warn("<NavBar> was created without expected data property 'canDecrementMonth'");
+		if (!('monthDict' in this._state)) console.warn("<NavBar> was created without expected data property 'monthDict'");
+		if (!('month' in this._state)) console.warn("<NavBar> was created without expected data property 'month'");
+		if (!('year' in this._state)) console.warn("<NavBar> was created without expected data property 'year'");
+		if (!('canIncrementMonth' in this._state)) console.warn("<NavBar> was created without expected data property 'canIncrementMonth'");
+		if (!('monthSelectorOpen' in this._state)) console.warn("<NavBar> was created without expected data property 'monthSelectorOpen'");
+		this._intro = !!options.intro;
+
+		this._fragment = create_main_fragment$2(this, this._state);
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+		}
+
+		this._intro = true;
+	}
+
+	assign(NavBar.prototype, protoDev);
+	assign(NavBar.prototype, methods);
+
+	NavBar.prototype._checkReadOnly = function _checkReadOnly(newState) {
+	};
+
+	/* src\Components\Popover.html generated by Svelte v2.15.3 */
+
+	function checkIfFocusLost(evt) { 
+	  let { open } = this.get(); 
+	  if(!open) return;
+	  let el = evt.target;
+	  do {
+	    if(el == this.refs.popover) return false;
+	  } while(el = el.parentNode)
+	  this.set({open: false});
+	}
+	function something({w,h}) {
+		return console.log(w,h);
+	}
+
+	function data$2() { 
+	  return { 
+	    open: false,
+	    translateY: 0,
+	    translateX: 0
+	  }
+	}
+	var methods$1 = { 
+	  getTranslate() { 
+	    let { contents } = this.refs;
+	    let { translateX, translateY } = this.get(); 
+	    let boundingRect = contents.getBoundingClientRect();
+	    let distToTop = boundingRect.top - translateY; 
+	    let wWidth = window.innerWidth;
+	    let wHeight = window.innerHeight;
+	    let width = contents.offsetWidth; 
+	    let height = contents.offsetHeight;
+	    translateY = distToTop < 0 ? Math.abs(distToTop) : 0;
+	    return { translateX, translateY }  
+	  },
+	  open() { 
+	    let translate = this.getTranslate();
+	    this.set({open: true, ...translate});
+	  },
+	  close() { 
+	    this.set({open:false});
+	  }
+	};
+
+	function oncreate() { 
+	  document.addEventListener('click',checkIfFocusLost.bind(this)); 
+	}
+	function ondestroy() { 
+	  document.removeEventListener('click', checkIfFocusLost);
+	}
+	const file$3 = "src\\Components\\Popover.html";
+
+	function create_main_fragment$3(component, ctx) {
+		var div4, div0, slot_content_trigger = component._slotted.trigger, text, div3, div2, div1, slot_content_contents = component._slotted.contents, current;
+
+		function click_handler(event) {
+			component.open();
+		}
+
+		return {
+			c: function create() {
+				div4 = createElement("div");
+				div0 = createElement("div");
+				text = createText("\r\n  ");
+				div3 = createElement("div");
+				div2 = createElement("div");
+				div1 = createElement("div");
+				addListener(div0, "click", click_handler);
+				div0.className = "trigger svelte-5pilkc";
+				addLoc(div0, file$3, 1, 2, 37);
+				div1.className = "contents-inner svelte-5pilkc";
+				addLoc(div1, file$3, 11, 6, 335);
+				div2.className = "contents svelte-5pilkc";
+				addLoc(div2, file$3, 10, 4, 305);
+				div3.className = "contents-wrapper svelte-5pilkc";
+				setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+				toggleClass(div3, "visible", ctx.open);
+				addLoc(div3, file$3, 5, 2, 130);
+				div4.className = "popover svelte-5pilkc";
+				addLoc(div4, file$3, 0, 0, 0);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div4, anchor);
+				append(div4, div0);
+
+				if (slot_content_trigger) {
+					append(div0, slot_content_trigger);
+				}
+
+				append(div4, text);
+				append(div4, div3);
+				append(div3, div2);
+				append(div2, div1);
+
+				if (slot_content_contents) {
+					append(div1, slot_content_contents);
+				}
+
+				component.refs.contents = div3;
+				component.refs.popover = div4;
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				if (changed.translateX || changed.translateY) {
+					setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+				}
+
+				if (changed.open) {
+					toggleClass(div3, "visible", ctx.open);
+				}
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: run,
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div4);
+				}
+
+				if (slot_content_trigger) {
+					reinsertChildren(div0, slot_content_trigger);
+				}
+
+				removeListener(div0, "click", click_handler);
+
+				if (slot_content_contents) {
+					reinsertChildren(div1, slot_content_contents);
+				}
+
+				if (component.refs.contents === div3) component.refs.contents = null;
+				if (component.refs.popover === div4) component.refs.popover = null;
+			}
+		};
+	}
+
+	function Popover(options) {
+		this._debugName = '<Popover>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this.refs = {};
+		this._state = assign(data$2(), options.data);
+
+		this._recompute({ w: 1, h: 1 }, this._state);
+		if (!('w' in this._state)) console.warn("<Popover> was created without expected data property 'w'");
+		if (!('h' in this._state)) console.warn("<Popover> was created without expected data property 'h'");
+		if (!('open' in this._state)) console.warn("<Popover> was created without expected data property 'open'");
+		if (!('translateX' in this._state)) console.warn("<Popover> was created without expected data property 'translateX'");
+		if (!('translateY' in this._state)) console.warn("<Popover> was created without expected data property 'translateY'");
+		this._intro = !!options.intro;
+
+		this._handlers.destroy = [ondestroy];
+
+		this._slotted = options.slots || {};
+
+		this._fragment = create_main_fragment$3(this, this._state);
+
+		this.root._oncreate.push(() => {
+			oncreate.call(this);
+			this.fire("update", { changed: assignTrue({}, this._state), current: this._state });
+		});
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+
+		this._intro = true;
+	}
+
+	assign(Popover.prototype, protoDev);
+	assign(Popover.prototype, methods$1);
+
+	Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
+		if ('something' in newState && !this._updatingReadonlyProperty) throw new Error("<Popover>: Cannot set read-only property 'something'");
+	};
+
+	Popover.prototype._recompute = function _recompute(changed, state) {
+		if (changed.w || changed.h) {
+			if (this._differs(state.something, (state.something = something(state)))) changed.something = true;
+		}
+	};
+
+	/* src\Components\Datepicker.html generated by Svelte v2.15.3 */
+	function months({start, end}) {
+		return getMonths(start,end);
+	}
+
+	function monthIndex({month,year,months}) { 
+	  for(let i = 0; i < months.length; ++i) { 
+	    if(months[i].month == month && months[i].year == year) return i
+	  }
+	  return 0; 
+	}
+
+	function canIncrementMonth({monthIndex,months}) {
+		return monthIndex < months.length -1;
+	}
+
+	function canDecrementMonth({monthIndex,months}) {
+		return monthIndex > 0;
+	}
+
+	function data$3() { 
+	  let today = new Date(); 
+	  return { 
+	    today,
+	    dayDict,
+	    start: new Date(1987, 9, 29), 
+	    end: new Date(2020, 9, 29),
+	    selected: today, 
+	    month: today.getMonth(), 
+	    year: today.getFullYear()
+	  }
+	}
+	var methods$2 = { 
+	  changeMonth(month) { 
+	    console.log('month',month);
+	    this.set({month});
+	  },
+	  incrementMonth(direction) {
+	    let { canIncrementMonth, canDecrementMonth, month, year } = this.get(); 
+	    if(direction == 1 && !canIncrementMonth) return;
+	    if(direction == -1 && !canDecrementMonth) return;
+	    let current = new Date(year,month,1); 
+	    current.setMonth(current.getMonth() + direction); 
+	    this.set({
+	      month: current.getMonth(),
+	      year: current.getFullYear()
+	    });
+	  }
+	};
+
+	function oncreate$1() { 
+	  let { selected } = this.get(); 
+	  this.set({
+	    month: selected.getMonth(), 
+	    year: selected.getFullYear()
+	  });
+	}
+	const file$4 = "src\\Components\\Datepicker.html";
+
+	function get_each_context$3(ctx, list, i) {
+		const child_ctx = Object.create(ctx);
+		child_ctx.day = list[i];
+		return child_ctx;
+	}
+
+	function create_main_fragment$4(component, ctx) {
+		var div4, div0, a, text1, div3, div2, text2, div1, text3, current;
+
+		var navbar_initial_data = {
+		 	month: ctx.month,
+		 	year: ctx.year,
+		 	canIncrementMonth: ctx.canIncrementMonth,
+		 	canDecrementMonth: ctx.canDecrementMonth
+		 };
+		var navbar = new NavBar({
+			root: component.root,
+			store: component.store,
+			data: navbar_initial_data
+		});
+
+		navbar.on("monthSelected", function(event) {
+			component.changeMonth(event);
+		});
+		navbar.on("incrementMonth", function(event) {
+			component.incrementMonth(event);
+		});
+
+		var each_value = ctx.dayDict;
+
+		var each_blocks = [];
+
+		for (var i = 0; i < each_value.length; i += 1) {
+			each_blocks[i] = create_each_block$3(component, get_each_context$3(ctx, each_value, i));
+		}
+
+		var months_1_initial_data = {
+		 	months: ctx.months,
+		 	month: ctx.month,
+		 	year: ctx.year,
+		 	monthIndex: ctx.monthIndex
+		 };
+		var months_1 = new Months({
+			root: component.root,
+			store: component.store,
+			data: months_1_initial_data
+		});
+
+		var popover = new Popover({
+			root: component.root,
+			store: component.store,
+			slots: { default: createFragment(), contents: createFragment(), trigger: createFragment() }
+		});
+
+		return {
+			c: function create() {
+				div4 = createElement("div");
+				div0 = createElement("div");
+				a = createElement("a");
+				a.textContent = "Open Calendar";
+				text1 = createText("\r\n    ");
+				div3 = createElement("div");
+				div2 = createElement("div");
+				navbar._fragment.c();
+				text2 = createText("\r\n        ");
+				div1 = createElement("div");
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].c();
+				}
+
+				text3 = createText("\r\n        ");
+				months_1._fragment.c();
+				popover._fragment.c();
+				a.href = "#open-calendar";
+				a.className = "calendar-button svelte-1oragdh";
+				addLoc(a, file$4, 3, 6, 71);
+				setAttribute(div0, "slot", "trigger");
+				div0.className = "svelte-1oragdh";
+				addLoc(div0, file$4, 2, 4, 43);
+				div1.className = "legend svelte-1oragdh";
+				addLoc(div1, file$4, 15, 8, 449);
+				div2.className = "calendar svelte-1oragdh";
+				addLoc(div2, file$4, 6, 6, 184);
+				setAttribute(div3, "slot", "contents");
+				div3.className = "svelte-1oragdh";
+				addLoc(div3, file$4, 5, 4, 155);
+				div4.className = "datepicker svelte-1oragdh";
+				addLoc(div4, file$4, 0, 0, 0);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, div4, anchor);
+				append(popover._slotted.trigger, div0);
+				append(div0, a);
+				append(popover._slotted.default, text1);
+				append(popover._slotted.contents, div3);
+				append(div3, div2);
+				navbar._mount(div2, null);
+				append(div2, text2);
+				append(div2, div1);
+
+				for (var i = 0; i < each_blocks.length; i += 1) {
+					each_blocks[i].m(div1, null);
+				}
+
+				append(div2, text3);
+				months_1._mount(div2, null);
+				popover._mount(div4, null);
+				current = true;
+			},
+
+			p: function update(changed, ctx) {
+				var navbar_changes = {};
+				if (changed.month) navbar_changes.month = ctx.month;
+				if (changed.year) navbar_changes.year = ctx.year;
+				if (changed.canIncrementMonth) navbar_changes.canIncrementMonth = ctx.canIncrementMonth;
+				if (changed.canDecrementMonth) navbar_changes.canDecrementMonth = ctx.canDecrementMonth;
+				navbar._set(navbar_changes);
+
+				if (changed.dayDict) {
+					each_value = ctx.dayDict;
+
+					for (var i = 0; i < each_value.length; i += 1) {
+						const child_ctx = get_each_context$3(ctx, each_value, i);
+
+						if (each_blocks[i]) {
+							each_blocks[i].p(changed, child_ctx);
+						} else {
+							each_blocks[i] = create_each_block$3(component, child_ctx);
+							each_blocks[i].c();
+							each_blocks[i].m(div1, null);
+						}
+					}
+
+					for (; i < each_blocks.length; i += 1) {
+						each_blocks[i].d(1);
+					}
+					each_blocks.length = each_value.length;
+				}
+
+				var months_1_changes = {};
+				if (changed.months) months_1_changes.months = ctx.months;
+				if (changed.month) months_1_changes.month = ctx.month;
+				if (changed.year) months_1_changes.year = ctx.year;
+				if (changed.monthIndex) months_1_changes.monthIndex = ctx.monthIndex;
+				months_1._set(months_1_changes);
+			},
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				outrocallback = callAfter(outrocallback, 3);
+
+				if (navbar) navbar._fragment.o(outrocallback);
+				if (months_1) months_1._fragment.o(outrocallback);
+				if (popover) popover._fragment.o(outrocallback);
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(div4);
+				}
+
+				navbar.destroy();
+
+				destroyEach(each_blocks, detach);
+
+				months_1.destroy();
+				popover.destroy();
+			}
+		};
+	}
+
+	// (17:10) {#each dayDict as day}
+	function create_each_block$3(component, ctx) {
+		var span, text_value = ctx.day.abbrev, text;
+
+		return {
+			c: function create() {
+				span = createElement("span");
+				text = createText(text_value);
+				span.className = "svelte-1oragdh";
+				addLoc(span, file$4, 17, 12, 517);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, span, anchor);
+				append(span, text);
+			},
+
+			p: function update(changed, ctx) {
+				if ((changed.dayDict) && text_value !== (text_value = ctx.day.abbrev)) {
+					setData(text, text_value);
+				}
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(span);
+				}
+			}
+		};
+	}
+
+	function Datepicker(options) {
+		this._debugName = '<Datepicker>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this._state = assign(data$3(), options.data);
+
+		this._recompute({ start: 1, end: 1, month: 1, year: 1, months: 1, monthIndex: 1 }, this._state);
+		if (!('start' in this._state)) console.warn("<Datepicker> was created without expected data property 'start'");
+		if (!('end' in this._state)) console.warn("<Datepicker> was created without expected data property 'end'");
+		if (!('month' in this._state)) console.warn("<Datepicker> was created without expected data property 'month'");
+		if (!('year' in this._state)) console.warn("<Datepicker> was created without expected data property 'year'");
+
+
+
+
+		if (!('dayDict' in this._state)) console.warn("<Datepicker> was created without expected data property 'dayDict'");
+		this._intro = !!options.intro;
+
+		this._fragment = create_main_fragment$4(this, this._state);
+
+		this.root._oncreate.push(() => {
+			oncreate$1.call(this);
+			this.fire("update", { changed: assignTrue({}, this._state), current: this._state });
+		});
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+
+		this._intro = true;
+	}
+
+	assign(Datepicker.prototype, protoDev);
+	assign(Datepicker.prototype, methods$2);
+
+	Datepicker.prototype._checkReadOnly = function _checkReadOnly(newState) {
+		if ('months' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'months'");
+		if ('monthIndex' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'monthIndex'");
+		if ('canIncrementMonth' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'canIncrementMonth'");
+		if ('canDecrementMonth' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'canDecrementMonth'");
+	};
+
+	Datepicker.prototype._recompute = function _recompute(changed, state) {
+		if (changed.start || changed.end) {
+			if (this._differs(state.months, (state.months = months(state)))) changed.months = true;
+		}
+
+		if (changed.month || changed.year || changed.months) {
+			if (this._differs(state.monthIndex, (state.monthIndex = monthIndex(state)))) changed.monthIndex = true;
+		}
+
+		if (changed.monthIndex || changed.months) {
+			if (this._differs(state.canIncrementMonth, (state.canIncrementMonth = canIncrementMonth(state)))) changed.canIncrementMonth = true;
+			if (this._differs(state.canDecrementMonth, (state.canDecrementMonth = canDecrementMonth(state)))) changed.canDecrementMonth = true;
+		}
+	};
+
+	/* src\App.html generated by Svelte v2.15.3 */
+
+	function end({start}) {
+		return new Date(start.getTime() + (1000 * 3600 * 24 * 720));
+	}
+
+	function data$4() { 
+		return { 
+			start: new Date(), 
+		}
+	}
+	const file$5 = "src\\App.html";
+
+	function create_main_fragment$5(component, ctx) {
+		var h1, text1, p0, text3, text4, p1, text6, p2, text8, text9, p3, text11, p4, text13, p5, text15, current;
+
+		var datepicker0_initial_data = { format: "mm/dd/yyyy" };
+		var datepicker0 = new Datepicker({
+			root: component.root,
+			store: component.store,
+			data: datepicker0_initial_data
+		});
+
+		var datepicker1 = new Datepicker({
+			root: component.root,
+			store: component.store
+		});
+
+		var datepicker2 = new Datepicker({
+			root: component.root,
+			store: component.store
+		});
+
+		return {
+			c: function create() {
+				h1 = createElement("h1");
+				h1.textContent = "Date Picker";
+				text1 = createText("\n");
+				p0 = createElement("p");
+				p0.textContent = "Get your dates here, hot off the presses.";
+				text3 = createText("\n");
+				datepicker0._fragment.c();
+				text4 = createText("\n\n\n");
+				p1 = createElement("p");
+				p1.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+				text6 = createText("\n");
+				p2 = createElement("p");
+				p2.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+				text8 = createText("\n\n");
+				datepicker1._fragment.c();
+				text9 = createText("\n\n");
+				p3 = createElement("p");
+				p3.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+				text11 = createText("\n");
+				p4 = createElement("p");
+				p4.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+				text13 = createText("\n");
+				p5 = createElement("p");
+				p5.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+				text15 = createText("\n\n");
+				datepicker2._fragment.c();
+				addLoc(h1, file$5, 0, 0, 0);
+				addLoc(p0, file$5, 1, 0, 21);
+				addLoc(p1, file$5, 5, 0, 172);
+				addLoc(p2, file$5, 6, 0, 415);
+				addLoc(p3, file$5, 10, 0, 675);
+				addLoc(p4, file$5, 11, 0, 918);
+				addLoc(p5, file$5, 12, 0, 1161);
+			},
+
+			m: function mount(target, anchor) {
+				insert(target, h1, anchor);
+				insert(target, text1, anchor);
+				insert(target, p0, anchor);
+				insert(target, text3, anchor);
+				datepicker0._mount(target, anchor);
+				insert(target, text4, anchor);
+				insert(target, p1, anchor);
+				insert(target, text6, anchor);
+				insert(target, p2, anchor);
+				insert(target, text8, anchor);
+				datepicker1._mount(target, anchor);
+				insert(target, text9, anchor);
+				insert(target, p3, anchor);
+				insert(target, text11, anchor);
+				insert(target, p4, anchor);
+				insert(target, text13, anchor);
+				insert(target, p5, anchor);
+				insert(target, text15, anchor);
+				datepicker2._mount(target, anchor);
+				current = true;
+			},
+
+			p: noop,
+
+			i: function intro(target, anchor) {
+				if (current) return;
+
+				this.m(target, anchor);
+			},
+
+			o: function outro(outrocallback) {
+				if (!current) return;
+
+				outrocallback = callAfter(outrocallback, 3);
+
+				if (datepicker0) datepicker0._fragment.o(outrocallback);
+				if (datepicker1) datepicker1._fragment.o(outrocallback);
+				if (datepicker2) datepicker2._fragment.o(outrocallback);
+				current = false;
+			},
+
+			d: function destroy$$1(detach) {
+				if (detach) {
+					detachNode(h1);
+					detachNode(text1);
+					detachNode(p0);
+					detachNode(text3);
+				}
+
+				datepicker0.destroy(detach);
+				if (detach) {
+					detachNode(text4);
+					detachNode(p1);
+					detachNode(text6);
+					detachNode(p2);
+					detachNode(text8);
+				}
+
+				datepicker1.destroy(detach);
+				if (detach) {
+					detachNode(text9);
+					detachNode(p3);
+					detachNode(text11);
+					detachNode(p4);
+					detachNode(text13);
+					detachNode(p5);
+					detachNode(text15);
+				}
+
+				datepicker2.destroy(detach);
+			}
+		};
+	}
+
+	function App(options) {
+		this._debugName = '<App>';
+		if (!options || (!options.target && !options.root)) {
+			throw new Error("'target' is a required option");
+		}
+
+		init(this, options);
+		this._state = assign(data$4(), options.data);
+
+		this._recompute({ start: 1 }, this._state);
+		if (!('start' in this._state)) console.warn("<App> was created without expected data property 'start'");
+		this._intro = !!options.intro;
+
+		this._fragment = create_main_fragment$5(this, this._state);
+
+		if (options.target) {
+			if (options.hydrate) throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+			this._fragment.c();
+			this._mount(options.target, options.anchor);
+
+			flush(this);
+		}
+
+		this._intro = true;
+	}
+
+	assign(App.prototype, protoDev);
+
+	App.prototype._checkReadOnly = function _checkReadOnly(newState) {
+		if ('end' in newState && !this._updatingReadonlyProperty) throw new Error("<App>: Cannot set read-only property 'end'");
+	};
+
+	App.prototype._recompute = function _recompute(changed, state) {
+		if (changed.start) {
+			if (this._differs(state.end, (state.end = end(state)))) changed.end = true;
+		}
+	};
+
+	const app = new App({
+		target: document.body,
+		data: {
+			// name: 'world'
+		}
+	});
+
+	return app;
+
+}());
 //# sourceMappingURL=bundle.js.map

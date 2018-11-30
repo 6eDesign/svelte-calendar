@@ -48,11 +48,18 @@
   }
   .calendar { 
     box-sizing: border-box;
-    width: 320px;
     box-sizing: content-box;
     position: relative;
     overflow: hidden;
     user-select: none;
+    width: 100vw;
+  }
+  @media (min-width: 480px) { 
+    .calendar { 
+      height: auto; 
+      width: 320px;
+      max-width: 100%;
+    }
   }
   .legend { 
     color: #4a4a4a;

@@ -6,7 +6,7 @@
   <div 
     class="contents-wrapper" 
     class:visible="open"
-    style="transform: translate(-50%,-50%) translateY({!open ? 0 : translateY}px)" 
+    style="transform: translate(-50%,-50%) translate({translateX}px, {translateY}px)" 
     ref:contents>
     <div class="contents">
       <div class="contents-inner">
@@ -37,14 +37,15 @@
     top: 50%; 
     left: 50%; 
     visibility: hidden; 
+    transition: none;
     z-index: 2;
   }
 
   .contents { 
     background: #fff;
-    box-shadow: 0px 0px 15px 4px rgba(0, 0, 0, 0.12);
-    opacity: 0; 
-    transform: scale(.7, 0) translateY(15px);
+    box-shadow: 0px 10px 26px rgba(0,0,0,0.4) ;
+    opacity: .8; 
+    transform: scale(.7, 0);
     padding: 10px;
     padding-top: 0;
   }
@@ -52,13 +53,13 @@
   .contents-inner { 
     opacity: 0;
     transition: opacity 250ms linear;
-    transition-delay: 200ms;
+    transition-delay: 280ms;
   }
 
   .contents-wrapper.visible .contents { 
     visibility: visible;
     opacity: 1; 
-    transform: scale(1) translateY(0);
+    transform: scale(1);
   }
 
   .contents-wrapper.visible .contents-inner { 
@@ -81,22 +82,34 @@
 
   export default { 
     oncreate() { 
-      console.log(this.refs);
       document.addEventListener('click',checkIfFocusLost.bind(this)); 
     }, 
     data() { 
       return { 
         open: false,
-        translateY: 150
+        translateY: 0,
+        translateX: 0
       }
     },
+    computed: { 
+      something: ({w,h}) => console.log(w,h)
+    },
     methods: { 
-      open() { 
-        let {contents} = this.refs;
+      getTranslate() { 
+        let { contents } = this.refs;
+        let { translateX, translateY } = this.get(); 
         let boundingRect = contents.getBoundingClientRect()
-        let distToTop = window.pageYOffset + boundingRect.top; 
-        let translateY = distToTop < 0 ? Math.abs(distToTop) + 15 : 0
-        this.set({open: true, translateY});
+        let distToTop = boundingRect.top - translateY; 
+        let wWidth = window.innerWidth;
+        let wHeight = window.innerHeight;
+        let width = contents.offsetWidth; 
+        let height = contents.offsetHeight;
+        translateY = distToTop < 0 ? Math.abs(distToTop) : 0
+        return { translateX, translateY }  
+      },
+      open() { 
+        let translate = this.getTranslate()
+        this.set({open: true, ...translate});
       },
       close() { 
         this.set({open:false});
