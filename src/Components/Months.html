@@ -1,6 +1,6 @@
 <div class="months-container">
   {#each currentMonth.weeks as week}
-    <Week days={week.days} />
+    <Week days={week.days} on:dateSelected />
   {/each}
   <!-- {#each visibleMonths as month}
     <div class="month" style="transform: translateX({translateX})">

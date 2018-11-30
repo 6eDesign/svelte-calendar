@@ -1,6 +1,6 @@
 <h1>Date Picker</h1>
 <p>Get your dates here, hot off the presses.</p>
-<Datepicker format="mm/dd/yyyy" />
+<Datepicker format="{dateFormat}" />
 <!-- <Datepicker ref:cal {start} {end} format="mm/dd/yyyy" /> -->
 
 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
@@ -18,7 +18,8 @@
 	export default { 
 		data() { 
 			return { 
-				start: new Date(), 
+        start: new Date(), 
+        dateFormat: '#{l}, #{F} #{j}, #{Y}'
 			}
 		},
 		computed: { 

@@ -562,6 +562,137 @@ var app = (function () {
 	  return months;
 	}
 
+	/**
+	 * generic function to inject data into token-laden string
+	 * @param str {String} Required
+	 * @param name {String} Required
+	 * @param value {String|Integer} Required
+	 * @returns {String}
+	 *
+	 * Pass this function a string with encoded tokens, example: 
+	 *    injectStringData("The following is a token: #{tokenName}", "tokenName", 123); 
+	 *   
+	 *    Returns: "The following is a token: 123"
+	 *
+	 */
+	var injectStringData = function(str,name,value) {
+	  return str.replace(new RegExp('#{'+name+'}','g'),value);
+	};
+
+	/**
+	 * generic function to enforce length of string
+	 * @param str {String} Required
+	 * @param length {Integer} Required
+	 * @param fromBack {Boolean} Optional
+	 * @returns {String}
+	 *
+	 * Pass a string or number to this function and specify the desired length.
+	 * This function will either pad the # with leading 0's (if str.length < length)
+	 * or remove data from the end (@fromBack==false) or beginning (@fromBack==true)
+	 * of the string when str.length > length.
+	 *
+	 * When length == str.length or typeof length == 'undefined', this function
+	 * returns the original @str parameter.
+	 *
+	 */
+	var enforceLength = function(str,length,fromBack) {
+	  str = str.toString();
+	  if(typeof length == 'undefined') return str;
+	  if(str.length == length) return str;
+	  fromBack = (typeof fromBack == 'undefined') ? false : fromBack;
+	  if(str.length < length) {
+	    // pad the beginning of the string w/ enough 0's to reach desired length:
+	    while(length - str.length > 0) str = '0' + str;
+	  } else if(str.length > length) {
+	    if(fromBack) {
+	      // grab the desired #/chars from end of string: ex: '2015' -> '15'
+	      str = str.substring(str.length-length);
+	    } else {
+	      // grab the desired #/chars from beginning of string: ex: '2015' -> '20'
+	      str = str.substring(0,length);
+	    }
+	  }
+	  return str;
+	};
+
+	// Internal variables for storing days of week, months of year: 
+	var daysOfWeek = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
+	var monthsOfYear = [ 'January','February','March','April','May','June','July','August','September','October','November','December'];
+
+	var acceptedDateTokens = [
+	  // d: day of the month, 2 digits with leading zeros:
+	  { key: 'd', method: function(date) { return enforceLength(date.getDate(), 2); } },
+	  // D: textual representation of day, 3 letters: Sun thru Sat
+	  { key: 'D', method: function(date) { return enforceLength(daysOfWeek[date.getDay()],3); } },
+	  // j: day of month without leading 0's
+	  { key: 'j', method: function(date) { return date.getDate(); } },
+	  // l: full textual representation of day of week: Sunday thru Saturday
+	  { key: 'l', method: function(date) { return daysOfWeek[date.getDay()]; } },
+	  // F: full text month: 'January' thru 'December'
+	  { key: 'F', method: function(date) { return monthsOfYear[date.getMonth()]; } },
+	  // m: 2 digit numeric month: '01' - '12':
+	  { key: 'm', method: function(date) { return enforceLength(date.getMonth()+1,2); } },
+	  // M: a short textual representation of the month, 3 letters: 'Jan' - 'Dec'
+	  { key: 'M', method: function(date) { return enforceLength(monthsOfYear[date.getMonth()],3); } },
+	  // n: numeric represetation of month w/o leading 0's, '1' - '12':
+	  { key: 'n', method: function(date) { return date.getMonth() + 1; } },
+	  // Y: Full numeric year, 4 digits
+	  { key: 'Y', method: function(date) { return date.getFullYear(); } },
+	  // y: 2 digit numeric year:
+	  { key: 'y', method: function(date) { return enforceLength(date.getFullYear(),2,true); } }
+	];
+
+	var acceptedTimeTokens = [
+	  // a: lowercase ante meridiem and post meridiem 'am' or 'pm'
+	  { key: 'a', method: function(date) { return (date.getHours() > 11) ? 'pm' : 'am'; } },
+	  // A: uppercase ante merdiiem and post meridiem 'AM' or 'PM'
+	  { key: 'A', method: function(date) { return (date.getHours() > 11) ? 'PM' : 'AM'; } },
+	  // g: 12-hour format of an hour without leading zeros 1-12
+	  { key: 'g', method: function(date) { return date.getHours() % 12 || 12; } },
+	  // G: 24-hour format of an hour without leading zeros 0-23
+	  { key: 'G', method: function(date) { return date.getHours(); } },
+	  // h: 12-hour format of an hour with leading zeros 01-12
+	  { key: 'h', method: function(date) { return enforceLength(date.getHours()%12 || 12,2); } },
+	  // H: 24-hour format of an hour with leading zeros: 00-23
+	  { key: 'H', method: function(date) { return enforceLength(date.getHours(),2); } },
+	  // i: Minutes with leading zeros 00-59
+	  { key: 'i', method: function(date) { return enforceLength(date.getMinutes(),2); } },
+	  // s: Seconds with leading zeros 00-59
+	  { key: 's', method: function(date) { return enforceLength(date.getSeconds(),2); } }
+	  // // T: Timezone abbreviation "EST", "MDT", ...
+	  // { key: 'T', method: function(date) { return date.getTimezone(); } },
+	  // O: Difference to Greenwich time (GMT) in hours  +0200, -0200
+	  // { key: 'O', method: function(date) { return date.getGMTOffset(); } },
+	  // 'P': Difference to Greenwich time (GMT) w/ semicolon between hours:minutes +02:00
+	  // { key: 'P', method: function(date) { var offset = date.getGMTOffset(); return offset.slice(0,3)+':'+offset.slice(3); } }
+	];
+
+	/**
+	 * generic formatDate function which accepts dynamic templates
+	 * @param date {Date} Required
+	 * @param template {String} Optional
+	 * @returns {String}
+	 *
+	 * pass a date and a template, such as:
+	 *
+	 *    formatDate(new Date(), '#{M}. #{j}, #{Y}')
+	 *
+	 */
+	function formatDate(date,template) {
+	  template = (typeof template == 'undefined') ? '#{m}/#{d}/#{Y}' : template;
+	  for(var i=0; i < acceptedDateTokens.length; ++i) {
+	    if(template.indexOf('#{'+acceptedDateTokens[i].key+'}') > -1) {
+	      template = injectStringData(template,acceptedDateTokens[i].key,acceptedDateTokens[i].method(date));
+	    }
+	  }
+	  for(var i=0; i < acceptedTimeTokens.length; ++i) {
+	    if(template.indexOf('#{'+acceptedTimeTokens[i].key+'}') > -1) {
+	      template = injectStringData(template,acceptedTimeTokens[i].key,acceptedTimeTokens[i].method(date));
+	    }
+	  }
+	  return template;
+	}
+
 	function fade ( node, ref ) {
 		var delay = ref.delay; if ( delay === void 0 ) delay = 0;
 		var duration = ref.duration; if ( duration === void 0 ) duration = 400;
@@ -575,11 +706,17 @@ var app = (function () {
 		};
 	}
 
-	/* src\Components\Week.html generated by Svelte v2.15.3 */
+	/* src/Components/Week.html generated by Svelte v2.15.3 */
 
 
 
-	const file = "src\\Components\\Week.html";
+	const file = "src/Components/Week.html";
+
+	function click_handler(event) {
+		const { component, ctx } = this._svelte;
+
+		component.fire('dateSelected',ctx.day);
+	}
 
 	function get_each_context(ctx, list, i) {
 		const child_ctx = Object.create(ctx);
@@ -617,7 +754,7 @@ var app = (function () {
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
-				div.className = "week svelte-6xu817";
+				div.className = "week svelte-1m0vas8";
 				addLoc(div, file, 0, 0, 0);
 			},
 
@@ -687,13 +824,16 @@ var app = (function () {
 				div1 = createElement("div");
 				div0 = createElement("div");
 				text0 = createText(text0_value);
-				text1 = createText("\r\n    ");
-				div0.className = "day--label svelte-6xu817";
-				addLoc(div0, file, 7, 6, 186);
-				div1.className = "day svelte-6xu817";
+				text1 = createText("\n    ");
+				div0._svelte = { component, ctx };
+
+				addListener(div0, "click", click_handler);
+				div0.className = "day--label svelte-1m0vas8";
+				addLoc(div0, file, 7, 6, 179);
+				div1.className = "day svelte-1m0vas8";
 				toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
 				toggleClass(div1, "is-today", ctx.day.isToday);
-				addLoc(div1, file, 2, 4, 47);
+				addLoc(div1, file, 2, 4, 45);
 			},
 
 			m: function mount(target, anchor) {
@@ -704,11 +844,13 @@ var app = (function () {
 				current = true;
 			},
 
-			p: function update(changed, ctx) {
+			p: function update(changed, _ctx) {
+				ctx = _ctx;
 				if ((!current || changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
 					setData(text0, text0_value);
 				}
 
+				div0._svelte.ctx = ctx;
 				if (changed.days) {
 					toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
 					toggleClass(div1, "is-today", ctx.day.isToday);
@@ -743,6 +885,10 @@ var app = (function () {
 			d: function destroy$$1(detach) {
 				if (detach) {
 					detachNode(div1);
+				}
+
+				removeListener(div0, "click", click_handler);
+				if (detach) {
 					if (div1_transition) div1_transition.abort();
 				}
 			}
@@ -778,7 +924,7 @@ var app = (function () {
 	Week.prototype._checkReadOnly = function _checkReadOnly(newState) {
 	};
 
-	/* src\Components\Months.html generated by Svelte v2.15.3 */
+	/* src/Components/Months.html generated by Svelte v2.15.3 */
 
 	function currentMonth({monthIndex,months}) {
 		return months[monthIndex];
@@ -789,7 +935,7 @@ var app = (function () {
 	    monthDict
 	  }
 	}
-	const file$1 = "src\\Components\\Months.html";
+	const file$1 = "src/Components/Months.html";
 
 	function get_each_context$1(ctx, list, i) {
 		const child_ctx = Object.create(ctx);
@@ -827,7 +973,7 @@ var app = (function () {
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
-				div.className = "months-container svelte-1hl98t5";
+				div.className = "months-container svelte-nt8v0l";
 				addLoc(div, file$1, 0, 0, 0);
 			},
 
@@ -897,6 +1043,10 @@ var app = (function () {
 			root: component.root,
 			store: component.store,
 			data: week_initial_data
+		});
+
+		week.on("dateSelected", function(event) {
+			component.fire("dateSelected", event);
 		});
 
 		return {
@@ -973,7 +1123,7 @@ var app = (function () {
 		}
 	};
 
-	/* src\Components\NavBar.html generated by Svelte v2.15.3 */
+	/* src/Components/NavBar.html generated by Svelte v2.15.3 */
 
 	function data$1() { 
 	  return { 
@@ -994,9 +1144,9 @@ var app = (function () {
 	  }
 	};
 
-	const file$2 = "src\\Components\\NavBar.html";
+	const file$2 = "src/Components/NavBar.html";
 
-	function click_handler(event) {
+	function click_handler$1(event) {
 		const { component, ctx } = this._svelte;
 
 		component.monthSelected(event,ctx.index);
@@ -1038,40 +1188,40 @@ var app = (function () {
 				div3 = createElement("div");
 				div0 = createElement("div");
 				i0 = createElement("i");
-				text0 = createText("\r\n    ");
+				text0 = createText("\n    ");
 				div1 = createElement("div");
 				text1 = createText(text1_value);
 				text2 = createText(" ");
 				text3 = createText(ctx.year);
-				text4 = createText(" \r\n    ");
+				text4 = createText(" \n    ");
 				div2 = createElement("div");
 				i1 = createElement("i");
-				text5 = createText("\r\n  ");
+				text5 = createText("\n  ");
 				div4 = createElement("div");
 
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
-				i0.className = "arrow left svelte-u7jga";
-				addLoc(i0, file$2, 5, 6, 174);
+				i0.className = "arrow left svelte-w64iwt";
+				addLoc(i0, file$2, 5, 6, 169);
 				addListener(div0, "click", click_handler);
-				div0.className = "control svelte-u7jga";
+				div0.className = "control svelte-w64iwt";
 				toggleClass(div0, "enabled", ctx.canDecrementMonth);
-				addLoc(div0, file$2, 2, 4, 58);
+				addLoc(div0, file$2, 2, 4, 56);
 				addListener(div1, "click", click_handler_1);
-				div1.className = "label svelte-u7jga";
-				addLoc(div1, file$2, 7, 4, 218);
-				i1.className = "arrow right svelte-u7jga";
-				addLoc(i1, file$2, 13, 6, 445);
+				div1.className = "label svelte-w64iwt";
+				addLoc(div1, file$2, 7, 4, 211);
+				i1.className = "arrow right svelte-w64iwt";
+				addLoc(i1, file$2, 13, 6, 432);
 				addListener(div2, "click", click_handler_2);
-				div2.className = "control svelte-u7jga";
+				div2.className = "control svelte-w64iwt";
 				toggleClass(div2, "enabled", ctx.canIncrementMonth);
-				addLoc(div2, file$2, 10, 4, 331);
-				div3.className = "heading-section svelte-u7jga";
-				addLoc(div3, file$2, 1, 2, 23);
-				div4.className = "month-selector svelte-u7jga";
+				addLoc(div2, file$2, 10, 4, 321);
+				div3.className = "heading-section svelte-w64iwt";
+				addLoc(div3, file$2, 1, 2, 22);
+				div4.className = "month-selector svelte-w64iwt";
 				toggleClass(div4, "open", ctx.monthSelectorOpen);
-				addLoc(div4, file$2, 16, 2, 498);
+				addLoc(div4, file$2, 16, 2, 482);
 				div5.className = "title";
 				addLoc(div5, file$2, 0, 0, 0);
 			},
@@ -1173,16 +1323,16 @@ var app = (function () {
 				div = createElement("div");
 				span = createElement("span");
 				text0 = createText(text0_value);
-				text1 = createText("\r\n      ");
-				span.className = "svelte-u7jga";
-				addLoc(span, file$2, 23, 8, 764);
+				text1 = createText("\n      ");
+				span.className = "svelte-w64iwt";
+				addLoc(span, file$2, 23, 8, 741);
 
 				div._svelte = { component, ctx };
 
-				addListener(div, "click", click_handler);
-				div.className = "month-selector--month svelte-u7jga";
+				addListener(div, "click", click_handler$1);
+				div.className = "month-selector--month svelte-w64iwt";
 				toggleClass(div, "selected", ctx.index==ctx.month);
-				addLoc(div, file$2, 18, 6, 614);
+				addLoc(div, file$2, 18, 6, 596);
 			},
 
 			m: function mount(target, anchor) {
@@ -1209,7 +1359,7 @@ var app = (function () {
 					detachNode(div);
 				}
 
-				removeListener(div, "click", click_handler);
+				removeListener(div, "click", click_handler$1);
 			}
 		};
 	}
@@ -1247,7 +1397,7 @@ var app = (function () {
 	NavBar.prototype._checkReadOnly = function _checkReadOnly(newState) {
 	};
 
-	/* src\Components\Popover.html generated by Svelte v2.15.3 */
+	/* src/Components/Popover.html generated by Svelte v2.15.3 */
 
 	function checkIfFocusLost(evt) { 
 	  let { open } = this.get(); 
@@ -1297,10 +1447,21 @@ var app = (function () {
 	function ondestroy() { 
 	  document.removeEventListener('click', checkIfFocusLost);
 	}
-	const file$3 = "src\\Components\\Popover.html";
+	const file$3 = "src/Components/Popover.html";
 
 	function create_main_fragment$3(component, ctx) {
 		var div4, div0, slot_content_trigger = component._slotted.trigger, text, div3, div2, div1, slot_content_contents = component._slotted.contents, current;
+
+		function onwindowresize(event) {
+			component._updatingReadonlyProperty = true;
+
+			component.set({
+				innerWidth: this.innerWidth
+			});
+
+			component._updatingReadonlyProperty = false;
+		}
+		window.addEventListener("resize", onwindowresize);
 
 		function click_handler(event) {
 			component.open();
@@ -1310,23 +1471,23 @@ var app = (function () {
 			c: function create() {
 				div4 = createElement("div");
 				div0 = createElement("div");
-				text = createText("\r\n  ");
+				text = createText("\n  ");
 				div3 = createElement("div");
 				div2 = createElement("div");
 				div1 = createElement("div");
 				addListener(div0, "click", click_handler);
-				div0.className = "trigger svelte-5pilkc";
-				addLoc(div0, file$3, 1, 2, 37);
-				div1.className = "contents-inner svelte-5pilkc";
-				addLoc(div1, file$3, 11, 6, 335);
-				div2.className = "contents svelte-5pilkc";
-				addLoc(div2, file$3, 10, 4, 305);
-				div3.className = "contents-wrapper svelte-5pilkc";
+				div0.className = "trigger svelte-cnyx91";
+				addLoc(div0, file$3, 2, 2, 70);
+				div1.className = "contents-inner svelte-cnyx91";
+				addLoc(div1, file$3, 12, 6, 358);
+				div2.className = "contents svelte-cnyx91";
+				addLoc(div2, file$3, 11, 4, 329);
+				div3.className = "contents-wrapper svelte-cnyx91";
 				setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
 				toggleClass(div3, "visible", ctx.open);
-				addLoc(div3, file$3, 5, 2, 130);
-				div4.className = "popover svelte-5pilkc";
-				addLoc(div4, file$3, 0, 0, 0);
+				addLoc(div3, file$3, 6, 2, 159);
+				div4.className = "popover svelte-cnyx91";
+				addLoc(div4, file$3, 1, 0, 34);
 			},
 
 			m: function mount(target, anchor) {
@@ -1370,6 +1531,8 @@ var app = (function () {
 			o: run,
 
 			d: function destroy$$1(detach) {
+				window.removeEventListener("resize", onwindowresize);
+
 				if (detach) {
 					detachNode(div4);
 				}
@@ -1399,10 +1562,11 @@ var app = (function () {
 		init(this, options);
 		this.refs = {};
 		this._state = assign(data$2(), options.data);
-
+		this._state.innerWidth = window.innerWidth;
 		this._recompute({ w: 1, h: 1 }, this._state);
 		if (!('w' in this._state)) console.warn("<Popover> was created without expected data property 'w'");
 		if (!('h' in this._state)) console.warn("<Popover> was created without expected data property 'h'");
+		if (!('innerWidth' in this._state)) console.warn("<Popover> was created without expected data property 'innerWidth'");
 		if (!('open' in this._state)) console.warn("<Popover> was created without expected data property 'open'");
 		if (!('translateX' in this._state)) console.warn("<Popover> was created without expected data property 'translateX'");
 		if (!('translateY' in this._state)) console.warn("<Popover> was created without expected data property 'translateY'");
@@ -1434,6 +1598,7 @@ var app = (function () {
 	assign(Popover.prototype, methods$1);
 
 	Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
+		if ('innerWidth' in newState && !this._updatingReadonlyProperty) throw new Error("<Popover>: Cannot set read-only property 'innerWidth'");
 		if ('something' in newState && !this._updatingReadonlyProperty) throw new Error("<Popover>: Cannot set read-only property 'something'");
 	};
 
@@ -1443,7 +1608,7 @@ var app = (function () {
 		}
 	};
 
-	/* src\Components\Datepicker.html generated by Svelte v2.15.3 */
+	/* src/Components/Datepicker.html generated by Svelte v2.15.3 */
 	function months({start, end}) {
 		return getMonths(start,end);
 	}
@@ -1463,11 +1628,16 @@ var app = (function () {
 		return monthIndex > 0;
 	}
 
+	function formattedSelected({selected,format}) {
+		return formatDate(selected,format);
+	}
+
 	function data$3() { 
 	  let today = new Date(); 
 	  return { 
 	    today,
 	    dayDict,
+	    format: '#{m}/#{d}/#{Y}',
 	    start: new Date(1987, 9, 29), 
 	    end: new Date(2020, 9, 29),
 	    selected: today, 
@@ -1477,7 +1647,6 @@ var app = (function () {
 	}
 	var methods$2 = { 
 	  changeMonth(month) { 
-	    console.log('month',month);
 	    this.set({month});
 	  },
 	  incrementMonth(direction) {
@@ -1490,6 +1659,10 @@ var app = (function () {
 	      month: current.getMonth(),
 	      year: current.getFullYear()
 	    });
+	  },
+	  registerSelection(selection) { 
+	    this.refs.popover.close(); 
+	    this.set({selected: selection.date});
 	  }
 	};
 
@@ -1500,7 +1673,7 @@ var app = (function () {
 	    year: selected.getFullYear()
 	  });
 	}
-	const file$4 = "src\\Components\\Datepicker.html";
+	const file$4 = "src/Components/Datepicker.html";
 
 	function get_each_context$3(ctx, list, i) {
 		const child_ctx = Object.create(ctx);
@@ -1509,7 +1682,7 @@ var app = (function () {
 	}
 
 	function create_main_fragment$4(component, ctx) {
-		var div4, div0, a, text1, div3, div2, text2, div1, text3, current;
+		var div4, div0, slot_content_default = component._slotted.default, a, text0, text1, div3, div2, text2, div1, text3, popover_updating = {}, current;
 
 		var navbar_initial_data = {
 		 	month: ctx.month,
@@ -1550,53 +1723,90 @@ var app = (function () {
 			data: months_1_initial_data
 		});
 
+		months_1.on("dateSelected", function(event) {
+			component.registerSelection(event);
+		});
+
+		var popover_initial_data = {};
+		if (ctx.isOpen !== void 0) {
+			popover_initial_data.open = ctx.isOpen;
+			popover_updating.open = true;
+		}
 		var popover = new Popover({
 			root: component.root,
 			store: component.store,
-			slots: { default: createFragment(), contents: createFragment(), trigger: createFragment() }
+			slots: { default: createFragment(), contents: createFragment(), trigger: createFragment() },
+			data: popover_initial_data,
+			_bind(changed, childState) {
+				var newState = {};
+				if (!popover_updating.open && changed.open) {
+					newState.isOpen = childState.open;
+				}
+				component._set(newState);
+				popover_updating = {};
+			}
 		});
+
+		component.root._beforecreate.push(() => {
+			popover._bind({ open: 1 }, popover.get());
+		});
+
+		component.refs.popover = popover;
 
 		return {
 			c: function create() {
 				div4 = createElement("div");
 				div0 = createElement("div");
-				a = createElement("a");
-				a.textContent = "Open Calendar";
-				text1 = createText("\r\n    ");
+				if (!slot_content_default) {
+					a = createElement("a");
+					text0 = createText(ctx.formattedSelected);
+				}
+				text1 = createText("\n    ");
 				div3 = createElement("div");
 				div2 = createElement("div");
 				navbar._fragment.c();
-				text2 = createText("\r\n        ");
+				text2 = createText("\n        ");
 				div1 = createElement("div");
 
 				for (var i = 0; i < each_blocks.length; i += 1) {
 					each_blocks[i].c();
 				}
 
-				text3 = createText("\r\n        ");
+				text3 = createText("\n        ");
 				months_1._fragment.c();
 				popover._fragment.c();
-				a.href = "#open-calendar";
-				a.className = "calendar-button svelte-1oragdh";
-				addLoc(a, file$4, 3, 6, 71);
+				if (!slot_content_default) {
+					a.href = "#open-calendar";
+					a.className = "calendar-button svelte-1uvtqlc";
+					addLoc(a, file$4, 4, 8, 134);
+				}
 				setAttribute(div0, "slot", "trigger");
-				div0.className = "svelte-1oragdh";
-				addLoc(div0, file$4, 2, 4, 43);
-				div1.className = "legend svelte-1oragdh";
-				addLoc(div1, file$4, 15, 8, 449);
-				div2.className = "calendar svelte-1oragdh";
-				addLoc(div2, file$4, 6, 6, 184);
+				div0.className = "svelte-1uvtqlc";
+				addLoc(div0, file$4, 2, 4, 92);
+				div1.className = "legend svelte-1uvtqlc";
+				addLoc(div1, file$4, 19, 8, 540);
+				div2.className = "calendar svelte-1uvtqlc";
+				addLoc(div2, file$4, 10, 6, 284);
 				setAttribute(div3, "slot", "contents");
-				div3.className = "svelte-1oragdh";
-				addLoc(div3, file$4, 5, 4, 155);
-				div4.className = "datepicker svelte-1oragdh";
+				div3.className = "svelte-1uvtqlc";
+				addLoc(div3, file$4, 9, 4, 256);
+				div4.className = "datepicker svelte-1uvtqlc";
+				toggleClass(div4, "open", ctx.isOpen);
 				addLoc(div4, file$4, 0, 0, 0);
 			},
 
 			m: function mount(target, anchor) {
 				insert(target, div4, anchor);
 				append(popover._slotted.trigger, div0);
-				append(div0, a);
+				if (!slot_content_default) {
+					append(div0, a);
+					append(a, text0);
+				}
+
+				else {
+					append(div0, slot_content_default);
+				}
+
 				append(popover._slotted.default, text1);
 				append(popover._slotted.contents, div3);
 				append(div3, div2);
@@ -1614,7 +1824,15 @@ var app = (function () {
 				current = true;
 			},
 
-			p: function update(changed, ctx) {
+			p: function update(changed, _ctx) {
+				ctx = _ctx;
+				if (!slot_content_default) {
+					if (!current || changed.formattedSelected) {
+						setData(text0, ctx.formattedSelected);
+				}
+
+				}
+
 				var navbar_changes = {};
 				if (changed.month) navbar_changes.month = ctx.month;
 				if (changed.year) navbar_changes.year = ctx.year;
@@ -1649,6 +1867,18 @@ var app = (function () {
 				if (changed.year) months_1_changes.year = ctx.year;
 				if (changed.monthIndex) months_1_changes.monthIndex = ctx.monthIndex;
 				months_1._set(months_1_changes);
+
+				var popover_changes = {};
+				if (!popover_updating.open && changed.isOpen) {
+					popover_changes.open = ctx.isOpen;
+					popover_updating.open = ctx.isOpen !== void 0;
+				}
+				popover._set(popover_changes);
+				popover_updating = {};
+
+				if (changed.isOpen) {
+					toggleClass(div4, "open", ctx.isOpen);
+				}
 			},
 
 			i: function intro(target, anchor) {
@@ -1673,17 +1903,22 @@ var app = (function () {
 					detachNode(div4);
 				}
 
+				if (slot_content_default) {
+					reinsertChildren(div0, slot_content_default);
+				}
+
 				navbar.destroy();
 
 				destroyEach(each_blocks, detach);
 
 				months_1.destroy();
 				popover.destroy();
+				if (component.refs.popover === popover) component.refs.popover = null;
 			}
 		};
 	}
 
-	// (17:10) {#each dayDict as day}
+	// (21:10) {#each dayDict as day}
 	function create_each_block$3(component, ctx) {
 		var span, text_value = ctx.day.abbrev, text;
 
@@ -1691,8 +1926,8 @@ var app = (function () {
 			c: function create() {
 				span = createElement("span");
 				text = createText(text_value);
-				span.className = "svelte-1oragdh";
-				addLoc(span, file$4, 17, 12, 517);
+				span.className = "svelte-1uvtqlc";
+				addLoc(span, file$4, 21, 12, 606);
 			},
 
 			m: function mount(target, anchor) {
@@ -1721,19 +1956,26 @@ var app = (function () {
 		}
 
 		init(this, options);
+		this.refs = {};
 		this._state = assign(data$3(), options.data);
 
-		this._recompute({ start: 1, end: 1, month: 1, year: 1, months: 1, monthIndex: 1 }, this._state);
+		this._recompute({ start: 1, end: 1, month: 1, year: 1, months: 1, monthIndex: 1, selected: 1, format: 1 }, this._state);
 		if (!('start' in this._state)) console.warn("<Datepicker> was created without expected data property 'start'");
 		if (!('end' in this._state)) console.warn("<Datepicker> was created without expected data property 'end'");
 		if (!('month' in this._state)) console.warn("<Datepicker> was created without expected data property 'month'");
 		if (!('year' in this._state)) console.warn("<Datepicker> was created without expected data property 'year'");
 
 
+		if (!('selected' in this._state)) console.warn("<Datepicker> was created without expected data property 'selected'");
+		if (!('format' in this._state)) console.warn("<Datepicker> was created without expected data property 'format'");
+		if (!('isOpen' in this._state)) console.warn("<Datepicker> was created without expected data property 'isOpen'");
+
 
 
 		if (!('dayDict' in this._state)) console.warn("<Datepicker> was created without expected data property 'dayDict'");
 		this._intro = !!options.intro;
+
+		this._slotted = options.slots || {};
 
 		this._fragment = create_main_fragment$4(this, this._state);
 
@@ -1761,6 +2003,7 @@ var app = (function () {
 		if ('monthIndex' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'monthIndex'");
 		if ('canIncrementMonth' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'canIncrementMonth'");
 		if ('canDecrementMonth' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'canDecrementMonth'");
+		if ('formattedSelected' in newState && !this._updatingReadonlyProperty) throw new Error("<Datepicker>: Cannot set read-only property 'formattedSelected'");
 	};
 
 	Datepicker.prototype._recompute = function _recompute(changed, state) {
@@ -1776,9 +2019,13 @@ var app = (function () {
 			if (this._differs(state.canIncrementMonth, (state.canIncrementMonth = canIncrementMonth(state)))) changed.canIncrementMonth = true;
 			if (this._differs(state.canDecrementMonth, (state.canDecrementMonth = canDecrementMonth(state)))) changed.canDecrementMonth = true;
 		}
+
+		if (changed.selected || changed.format) {
+			if (this._differs(state.formattedSelected, (state.formattedSelected = formattedSelected(state)))) changed.formattedSelected = true;
+		}
 	};
 
-	/* src\App.html generated by Svelte v2.15.3 */
+	/* src/App.html generated by Svelte v2.15.3 */
 
 	function end({start}) {
 		return new Date(start.getTime() + (1000 * 3600 * 24 * 720));
@@ -1786,15 +2033,16 @@ var app = (function () {
 
 	function data$4() { 
 		return { 
-			start: new Date(), 
+	        start: new Date(), 
+	        dateFormat: '#{l}, #{F} #{j}, #{Y}'
 		}
 	}
-	const file$5 = "src\\App.html";
+	const file$5 = "src/App.html";
 
 	function create_main_fragment$5(component, ctx) {
 		var h1, text1, p0, text3, text4, p1, text6, p2, text8, text9, p3, text11, p4, text13, p5, text15, current;
 
-		var datepicker0_initial_data = { format: "mm/dd/yyyy" };
+		var datepicker0_initial_data = { format: ctx.dateFormat };
 		var datepicker0 = new Datepicker({
 			root: component.root,
 			store: component.store,
@@ -1841,11 +2089,11 @@ var app = (function () {
 				datepicker2._fragment.c();
 				addLoc(h1, file$5, 0, 0, 0);
 				addLoc(p0, file$5, 1, 0, 21);
-				addLoc(p1, file$5, 5, 0, 172);
-				addLoc(p2, file$5, 6, 0, 415);
-				addLoc(p3, file$5, 10, 0, 675);
-				addLoc(p4, file$5, 11, 0, 918);
-				addLoc(p5, file$5, 12, 0, 1161);
+				addLoc(p1, file$5, 5, 0, 174);
+				addLoc(p2, file$5, 6, 0, 417);
+				addLoc(p3, file$5, 10, 0, 677);
+				addLoc(p4, file$5, 11, 0, 920);
+				addLoc(p5, file$5, 12, 0, 1163);
 			},
 
 			m: function mount(target, anchor) {
@@ -1871,7 +2119,11 @@ var app = (function () {
 				current = true;
 			},
 
-			p: noop,
+			p: function update(changed, ctx) {
+				var datepicker0_changes = {};
+				if (changed.dateFormat) datepicker0_changes.format = ctx.dateFormat;
+				datepicker0._set(datepicker0_changes);
+			},
 
 			i: function intro(target, anchor) {
 				if (current) return;
@@ -1934,6 +2186,7 @@ var app = (function () {
 
 		this._recompute({ start: 1 }, this._state);
 		if (!('start' in this._state)) console.warn("<App> was created without expected data property 'start'");
+		if (!('dateFormat' in this._state)) console.warn("<App> was created without expected data property 'dateFormat'");
 		this._intro = !!options.intro;
 
 		this._fragment = create_main_fragment$5(this, this._state);

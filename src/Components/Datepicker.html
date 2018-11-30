@@ -1,7 +1,11 @@
-<div class="datepicker">
-  <Popover>
+<div class="datepicker" class:open="isOpen">
+  <Popover ref:popover bind:open="isOpen">
     <div slot="trigger">
-      <a href="#open-calendar" class="calendar-button">Open Calendar</a>
+      <slot>
+        <a href="#open-calendar" class="calendar-button">
+          {formattedSelected}
+        </a>
+      </slot>
     </div>
     <div slot="contents">
       <div class="calendar">
@@ -18,7 +22,13 @@
             <span>{day.abbrev}</span>
           {/each}
         </div>
-        <Months {months} {month} {year} {monthIndex}/>
+        <Months 
+          {months} 
+          {month} 
+          {year} 
+          {monthIndex}
+          on:dateSelected="registerSelection(event)"
+        />
       </div>
     </div>
   </Popover>
@@ -31,11 +41,35 @@
     margin: 0 auto;
     /* margin: 154px auto 0 auto;  */
   }
+
+  .datepicker:before { 
+    content: '';
+    visibility: hidden;
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+    opacity: 0; 
+    transition: all 300ms linear;
+    z-index: 1;
+  }
+
+  .datepicker.open:before { 
+    visibility: visible;
+    opacity: 1; 
+  }
+
+
+
   .calendar-button { 
-        padding: 10px 20px;
+    padding: 10px 20px;
     border: 1px solid #eee;
     display: block;
     text-align: center;
+    text-decoration: none;
+    cursor: pointer;
   }
   html {
     box-sizing: border-box;
@@ -110,8 +144,10 @@
 </style>
 
 <script>
-  import {dayDict} from './lib/dictionaries';
+  import {dayDict,monthDict} from './lib/dictionaries';
   import {getMonths} from './lib/helpers';
+  import formatDate from 'timeUtils';
+
   let today = new Date();
   export default { 
     data() { 
@@ -119,6 +155,7 @@
       return { 
         today,
         dayDict,
+        format: '#{m}/#{d}/#{Y}',
         start: new Date(1987, 9, 29), 
         end: new Date(2020, 9, 29),
         selected: today, 
@@ -135,11 +172,11 @@
         return 0; 
       },
       canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,
-      canDecrementMonth: ({monthIndex,months}) => monthIndex > 0
+      canDecrementMonth: ({monthIndex,months}) => monthIndex > 0,
+      formattedSelected: ({selected,format}) => formatDate(selected,format)
     },
     methods: { 
       changeMonth(month) { 
-        console.log('month',month);
         this.set({month});
       },
       incrementMonth(direction) {
@@ -152,6 +189,10 @@
           month: current.getMonth(),
           year: current.getFullYear()
         })
+      },
+      registerSelection(selection) { 
+        this.refs.popover.close(); 
+        this.set({selected: selection.date});
       }
     },
     oncreate() { 

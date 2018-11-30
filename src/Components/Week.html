@@ -5,7 +5,7 @@
       transition:fade
       class:outside-month="!day.partOfMonth"
       class:is-today="day.isToday">
-      <div class="day--label">
+      <div class="day--label" on:click="fire('dateSelected',day)">
         {day.date.getDate()}
       </div>
     </div>
