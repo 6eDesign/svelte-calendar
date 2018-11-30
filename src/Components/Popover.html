@@ -1,0 +1,109 @@
+<div class="popover" ref:popover>
+  <div class="trigger" on:click="open()">
+    <slot name="trigger">
+    </slot>
+  </div>
+  <div 
+    class="contents-wrapper" 
+    class:visible="open"
+    style="transform: translate(-50%,-50%) translateY({!open ? 0 : translateY}px)" 
+    ref:contents>
+    <div class="contents">
+      <div class="contents-inner">
+        <slot name="contents">
+        </slot>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .popover { 
+    position: relative;
+
+  }
+
+  .trigger { 
+
+  }
+
+  .contents, .contents-wrapper { 
+    transition: all 200ms cubic-bezier(.92,.09,.18,1.05);
+  }
+
+  .contents-wrapper { 
+    transform: translate(-50%, -50%); 
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    visibility: hidden; 
+    z-index: 2;
+  }
+
+  .contents { 
+    background: #fff;
+    box-shadow: 0px 0px 15px 4px rgba(0, 0, 0, 0.12);
+    opacity: 0; 
+    transform: scale(.7, 0) translateY(15px);
+    padding: 10px;
+    padding-top: 0;
+  }
+
+  .contents-inner { 
+    opacity: 0;
+    transition: opacity 250ms linear;
+    transition-delay: 200ms;
+  }
+
+  .contents-wrapper.visible .contents { 
+    visibility: visible;
+    opacity: 1; 
+    transform: scale(1) translateY(0);
+  }
+
+  .contents-wrapper.visible .contents-inner { 
+    opacity: 1; 
+  }
+
+</style>
+
+<script>
+
+  function checkIfFocusLost(evt) { 
+    let { open } = this.get(); 
+    if(!open) return;
+    let el = evt.target;
+    do {
+      if(el == this.refs.popover) return false;
+    } while(el = el.parentNode)
+    this.set({open: false});
+  }; 
+
+  export default { 
+    oncreate() { 
+      console.log(this.refs);
+      document.addEventListener('click',checkIfFocusLost.bind(this)); 
+    }, 
+    data() { 
+      return { 
+        open: false,
+        translateY: 150
+      }
+    },
+    methods: { 
+      open() { 
+        let {contents} = this.refs;
+        let boundingRect = contents.getBoundingClientRect()
+        let distToTop = window.pageYOffset + boundingRect.top; 
+        let translateY = distToTop < 0 ? Math.abs(distToTop) + 15 : 0
+        this.set({open: true, translateY});
+      },
+      close() { 
+        this.set({open:false});
+      }
+    },
+    ondestroy() { 
+      document.removeEventListener('click', checkIfFocusLost);
+    }
+  }
+</script>

@@ -1,5 +1,18 @@
-<Calendar ref:cal format="mm/dd/yyyy" />
-<!-- <Calendar ref:cal {start} {end} format="mm/dd/yyyy" /> -->
+<h1>Date Picker</h1>
+<p>Get your dates here, hot off the presses.</p>
+<Datepicker format="mm/dd/yyyy" />
+<!-- <Datepicker ref:cal {start} {end} format="mm/dd/yyyy" /> -->
+
+<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+
+<Datepicker />
+
+<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+
+<Datepicker />
 
 <script>
 	export default { 
@@ -12,7 +25,7 @@
 			end: ({start}) => new Date(start.getTime() + (1000 * 3600 * 24 * 720))
 		}, 
 		components: { 
-			Calendar: './Components/Calendar.html'
+			Datepicker: './Components/Datepicker.html'
 		}
 	}
 </script>

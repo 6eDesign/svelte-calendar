@@ -1,21 +1,42 @@
-<div class="calendar">
-  <NavBar 
-    {month} 
-    {year}
-    {canIncrementMonth}
-    {canDecrementMonth}
-    on:monthSelected="changeMonth(event)" 
-    on:incrementMonth="incrementMonth(event)"
-  />
-  <div class="legend">
-    {#each dayDict as day}
-      <span>{day.abbrev}</span>
-    {/each}
-  </div>
-  <Months {months} {month} {year} {monthIndex}/>
+<div class="datepicker">
+  <Popover>
+    <div slot="trigger">
+      <a href="#open-calendar" class="calendar-button">Open Calendar</a>
+    </div>
+    <div slot="contents">
+      <div class="calendar">
+        <NavBar 
+          {month} 
+          {year}
+          {canIncrementMonth}
+          {canDecrementMonth}
+          on:monthSelected="changeMonth(event)" 
+          on:incrementMonth="incrementMonth(event)"
+        />
+        <div class="legend">
+          {#each dayDict as day}
+            <span>{day.abbrev}</span>
+          {/each}
+        </div>
+        <Months {months} {month} {year} {monthIndex}/>
+      </div>
+    </div>
+  </Popover>
 </div>
 
 <style>
+
+  .datepicker { 
+    width: 300px;
+    margin: 0 auto;
+    /* margin: 154px auto 0 auto;  */
+  }
+  .calendar-button { 
+        padding: 10px 20px;
+    border: 1px solid #eee;
+    display: block;
+    text-align: center;
+  }
   html {
     box-sizing: border-box;
   }
@@ -27,8 +48,7 @@
   }
   .calendar { 
     box-sizing: border-box;
-    width: 450px;
-    max-width: 100%;
+    width: 320px;
     box-sizing: content-box;
     position: relative;
     overflow: hidden;
@@ -136,7 +156,8 @@
     },
     components: { 
       Months: './Months.html',
-      NavBar: './NavBar.html'
+      NavBar: './NavBar.html',
+      Popover: './Popover.html'
     }
   }
 </script>
