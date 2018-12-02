@@ -7,12 +7,12 @@
   <div 
     class="contents-wrapper" 
     class:visible="open"
+    class:shrink="shrink"
     style="transform: translate(-50%,-50%) translate({translateX}px, {translateY}px)" 
-    ref:contents>
-    <div class="contents">
+    ref:contentsWrapper>
+    <div class="contents" ref:contentsAnimated>
       <div class="contents-inner">
-        <slot name="contents">
-        </slot>
+        <slot name="contents"></slot>
       </div>
     </div>
   </div>
@@ -21,11 +21,6 @@
 <style>
   .popover { 
     position: relative;
-
-  }
-
-  .trigger { 
-
   }
 
   .contents, .contents-wrapper { 
@@ -37,87 +32,160 @@
     position: absolute;
     top: 50%; 
     left: 50%; 
-    visibility: hidden; 
     transition: none;
     z-index: 2;
+    display: none;
   }
 
   .contents { 
     background: #fff;
     box-shadow: 0px 10px 26px rgba(0,0,0,0.4) ;
     opacity: .8; 
-    transform: scale(.7, 0);
-    padding: 10px;
     padding-top: 0;
+    display: none;
+    animation: grow 200ms forwards cubic-bezier(.92,.09,.18,1.05);
   }
 
   .contents-inner { 
     opacity: 0;
-    transition: opacity 250ms linear;
-    transition-delay: 280ms;
+    animation: fadeIn 200ms 250ms forwards;
+  }
+
+  .contents-wrapper.visible { 
+    display: block;
   }
 
   .contents-wrapper.visible .contents { 
-    visibility: visible;
     opacity: 1; 
     transform: scale(1);
+    display: block;
   }
 
-  .contents-wrapper.visible .contents-inner { 
-    opacity: 1; 
+  .contents-wrapper.shrink .contents { 
+    animation: shrink 150ms forwards cubic-bezier(.92,.09,.18,1.05);
+  }
+
+  @keyframes grow { 
+    0% { 
+      transform: scale(.7,.1); 
+      opacity: 0; 
+    }
+    30% { 
+      opacity: 1; 
+    }
+    100% { 
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shrink { 
+    0% { 
+      transform: scale(1); 
+      opacity: 1; 
+    }
+    70% { 
+      opacity: 1; 
+    }
+    100% { 
+      opacity: 0; 
+      transform: scale(.7,.1);
+    }
+  }
+
+  @keyframes fadeIn { 
+    0% { 
+      opacity: 0; 
+    }
+    100% { 
+      opacity: 1; 
+    }
   }
 
 </style>
 
 <script>
 
-  function checkIfFocusLost(evt) { 
+  function checkForFocusLoss(evt) { 
     let { open } = this.get(); 
     if(!open) return;
     let el = evt.target;
     do {
-      if(el == this.refs.popover) return false;
+      if(el == this.refs.popover) return;
     } while(el = el.parentNode)
-    this.set({open: false});
+    this.close();
   }; 
+
+  var once = (el,evt,cb) => { 
+    function handler() { 
+      cb.apply(this,arguments); 
+      el.removeEventListener(evt,handler);
+    }
+    el.addEventListener(evt,handler);
+  }
 
   export default { 
     oncreate() { 
-      document.addEventListener('click',checkIfFocusLost.bind(this)); 
+      document.addEventListener('click',checkForFocusLoss.bind(this)); 
     }, 
     data() { 
       return { 
         open: false,
+        shrink: false,
         translateY: 0,
         translateX: 0
       }
     },
     computed: { 
-      something: ({w,h}) => console.log(w,h)
+      something: ({w,h}) => console.log(w,h) 
     },
     methods: { 
-      getTranslate() { 
-        let { contents } = this.refs;
+      getDistanceToEdges() { 
+        this.set({open: true})
         let { translateX, translateY } = this.get(); 
-        let boundingRect = contents.getBoundingClientRect()
-        let distToTop = boundingRect.top - translateY; 
-        let wWidth = window.innerWidth;
-        let wHeight = window.innerHeight;
-        let width = contents.offsetWidth; 
-        let height = contents.offsetHeight;
-        translateY = distToTop < 0 ? Math.abs(distToTop) : 0
+        let { contentsWrapper } = this.refs; 
+        let width = contentsWrapper.offsetWidth; 
+        let height = contentsWrapper.offsetHeight; 
+        let rect = contentsWrapper.getBoundingClientRect(); 
+        this.set({open: false});
+        return { 
+          top: rect.top + (-1*translateY), 
+          bottom: window.innerHeight - rect.bottom + translateY, 
+          left: rect.left + (-1*translateX), 
+          right: document.body.clientWidth - rect.right + translateX
+        }
+      }, 
+      getTranslate() { 
+        let dist = this.getDistanceToEdges(); 
+        let translateX, translateY; 
+        if(dist.top < 0) { 
+          translateY = Math.abs(dist.top); 
+        } else if(dist.bottom < 0) { 
+          translateY = dist.bottom; 
+        } else { 
+          translateY = 0; 
+        }
+        if(dist.left < 0) { 
+          translateX = Math.abs(dist.left); 
+        } else if(dist.right < 0) { 
+          translateX = dist.right;
+        } else { 
+          translateX = 0; 
+        }
         return { translateX, translateY }  
       },
       open() { 
-        let translate = this.getTranslate()
-        this.set({open: true, ...translate});
+        console.log('opening');
+        this.set({open: true, ...this.getTranslate()});
       },
       close() { 
-        this.set({open:false});
+        this.set({shrink:true});
+        once(this.refs.contentsAnimated, 'animationend', () => {
+          this.set({shrink: false, open: false});
+        });
       }
     },
     ondestroy() { 
-      document.removeEventListener('click', checkIfFocusLost);
+      document.removeEventListener('click', checkForFocusLoss);
     }
   }
 </script>

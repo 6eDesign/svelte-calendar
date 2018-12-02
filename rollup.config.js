@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import browsersync from 'rollup-plugin-browsersync';
+import buble from 'rollup-plugin-buble';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -36,6 +37,7 @@ export default {
 		// https://github.com/rollup/rollup-plugin-commonjs
 		resolve(),
 		commonjs(),
+		buble({objectAssign: true}),
 
 		!production && browsersync({server: 'public'}),
 		

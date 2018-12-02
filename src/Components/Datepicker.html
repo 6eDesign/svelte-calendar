@@ -1,8 +1,8 @@
-<div class="datepicker" class:open="isOpen">
-  <Popover ref:popover bind:open="isOpen">
+<div class="datepicker" class:open="isOpen" class:closing="isClosing">
+  <Popover ref:popover bind:open="isOpen" bind:shrink="isClosing">
     <div slot="trigger">
       <slot>
-        <a href="#open-calendar" class="calendar-button">
+        <a class="calendar-button">
           {formattedSelected}
         </a>
       </slot>
@@ -37,22 +37,23 @@
 <style>
 
   .datepicker { 
-    width: 300px;
+    display: inline-block;
     margin: 0 auto;
-    /* margin: 154px auto 0 auto;  */
+    text-align: center;
+    overflow: visible;
   }
 
   .datepicker:before { 
     content: '';
     visibility: hidden;
-    position: absolute;
+    position: fixed;
     top: 0; 
     left: 0; 
     width: 100vw; 
     height: 100vh;
     background: rgba(0,0,0,0.3);
     opacity: 0; 
-    transition: all 300ms linear;
+    transition: all 231ms linear;
     z-index: 1;
   }
 
@@ -61,7 +62,10 @@
     opacity: 1; 
   }
 
-
+  .datepicker.closing:before { 
+    visibility: hidden;
+    opacity: 0; 
+  }
 
   .calendar-button { 
     padding: 10px 20px;
@@ -70,24 +74,34 @@
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
   }
+
   html {
     box-sizing: border-box;
   }
+  
   *, *:before, *:after {
     box-sizing: inherit;
   }
+  
   .weeks-container { 
     height: 311px;
   }
+  
   .calendar { 
     box-sizing: border-box;
-    box-sizing: content-box;
+    box-sizing: border-box;
     position: relative;
     overflow: hidden;
     user-select: none;
     width: 100vw;
+    padding: 10px;
+    padding-top: 0; 
   }
+  
   @media (min-width: 480px) { 
     .calendar { 
       height: auto; 
@@ -95,11 +109,13 @@
       max-width: 100%;
     }
   }
+  
   .legend { 
     color: #4a4a4a;
     padding: 10px 0;
     margin-bottom: 5px;
   }
+  
   .legend span { 
     width: 14.285714%;
     display: inline-block;
@@ -119,6 +135,7 @@
     justify-content: space-around;
     line-height:30px;
   }
+  
   .flex-item {
     background: tomato;
     margin: 5px;
@@ -130,11 +147,13 @@
     height:auto;
     display: flex; 
   }
+  
   .flex-item:before {
     content:'';
     float:left;
     padding-top:100%;
   }
+  
   .flex-item-inner { 
     display: flex;
     justify-content: center;
@@ -159,6 +178,7 @@
         start: new Date(1987, 9, 29), 
         end: new Date(2020, 9, 29),
         selected: today, 
+        dateChosen: false,
         month: today.getMonth(), 
         year: today.getFullYear()
       }
@@ -192,7 +212,7 @@
       },
       registerSelection(selection) { 
         this.refs.popover.close(); 
-        this.set({selected: selection.date});
+        this.set({selected: selection.date, dateChosen: true});
       }
     },
     oncreate() { 

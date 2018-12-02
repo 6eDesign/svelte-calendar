@@ -2,13 +2,6 @@
   {#each currentMonth.weeks as week}
     <Week days={week.days} on:dateSelected />
   {/each}
-  <!-- {#each visibleMonths as month}
-    <div class="month" style="transform: translateX({translateX})">
-      {#each month.weeks as week}
-        <Week days={week.days} />
-      {/each}
-    </div>
-  {/each} -->
 </div>
 
 <style>
