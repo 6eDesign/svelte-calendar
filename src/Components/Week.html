@@ -5,9 +5,9 @@
       transition:fade
       class:outside-month="!day.partOfMonth"
       class:is-today="day.isToday">
-      <div class="day--label" on:click="fire('dateSelected',day)">
+      <button class="day--label" on:click="fire('dateSelected',day)">
         {day.date.getDate()}
-      </div>
+      </button>
     </div>
   {/each}
 </div>
@@ -52,16 +52,17 @@
     border: 1px solid #fff;
     border-radius: 50%; 
     margin: 10%;
+    padding: 0;
+    align-items: center;
+    background: none;
   }
 
   .day--label:hover { 
     cursor: pointer;
     border-color: #f7901e;
   }
-  .day.is-today { 
-    color: #fff;
-  }
   .day.is-today .day--label { 
+    color: #fff;
     opacity: 1; 
     background: #f7901e;
   }

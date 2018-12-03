@@ -802,7 +802,7 @@ var app = (function () {
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
-  			div.className = "week svelte-6xu817";
+  			div.className = "week svelte-e0t4e5";
   			addLoc(div, file, 0, 0, 0);
   		},
 
@@ -865,30 +865,30 @@ var app = (function () {
 
   // (2:2) {#each days as day}
   function create_each_block(component, ctx) {
-  	var div1, div0, text0_value = ctx.day.date.getDate(), text0, text1, div1_transition, current;
+  	var div, button, text0_value = ctx.day.date.getDate(), text0, text1, div_transition, current;
 
   	return {
   		c: function create() {
-  			div1 = createElement("div");
-  			div0 = createElement("div");
+  			div = createElement("div");
+  			button = createElement("button");
   			text0 = createText(text0_value);
   			text1 = createText("\r\n    ");
-  			div0._svelte = { component: component, ctx: ctx };
+  			button._svelte = { component: component, ctx: ctx };
 
-  			addListener(div0, "click", click_handler);
-  			div0.className = "day--label svelte-6xu817";
-  			addLoc(div0, file, 7, 6, 186);
-  			div1.className = "day svelte-6xu817";
-  			toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
-  			toggleClass(div1, "is-today", ctx.day.isToday);
-  			addLoc(div1, file, 2, 4, 47);
+  			addListener(button, "click", click_handler);
+  			button.className = "day--label svelte-e0t4e5";
+  			addLoc(button, file, 7, 6, 186);
+  			div.className = "day svelte-e0t4e5";
+  			toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  			toggleClass(div, "is-today", ctx.day.isToday);
+  			addLoc(div, file, 2, 4, 47);
   		},
 
   		m: function mount(target, anchor) {
-  			insert(target, div1, anchor);
-  			append(div1, div0);
-  			append(div0, text0);
-  			append(div1, text1);
+  			insert(target, div, anchor);
+  			append(div, button);
+  			append(button, text0);
+  			append(div, text1);
   			current = true;
   		},
 
@@ -898,21 +898,21 @@ var app = (function () {
   				setData(text0, text0_value);
   			}
 
-  			div0._svelte.ctx = ctx;
+  			button._svelte.ctx = ctx;
   			if (changed.days) {
-  				toggleClass(div1, "outside-month", !ctx.day.partOfMonth);
-  				toggleClass(div1, "is-today", ctx.day.isToday);
+  				toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  				toggleClass(div, "is-today", ctx.day.isToday);
   			}
   		},
 
   		i: function intro(target, anchor) {
   			if (current) { return; }
   			if (component.root._intro) {
-  				if (div1_transition) { div1_transition.invalidate(); }
+  				if (div_transition) { div_transition.invalidate(); }
 
   				component.root._aftercreate.push(function () {
-  					if (!div1_transition) { div1_transition = wrapTransition(component, div1, fade, {}, true); }
-  					div1_transition.run(1);
+  					if (!div_transition) { div_transition = wrapTransition(component, div, fade, {}, true); }
+  					div_transition.run(1);
   				});
   			}
   			this.m(target, anchor);
@@ -921,10 +921,10 @@ var app = (function () {
   		o: function outro(outrocallback) {
   			if (!current) { return; }
 
-  			if (!div1_transition) { div1_transition = wrapTransition(component, div1, fade, {}, false); }
-  			div1_transition.run(0, function () {
+  			if (!div_transition) { div_transition = wrapTransition(component, div, fade, {}, false); }
+  			div_transition.run(0, function () {
   				outrocallback();
-  				div1_transition = null;
+  				div_transition = null;
   			});
 
   			current = false;
@@ -932,12 +932,12 @@ var app = (function () {
 
   		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode(div1);
+  				detachNode(div);
   			}
 
-  			removeListener(div0, "click", click_handler);
+  			removeListener(button, "click", click_handler);
   			if (detach) {
-  				if (div1_transition) { div1_transition.abort(); }
+  				if (div_transition) { div_transition.abort(); }
   			}
   		}
   	};
