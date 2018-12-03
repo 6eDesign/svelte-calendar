@@ -15,7 +15,8 @@
     "rollup-plugin-terser": "^3.0.0",
     "sirv-cli": "^0.2.2",
     "svelte": "^2.15.3",
-    "timeUtils": "^1.0.1"
+    "svelte-transitions": "^1.2.0",
+    "timeUtils": "^1.1.2"
   },
   "scripts": {
     "build": "rollup -c",
@@ -24,7 +25,5 @@
     "start": "sirv public",
     "start:dev": "sirv public --dev"
   },
-  "dependencies": {
-    "svelte-transitions": "^1.2.0"
-  }
+  "dependencies": {}
 }
