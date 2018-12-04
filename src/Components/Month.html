@@ -1,23 +1,15 @@
-<div class="months-container">
+<div class="month-container">
   {#each currentMonth.weeks as week}
-    <Week days={week.days} on:dateSelected />
+    <Week days={week.days} {selected} on:dateSelected />
   {/each}
 </div>
 
 <style>
-  .months-container { 
+  .month-container { 
     width: 100%;
     white-space: nowrap;
     display: inline-block;
   }
-  .month { 
-    display: inline-block; 
-    width: 100%;
-    vertical-align: top;
-    transition: all 320ms cubic-bezier(0.720, 0.110, 0.460, 1.145);
-    transform: translateX(0);
-  }
-
 </style>
 
 <script>

@@ -1,10 +1,16 @@
 <div class="datepicker" class:open="isOpen" class:closing="isClosing">
-  <Popover ref:popover bind:open="isOpen" bind:shrink="isClosing">
+  <Popover 
+    ref:popover 
+    bind:open="isOpen" 
+    bind:shrink="isClosing"
+    on:opened="attachEventListeners(event)"
+    on:closed="detachEventListeners(event)"
+  >
     <div slot="trigger">
       <slot>
-        <a class="calendar-button">
+        <button class="calendar-button">
           {formattedSelected}
-        </a>
+        </button>
       </slot>
     </div>
     <div slot="contents">
@@ -22,11 +28,12 @@
             <span>{day.abbrev}</span>
           {/each}
         </div>
-        <Months 
+        <Month 
           {months} 
           {month} 
           {year} 
           {monthIndex}
+          {selected}
           on:dateSelected="registerSelection(event)"
         />
       </div>
@@ -168,6 +175,8 @@
   import { formatDate } from 'timeUtils';
 
   let today = new Date();
+  today.setHours(0,0,0,0);
+  
   export default { 
     data() { 
       let today = new Date(); 
@@ -210,9 +219,49 @@
           year: current.getFullYear()
         })
       },
+      incrementDay(amount) { 
+        let { selected } = this.get(); 
+        console.log('selected',selected);
+        selected.setDate(selected.getDate() + amount); 
+        console.log('setting selected', selected);
+        this.set({selected});
+      }, 
+      handleKeyPress(evt) { 
+        evt.preventDefault(); 
+        switch(evt.keyCode) { 
+          case 37: // left
+            this.incrementDay(-1);
+            break; 
+          case 38: // up
+            this.incrementDay(-7);
+            break; 
+          case 39: // right
+            this.incrementDay(1);
+            break; 
+          case 40: // down
+            this.incrementDay(7);
+            break; 
+          case 33: // pgup
+            this.incrementMonth(-1);
+            break;
+          case 34: // pgdown
+            this.incrementMonth(1);
+            break;
+          case 13: // enter
+            this.selectDayViaKeyboard(); 
+            break;
+        }
+      },
       registerSelection(selection) { 
         this.refs.popover.close(); 
         this.set({selected: selection.date, dateChosen: true});
+      }, 
+      attachEventListeners() { 
+        console.log('invoked');
+        document.addEventListener('keydown', this.handleKeyPress.bind(this));
+      }, 
+      detachEventListeners() { 
+        document.removeEventListener('keydown', this.handleKeyPress.bind(this));
       }
     },
     oncreate() { 
@@ -223,7 +272,7 @@
       });
     },
     components: { 
-      Months: './Months.html',
+      Month: './Month.html',
       NavBar: './NavBar.html',
       Popover: './Popover.html'
     }

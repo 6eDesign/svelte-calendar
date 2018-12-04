@@ -137,267 +137,6 @@ var app = (function () {
   	element.classList.toggle(name, !!toggle);
   }
 
-  function linear(t) {
-  	return t;
-  }
-
-  function generateRule(ref, ease, fn) {
-  	var a = ref.a;
-  	var b = ref.b;
-  	var delta = ref.delta;
-  	var duration = ref.duration;
-
-  	var step = 16.666 / duration;
-  	var keyframes = '{\n';
-
-  	for (var p = 0; p <= 1; p += step) {
-  		var t = a + delta * ease(p);
-  		keyframes += p * 100 + "%{" + (fn(t, 1 - t)) + "}\n";
-  	}
-
-  	return keyframes + "100% {" + (fn(b, 1 - b)) + "}\n}";
-  }
-
-  // https://github.com/darkskyapp/string-hash/blob/master/index.js
-  function hash(str) {
-  	var hash = 5381;
-  	var i = str.length;
-
-  	while (i--) { hash = ((hash << 5) - hash) ^ str.charCodeAt(i); }
-  	return hash >>> 0;
-  }
-
-  function wrapTransition(component, node, fn, params, intro) {
-  	var obj = fn.call(component, node, params);
-  	var duration;
-  	var ease;
-  	var cssText;
-
-  	var initialised = false;
-
-  	return {
-  		t: intro ? 0 : 1,
-  		running: false,
-  		program: null,
-  		pending: null,
-
-  		run: function run(b, callback) {
-  			var this$1 = this;
-
-  			if (typeof obj === 'function') {
-  				transitionManager.wait().then(function () {
-  					obj = obj();
-  					this$1._run(b, callback);
-  				});
-  			} else {
-  				this._run(b, callback);
-  			}
-  		},
-
-  		_run: function _run(b, callback) {
-  			duration = obj.duration || 300;
-  			ease = obj.easing || linear;
-
-  			var program = {
-  				start: window.performance.now() + (obj.delay || 0),
-  				b: b,
-  				callback: callback || noop
-  			};
-
-  			if (intro && !initialised) {
-  				if (obj.css && obj.delay) {
-  					cssText = node.style.cssText;
-  					node.style.cssText += obj.css(0, 1);
-  				}
-
-  				if (obj.tick) { obj.tick(0, 1); }
-  				initialised = true;
-  			}
-
-  			if (!b) {
-  				program.group = outros.current;
-  				outros.current.remaining += 1;
-  			}
-
-  			if (obj.delay) {
-  				this.pending = program;
-  			} else {
-  				this.start(program);
-  			}
-
-  			if (!this.running) {
-  				this.running = true;
-  				transitionManager.add(this);
-  			}
-  		},
-
-  		start: function start(program) {
-  			component.fire(((program.b ? 'intro' : 'outro') + ".start"), { node: node });
-
-  			program.a = this.t;
-  			program.delta = program.b - program.a;
-  			program.duration = duration * Math.abs(program.b - program.a);
-  			program.end = program.start + program.duration;
-
-  			if (obj.css) {
-  				if (obj.delay) { node.style.cssText = cssText; }
-
-  				var rule = generateRule(program, ease, obj.css);
-  				transitionManager.addRule(rule, program.name = '__svelte_' + hash(rule));
-
-  				node.style.animation = (node.style.animation || '')
-  					.split(', ')
-  					.filter(function (anim) { return anim && (program.delta < 0 || !/__svelte/.test(anim)); })
-  					.concat(((program.name) + " " + (program.duration) + "ms linear 1 forwards"))
-  					.join(', ');
-  			}
-
-  			this.program = program;
-  			this.pending = null;
-  		},
-
-  		update: function update(now) {
-  			var program = this.program;
-  			if (!program) { return; }
-
-  			var p = now - program.start;
-  			this.t = program.a + program.delta * ease(p / program.duration);
-  			if (obj.tick) { obj.tick(this.t, 1 - this.t); }
-  		},
-
-  		done: function done() {
-  			var program = this.program;
-  			this.t = program.b;
-
-  			if (obj.tick) { obj.tick(this.t, 1 - this.t); }
-
-  			component.fire(((program.b ? 'intro' : 'outro') + ".end"), { node: node });
-
-  			if (!program.b && !program.invalidated) {
-  				program.group.callbacks.push(function () {
-  					program.callback();
-  					if (obj.css) { transitionManager.deleteRule(node, program.name); }
-  				});
-
-  				if (--program.group.remaining === 0) {
-  					program.group.callbacks.forEach(run);
-  				}
-  			} else {
-  				if (obj.css) { transitionManager.deleteRule(node, program.name); }
-  			}
-
-  			this.running = !!this.pending;
-  		},
-
-  		abort: function abort(reset) {
-  			if (this.program) {
-  				if (reset && obj.tick) { obj.tick(1, 0); }
-  				if (obj.css) { transitionManager.deleteRule(node, this.program.name); }
-  				this.program = this.pending = null;
-  				this.running = false;
-  			}
-  		},
-
-  		invalidate: function invalidate() {
-  			if (this.program) {
-  				this.program.invalidated = true;
-  			}
-  		}
-  	};
-  }
-
-  var outros = {};
-
-  function groupOutros() {
-  	outros.current = {
-  		remaining: 0,
-  		callbacks: []
-  	};
-  }
-
-  var transitionManager = {
-  	running: false,
-  	transitions: [],
-  	bound: null,
-  	stylesheet: null,
-  	activeRules: {},
-  	promise: null,
-
-  	add: function add(transition) {
-  		this.transitions.push(transition);
-
-  		if (!this.running) {
-  			this.running = true;
-  			requestAnimationFrame(this.bound || (this.bound = this.next.bind(this)));
-  		}
-  	},
-
-  	addRule: function addRule(rule, name) {
-  		if (!this.stylesheet) {
-  			var style = createElement('style');
-  			document.head.appendChild(style);
-  			transitionManager.stylesheet = style.sheet;
-  		}
-
-  		if (!this.activeRules[name]) {
-  			this.activeRules[name] = true;
-  			this.stylesheet.insertRule(("@keyframes " + name + " " + rule), this.stylesheet.cssRules.length);
-  		}
-  	},
-
-  	next: function next() {
-  		this.running = false;
-
-  		var now = window.performance.now();
-  		var i = this.transitions.length;
-
-  		while (i--) {
-  			var transition = this.transitions[i];
-
-  			if (transition.program && now >= transition.program.end) {
-  				transition.done();
-  			}
-
-  			if (transition.pending && now >= transition.pending.start) {
-  				transition.start(transition.pending);
-  			}
-
-  			if (transition.running) {
-  				transition.update(now);
-  				this.running = true;
-  			} else if (!transition.pending) {
-  				this.transitions.splice(i, 1);
-  			}
-  		}
-
-  		if (this.running) {
-  			requestAnimationFrame(this.bound);
-  		} else if (this.stylesheet) {
-  			var i$1 = this.stylesheet.cssRules.length;
-  			while (i$1--) { this.stylesheet.deleteRule(i$1); }
-  			this.activeRules = {};
-  		}
-  	},
-
-  	deleteRule: function deleteRule(node, name) {
-  		node.style.animation = node.style.animation
-  			.split(', ')
-  			.filter(function (anim) { return anim && anim.indexOf(name) === -1; })
-  			.join(', ');
-  	},
-
-  	wait: function wait() {
-  		if (!transitionManager.promise) {
-  			transitionManager.promise = Promise.resolve();
-  			transitionManager.promise.then(function () {
-  				transitionManager.promise = null;
-  			});
-  		}
-
-  		return transitionManager.promise;
-  	}
-  };
-
   function blankObject() {
   	return Object.create(null);
   }
@@ -627,9 +366,8 @@ var app = (function () {
    * @returns {String} "The following is a token: 123"
    *
    */
-  var injectStringData = function(str,name,value) {
-    return str.replace(new RegExp('#{'+name+'}','g'),value);
-  };
+  var injectStringData = function (str,name,value) { return str
+    .replace(new RegExp('#{'+name+'}','g'), value); };
 
   /**
    * Generic function to enforce length of string. 
@@ -646,7 +384,6 @@ var app = (function () {
    * @param length {Integer} Required
    * @param fromBack {Boolean} Optional
    * @returns {String}
-   *
    *
    */
   var enforceLength = function(str,length,fromBack) {
@@ -669,50 +406,115 @@ var app = (function () {
     return str;
   };
 
-  // Internal variables for storing days of week, months of year: 
-  var daysOfWeek = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
-  var monthsOfYear = [ 'January','February','March','April','May','June','July','August','September','October','November','December'];
+  var daysOfWeek = [ 
+    'Sunday', 
+    'Monday', 
+    'Tuesday', 
+    'Wednesday', 
+    'Thursday', 
+    'Friday', 
+    'Saturday' 
+  ];
+
+  var monthsOfYear = [ 
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  var dictionary = { 
+    daysOfWeek: daysOfWeek, 
+    monthsOfYear: monthsOfYear
+  };
 
   var acceptedDateTokens = [
-    // d: day of the month, 2 digits with leading zeros:
-    { key: 'd', method: function(date) { return enforceLength(date.getDate(), 2); } },
-    // D: textual representation of day, 3 letters: Sun thru Sat
-    { key: 'D', method: function(date) { return enforceLength(daysOfWeek[date.getDay()],3); } },
-    // j: day of month without leading 0's
-    { key: 'j', method: function(date) { return date.getDate(); } },
-    // l: full textual representation of day of week: Sunday thru Saturday
-    { key: 'l', method: function(date) { return daysOfWeek[date.getDay()]; } },
-    // F: full text month: 'January' thru 'December'
-    { key: 'F', method: function(date) { return monthsOfYear[date.getMonth()]; } },
-    // m: 2 digit numeric month: '01' - '12':
-    { key: 'm', method: function(date) { return enforceLength(date.getMonth()+1,2); } },
-    // M: a short textual representation of the month, 3 letters: 'Jan' - 'Dec'
-    { key: 'M', method: function(date) { return enforceLength(monthsOfYear[date.getMonth()],3); } },
-    // n: numeric represetation of month w/o leading 0's, '1' - '12':
-    { key: 'n', method: function(date) { return date.getMonth() + 1; } },
-    // Y: Full numeric year, 4 digits
-    { key: 'Y', method: function(date) { return date.getFullYear(); } },
-    // y: 2 digit numeric year:
-    { key: 'y', method: function(date) { return enforceLength(date.getFullYear(),2,true); } }
+    { 
+      // d: day of the month, 2 digits with leading zeros:
+      key: 'd', 
+      method: function(date) { return enforceLength(date.getDate(), 2); } 
+    }, { 
+      // D: textual representation of day, 3 letters: Sun thru Sat
+      key: 'D', 
+      method: function(date) { return enforceLength(dictionary.daysOfWeek[date.getDay()],3); } 
+    }, { 
+      // j: day of month without leading 0's
+      key: 'j', 
+      method: function(date) { return date.getDate(); } 
+    }, { 
+      // l: full textual representation of day of week: Sunday thru Saturday
+      key: 'l', 
+      method: function(date) { return dictionary.daysOfWeek[date.getDay()]; } 
+    }, { 
+      // F: full text month: 'January' thru 'December'
+      key: 'F', 
+      method: function(date) { return dictionary.monthsOfYear[date.getMonth()]; } 
+    }, { 
+      // m: 2 digit numeric month: '01' - '12':
+      key: 'm', 
+      method: function(date) { return enforceLength(date.getMonth()+1,2); } 
+    }, { 
+      // M: a short textual representation of the month, 3 letters: 'Jan' - 'Dec'
+      key: 'M', 
+      method: function(date) { return enforceLength(dictionary.monthsOfYear[date.getMonth()],3); } 
+    }, { 
+      // n: numeric represetation of month w/o leading 0's, '1' - '12':
+      key: 'n', 
+      method: function(date) { return date.getMonth() + 1; } 
+    }, { 
+      // Y: Full numeric year, 4 digits
+      key: 'Y', 
+      method: function(date) { return date.getFullYear(); } 
+    }, { 
+      // y: 2 digit numeric year:
+      key: 'y', 
+      method: function(date) { return enforceLength(date.getFullYear(),2,true); }
+     }
   ];
 
   var acceptedTimeTokens = [
-    // a: lowercase ante meridiem and post meridiem 'am' or 'pm'
-    { key: 'a', method: function(date) { return (date.getHours() > 11) ? 'pm' : 'am'; } },
-    // A: uppercase ante merdiiem and post meridiem 'AM' or 'PM'
-    { key: 'A', method: function(date) { return (date.getHours() > 11) ? 'PM' : 'AM'; } },
-    // g: 12-hour format of an hour without leading zeros 1-12
-    { key: 'g', method: function(date) { return date.getHours() % 12 || 12; } },
-    // G: 24-hour format of an hour without leading zeros 0-23
-    { key: 'G', method: function(date) { return date.getHours(); } },
-    // h: 12-hour format of an hour with leading zeros 01-12
-    { key: 'h', method: function(date) { return enforceLength(date.getHours()%12 || 12,2); } },
-    // H: 24-hour format of an hour with leading zeros: 00-23
-    { key: 'H', method: function(date) { return enforceLength(date.getHours(),2); } },
-    // i: Minutes with leading zeros 00-59
-    { key: 'i', method: function(date) { return enforceLength(date.getMinutes(),2); } },
-    // s: Seconds with leading zeros 00-59
-    { key: 's', method: function(date) { return enforceLength(date.getSeconds(),2); } } ];
+    { 
+      // a: lowercase ante meridiem and post meridiem 'am' or 'pm'
+      key: 'a', 
+      method: function(date) { return (date.getHours() > 11) ? 'pm' : 'am'; } 
+    }, { 
+      // A: uppercase ante merdiiem and post meridiem 'AM' or 'PM'
+      key: 'A', 
+      method: function(date) { return (date.getHours() > 11) ? 'PM' : 'AM'; } 
+    }, { 
+      // g: 12-hour format of an hour without leading zeros 1-12
+      key: 'g', 
+      method: function(date) { return date.getHours() % 12 || 12; } 
+    }, { 
+      // G: 24-hour format of an hour without leading zeros 0-23
+      key: 'G', 
+      method: function(date) { return date.getHours(); } 
+    }, { 
+      // h: 12-hour format of an hour with leading zeros 01-12
+      key: 'h', 
+      method: function(date) { return enforceLength(date.getHours()%12 || 12,2); } 
+    }, { 
+      // H: 24-hour format of an hour with leading zeros: 00-23
+      key: 'H', 
+      method: function(date) { return enforceLength(date.getHours(),2); } 
+    }, { 
+      // i: Minutes with leading zeros 00-59
+      key: 'i', 
+      method: function(date) { return enforceLength(date.getMinutes(),2); } 
+    }, { 
+      // s: Seconds with leading zeros 00-59
+      key: 's', 
+      method: function(date) { return enforceLength(date.getSeconds(),2); }
+     }
+  ];
 
   /**
    * generic formatDate function which accepts dynamic templates
@@ -739,22 +541,7 @@ var app = (function () {
     return template;
   };
 
-  function fade ( node, ref ) {
-  	var delay = ref.delay; if ( delay === void 0 ) { delay = 0; }
-  	var duration = ref.duration; if ( duration === void 0 ) { duration = 400; }
-
-  	var o = +getComputedStyle( node ).opacity;
-
-  	return {
-  		delay: delay,
-  		duration: duration,
-  		css: function (t) { return ("opacity: " + (t * o)); }
-  	};
-  }
-
   /* src/Components/Week.html generated by Svelte v2.15.3 */
-
-
 
   var file = "src/Components/Week.html";
 
@@ -783,18 +570,6 @@ var app = (function () {
   		each_blocks[i] = create_each_block(component, get_each_context(ctx, each_value, i));
   	}
 
-  	function outroBlock(i, detach, fn) {
-  		if (each_blocks[i]) {
-  			each_blocks[i].o(function () {
-  				if (detach) {
-  					each_blocks[i].d(detach);
-  					each_blocks[i] = null;
-  				}
-  				if (fn) { fn(); }
-  			});
-  		}
-  	}
-
   	return {
   		c: function create() {
   			div = createElement("div");
@@ -802,7 +577,7 @@ var app = (function () {
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
-  			div.className = "week svelte-18toj75";
+  			div.className = "week svelte-exct20";
   			addLoc(div, file, 0, 0, 0);
   		},
 
@@ -810,14 +585,14 @@ var app = (function () {
   			insert(target, div, anchor);
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
-  				each_blocks[i].i(div, null);
+  				each_blocks[i].m(div, null);
   			}
 
   			current = true;
   		},
 
   		p: function update(changed, ctx) {
-  			if (changed.days) {
+  			if (changed.days || changed.selected) {
   				each_value = ctx.days;
 
   				for (var i = 0; i < each_value.length; i += 1) {
@@ -828,12 +603,14 @@ var app = (function () {
   					} else {
   						each_blocks[i] = create_each_block(component, child_ctx);
   						each_blocks[i].c();
+  						each_blocks[i].m(div, null);
   					}
-  					each_blocks[i].i(div, null);
   				}
 
-  				groupOutros();
-  				for (; i < each_blocks.length; i += 1) { outroBlock(i, 1); }
+  				for (; i < each_blocks.length; i += 1) {
+  					each_blocks[i].d(1);
+  				}
+  				each_blocks.length = each_value.length;
   			}
   		},
 
@@ -843,15 +620,7 @@ var app = (function () {
   			this.m(target, anchor);
   		},
 
-  		o: function outro(outrocallback) {
-  			if (!current) { return; }
-
-  			each_blocks = each_blocks.filter(Boolean);
-  			var countdown = callAfter(outrocallback, each_blocks.length);
-  			for (var i = 0; i < each_blocks.length; i += 1) { outroBlock(i, 0, countdown); }
-
-  			current = false;
-  		},
+  		o: run,
 
   		d: function destroy$$1(detach) {
   			if (detach) {
@@ -865,7 +634,7 @@ var app = (function () {
 
   // (2:2) {#each days as day}
   function create_each_block(component, ctx) {
-  	var div, button, text0_value = ctx.day.date.getDate(), text0, text1, div_transition, current;
+  	var div, button, text0_value = ctx.day.date.getDate(), text0, text1;
 
   	return {
   		c: function create() {
@@ -873,12 +642,14 @@ var app = (function () {
   			button = createElement("button");
   			text0 = createText(text0_value);
   			text1 = createText("\n    ");
-  			button._svelte = { component: component, ctx: ctx };
+  			button.className = "day--label svelte-exct20";
+  			toggleClass(button, "selected", ctx.day.date.getTime() == ctx.selected.getTime());
+  			addLoc(button, file, 8, 6, 204);
 
-  			addListener(button, "click", click_handler);
-  			button.className = "day--label svelte-18toj75";
-  			addLoc(button, file, 7, 6, 179);
-  			div.className = "day svelte-18toj75";
+  			div._svelte = { component: component, ctx: ctx };
+
+  			addListener(div, "click", click_handler);
+  			div.className = "day svelte-exct20";
   			toggleClass(div, "outside-month", !ctx.day.partOfMonth);
   			toggleClass(div, "is-today", ctx.day.isToday);
   			addLoc(div, file, 2, 4, 45);
@@ -889,45 +660,23 @@ var app = (function () {
   			append(div, button);
   			append(button, text0);
   			append(div, text1);
-  			current = true;
   		},
 
   		p: function update(changed, _ctx) {
   			ctx = _ctx;
-  			if ((!current || changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
+  			if ((changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
   				setData(text0, text0_value);
   			}
 
-  			button._svelte.ctx = ctx;
+  			if ((changed.days || changed.selected)) {
+  				toggleClass(button, "selected", ctx.day.date.getTime() == ctx.selected.getTime());
+  			}
+
+  			div._svelte.ctx = ctx;
   			if (changed.days) {
   				toggleClass(div, "outside-month", !ctx.day.partOfMonth);
   				toggleClass(div, "is-today", ctx.day.isToday);
   			}
-  		},
-
-  		i: function intro(target, anchor) {
-  			if (current) { return; }
-  			if (component.root._intro) {
-  				if (div_transition) { div_transition.invalidate(); }
-
-  				component.root._aftercreate.push(function () {
-  					if (!div_transition) { div_transition = wrapTransition(component, div, fade, {}, true); }
-  					div_transition.run(1);
-  				});
-  			}
-  			this.m(target, anchor);
-  		},
-
-  		o: function outro(outrocallback) {
-  			if (!current) { return; }
-
-  			if (!div_transition) { div_transition = wrapTransition(component, div, fade, {}, false); }
-  			div_transition.run(0, function () {
-  				outrocallback();
-  				div_transition = null;
-  			});
-
-  			current = false;
   		},
 
   		d: function destroy$$1(detach) {
@@ -935,10 +684,7 @@ var app = (function () {
   				detachNode(div);
   			}
 
-  			removeListener(button, "click", click_handler);
-  			if (detach) {
-  				if (div_transition) { div_transition.abort(); }
-  			}
+  			removeListener(div, "click", click_handler);
   		}
   	};
   }
@@ -952,6 +698,7 @@ var app = (function () {
   	init(this, options);
   	this._state = assign$1({}, options.data);
   	if (!('days' in this._state)) { console.warn("<Week> was created without expected data property 'days'"); }
+  	if (!('selected' in this._state)) { console.warn("<Week> was created without expected data property 'selected'"); }
   	this._intro = !!options.intro;
 
   	this._fragment = create_main_fragment(this, this._state);
@@ -960,8 +707,6 @@ var app = (function () {
   		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
   		this._fragment.c();
   		this._mount(options.target, options.anchor);
-
-  		flush(this);
   	}
 
   	this._intro = true;
@@ -972,7 +717,7 @@ var app = (function () {
   Week.prototype._checkReadOnly = function _checkReadOnly(newState) {
   };
 
-  /* src/Components/Months.html generated by Svelte v2.15.3 */
+  /* src/Components/Month.html generated by Svelte v2.15.3 */
 
   function currentMonth(ref) {
   	var monthIndex = ref.monthIndex;
@@ -986,7 +731,7 @@ var app = (function () {
       monthDict: monthDict
     }
   }
-  var file$1 = "src/Components/Months.html";
+  var file$1 = "src/Components/Month.html";
 
   function get_each_context$1(ctx, list, i) {
   	var child_ctx = Object.create(ctx);
@@ -1024,7 +769,7 @@ var app = (function () {
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
-  			div.className = "months-container svelte-nt8v0l";
+  			div.className = "month-container svelte-15vij24";
   			addLoc(div, file$1, 0, 0, 0);
   		},
 
@@ -1039,7 +784,7 @@ var app = (function () {
   		},
 
   		p: function update(changed, ctx) {
-  			if (changed.currentMonth) {
+  			if (changed.currentMonth || changed.selected) {
   				each_value = ctx.currentMonth.weeks;
 
   				for (var i = 0; i < each_value.length; i += 1) {
@@ -1053,8 +798,6 @@ var app = (function () {
   					}
   					each_blocks[i].i(div, null);
   				}
-
-  				groupOutros();
   				for (; i < each_blocks.length; i += 1) { outroBlock(i, 1); }
   			}
   		},
@@ -1089,7 +832,7 @@ var app = (function () {
   function create_each_block$1(component, ctx) {
   	var current;
 
-  	var week_initial_data = { days: ctx.week.days };
+  	var week_initial_data = { days: ctx.week.days, selected: ctx.selected };
   	var week = new Week({
   		root: component.root,
   		store: component.store,
@@ -1113,6 +856,7 @@ var app = (function () {
   		p: function update(changed, ctx) {
   			var week_changes = {};
   			if (changed.currentMonth) { week_changes.days = ctx.week.days; }
+  			if (changed.selected) { week_changes.selected = ctx.selected; }
   			week._set(week_changes);
   		},
 
@@ -1135,8 +879,8 @@ var app = (function () {
   	};
   }
 
-  function Months(options) {
-  	this._debugName = '<Months>';
+  function Month(options) {
+  	this._debugName = '<Month>';
   	if (!options || (!options.target && !options.root)) {
   		throw new Error("'target' is a required option");
   	}
@@ -1145,8 +889,10 @@ var app = (function () {
   	this._state = assign$1(data(), options.data);
 
   	this._recompute({ monthIndex: 1, months: 1 }, this._state);
-  	if (!('monthIndex' in this._state)) { console.warn("<Months> was created without expected data property 'monthIndex'"); }
-  	if (!('months' in this._state)) { console.warn("<Months> was created without expected data property 'months'"); }
+  	if (!('monthIndex' in this._state)) { console.warn("<Month> was created without expected data property 'monthIndex'"); }
+  	if (!('months' in this._state)) { console.warn("<Month> was created without expected data property 'months'"); }
+
+  	if (!('selected' in this._state)) { console.warn("<Month> was created without expected data property 'selected'"); }
   	this._intro = !!options.intro;
 
   	this._fragment = create_main_fragment$1(this, this._state);
@@ -1162,13 +908,13 @@ var app = (function () {
   	this._intro = true;
   }
 
-  assign$1(Months.prototype, protoDev);
+  assign$1(Month.prototype, protoDev);
 
-  Months.prototype._checkReadOnly = function _checkReadOnly(newState) {
-  	if ('currentMonth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Months>: Cannot set read-only property 'currentMonth'"); }
+  Month.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('currentMonth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Month>: Cannot set read-only property 'currentMonth'"); }
   };
 
-  Months.prototype._recompute = function _recompute(changed, state) {
+  Month.prototype._recompute = function _recompute(changed, state) {
   	if (changed.monthIndex || changed.months) {
   		if (this._differs(state.currentMonth, (state.currentMonth = currentMonth(state)))) { changed.currentMonth = true; }
   	}
@@ -1471,13 +1217,6 @@ var app = (function () {
     el.addEventListener(evt,handler);
   };
 
-  function something(ref) {
-  	var w = ref.w;
-  	var h = ref.h;
-
-  	return console.log(w,h);
-  }
-
   function data$2() { 
     return { 
       open: false,
@@ -1525,8 +1264,8 @@ var app = (function () {
       return { translateX: translateX, translateY: translateY }  
     },
     open: function open() { 
-      console.log('opening');
       this.set(Object.assign({}, {open: true}, this.getTranslate()));
+      this.fire('opened');
     },
     close: function close() {
       var this$1 = this;
@@ -1534,6 +1273,7 @@ var app = (function () {
       this.set({shrink:true});
       once(this.refs.contentsAnimated, 'animationend', function () {
         this$1.set({shrink: false, open: false});
+        this$1.fire('closed');
       });
     }
   };
@@ -1549,17 +1289,6 @@ var app = (function () {
   function create_main_fragment$3(component, ctx) {
   	var div4, div0, slot_content_trigger = component._slotted.trigger, text, div3, div2, div1, slot_content_contents = component._slotted.contents, current;
 
-  	function onwindowresize(event) {
-  		component._updatingReadonlyProperty = true;
-
-  		component.set({
-  			innerWidth: this.innerWidth
-  		});
-
-  		component._updatingReadonlyProperty = false;
-  	}
-  	window.addEventListener("resize", onwindowresize);
-
   	function click_handler(event) {
   		component.open();
   	}
@@ -1574,18 +1303,18 @@ var app = (function () {
   			div1 = createElement("div");
   			addListener(div0, "click", click_handler);
   			div0.className = "trigger";
-  			addLoc(div0, file$3, 2, 2, 70);
+  			addLoc(div0, file$3, 1, 2, 36);
   			div1.className = "contents-inner svelte-996xec";
-  			addLoc(div1, file$3, 13, 6, 412);
+  			addLoc(div1, file$3, 12, 6, 378);
   			div2.className = "contents svelte-996xec";
-  			addLoc(div2, file$3, 12, 4, 362);
+  			addLoc(div2, file$3, 11, 4, 328);
   			div3.className = "contents-wrapper svelte-996xec";
   			setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
   			toggleClass(div3, "visible", ctx.open);
   			toggleClass(div3, "shrink", ctx.shrink);
-  			addLoc(div3, file$3, 6, 2, 159);
+  			addLoc(div3, file$3, 5, 2, 125);
   			div4.className = "popover svelte-996xec";
-  			addLoc(div4, file$3, 1, 0, 34);
+  			addLoc(div4, file$3, 0, 0, 0);
   		},
 
   		m: function mount(target, anchor) {
@@ -1634,8 +1363,6 @@ var app = (function () {
   		o: run,
 
   		d: function destroy$$1(detach) {
-  			window.removeEventListener("resize", onwindowresize);
-
   			if (detach) {
   				detachNode(div4);
   			}
@@ -1668,11 +1395,6 @@ var app = (function () {
   	init(this, options);
   	this.refs = {};
   	this._state = assign$1(data$2(), options.data);
-  	this._state.innerWidth = window.innerWidth;
-  	this._recompute({ w: 1, h: 1 }, this._state);
-  	if (!('w' in this._state)) { console.warn("<Popover> was created without expected data property 'w'"); }
-  	if (!('h' in this._state)) { console.warn("<Popover> was created without expected data property 'h'"); }
-  	if (!('innerWidth' in this._state)) { console.warn("<Popover> was created without expected data property 'innerWidth'"); }
   	if (!('open' in this._state)) { console.warn("<Popover> was created without expected data property 'open'"); }
   	if (!('shrink' in this._state)) { console.warn("<Popover> was created without expected data property 'shrink'"); }
   	if (!('translateX' in this._state)) { console.warn("<Popover> was created without expected data property 'translateX'"); }
@@ -1705,17 +1427,15 @@ var app = (function () {
   assign$1(Popover.prototype, methods$1);
 
   Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
-  	if ('innerWidth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Popover>: Cannot set read-only property 'innerWidth'"); }
-  	if ('something' in newState && !this._updatingReadonlyProperty) { throw new Error("<Popover>: Cannot set read-only property 'something'"); }
-  };
-
-  Popover.prototype._recompute = function _recompute(changed, state) {
-  	if (changed.w || changed.h) {
-  		if (this._differs(state.something, (state.something = something(state)))) { changed.something = true; }
-  	}
   };
 
   /* src/Components/Datepicker.html generated by Svelte v2.15.3 */
+
+
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+
   function months(ref) {
   	var start = ref.start;
   	var end = ref.end;
@@ -1788,9 +1508,50 @@ var app = (function () {
         year: current.getFullYear()
       });
     },
+    incrementDay: function incrementDay(amount) { 
+      var ref = this.get();
+      var selected = ref.selected; 
+      console.log('selected',selected);
+      selected.setDate(selected.getDate() + amount); 
+      console.log('setting selected', selected);
+      this.set({selected: selected});
+    }, 
+    handleKeyPress: function handleKeyPress(evt) { 
+      evt.preventDefault(); 
+      switch(evt.keyCode) { 
+        case 37: // left
+          this.incrementDay(-1);
+          break; 
+        case 38: // up
+          this.incrementDay(-7);
+          break; 
+        case 39: // right
+          this.incrementDay(1);
+          break; 
+        case 40: // down
+          this.incrementDay(7);
+          break; 
+        case 33: // pgup
+          this.incrementMonth(-1);
+          break;
+        case 34: // pgdown
+          this.incrementMonth(1);
+          break;
+        case 13: // enter
+          this.selectDayViaKeyboard(); 
+          break;
+      }
+    },
     registerSelection: function registerSelection(selection) { 
       this.refs.popover.close(); 
       this.set({selected: selection.date, dateChosen: true});
+    }, 
+    attachEventListeners: function attachEventListeners() { 
+      console.log('invoked');
+      document.addEventListener('keydown', this.handleKeyPress.bind(this));
+    }, 
+    detachEventListeners: function detachEventListeners() { 
+      document.removeEventListener('keydown', this.handleKeyPress.bind(this));
     }
   };
 
@@ -1811,7 +1572,7 @@ var app = (function () {
   }
 
   function create_main_fragment$4(component, ctx) {
-  	var div4, div0, slot_content_default = component._slotted.default, a, text0, text1, div3, div2, text2, div1, text3, popover_updating = {}, current;
+  	var div4, div0, slot_content_default = component._slotted.default, button, text0, text1, div3, div2, text2, div1, text3, popover_updating = {}, current;
 
   	var navbar_initial_data = {
   	 	month: ctx.month,
@@ -1840,19 +1601,20 @@ var app = (function () {
   		each_blocks[i] = create_each_block$3(component, get_each_context$3(ctx, each_value, i));
   	}
 
-  	var months_1_initial_data = {
+  	var month_initial_data = {
   	 	months: ctx.months,
   	 	month: ctx.month,
   	 	year: ctx.year,
-  	 	monthIndex: ctx.monthIndex
+  	 	monthIndex: ctx.monthIndex,
+  	 	selected: ctx.selected
   	 };
-  	var months_1 = new Months({
+  	var month = new Month({
   		root: component.root,
   		store: component.store,
-  		data: months_1_initial_data
+  		data: month_initial_data
   	});
 
-  	months_1.on("dateSelected", function(event) {
+  	month.on("dateSelected", function(event) {
   		component.registerSelection(event);
   	});
 
@@ -1888,6 +1650,13 @@ var app = (function () {
   		popover._bind({ open: 1, shrink: 1 }, popover.get());
   	});
 
+  	popover.on("opened", function(event) {
+  		component.attachEventListeners(event);
+  	});
+  	popover.on("closed", function(event) {
+  		component.detachEventListeners(event);
+  	});
+
   	component.refs.popover = popover;
 
   	return {
@@ -1895,7 +1664,7 @@ var app = (function () {
   			div4 = createElement("div");
   			div0 = createElement("div");
   			if (!slot_content_default) {
-  				a = createElement("a");
+  				button = createElement("button");
   				text0 = createText(ctx.formattedSelected);
   			}
   			text1 = createText("\n    ");
@@ -1910,22 +1679,22 @@ var app = (function () {
   			}
 
   			text3 = createText("\n        ");
-  			months_1._fragment.c();
+  			month._fragment.c();
   			popover._fragment.c();
   			if (!slot_content_default) {
-  				a.className = "calendar-button svelte-1af1a63";
-  				addLoc(a, file$4, 4, 8, 184);
+  				button.className = "calendar-button svelte-1af1a63";
+  				addLoc(button, file$4, 10, 8, 290);
   			}
   			setAttribute(div0, "slot", "trigger");
   			div0.className = "svelte-1af1a63";
-  			addLoc(div0, file$4, 2, 4, 142);
+  			addLoc(div0, file$4, 8, 4, 248);
   			div1.className = "legend svelte-1af1a63";
-  			addLoc(div1, file$4, 19, 8, 568);
+  			addLoc(div1, file$4, 25, 8, 684);
   			div2.className = "calendar svelte-1af1a63";
-  			addLoc(div2, file$4, 10, 6, 312);
+  			addLoc(div2, file$4, 16, 6, 428);
   			setAttribute(div3, "slot", "contents");
   			div3.className = "svelte-1af1a63";
-  			addLoc(div3, file$4, 9, 4, 284);
+  			addLoc(div3, file$4, 15, 4, 400);
   			div4.className = "datepicker svelte-1af1a63";
   			toggleClass(div4, "open", ctx.isOpen);
   			toggleClass(div4, "closing", ctx.isClosing);
@@ -1936,8 +1705,8 @@ var app = (function () {
   			insert(target, div4, anchor);
   			append(popover._slotted.trigger, div0);
   			if (!slot_content_default) {
-  				append(div0, a);
-  				append(a, text0);
+  				append(div0, button);
+  				append(button, text0);
   			}
 
   			else {
@@ -1956,7 +1725,7 @@ var app = (function () {
   			}
 
   			append(div2, text3);
-  			months_1._mount(div2, null);
+  			month._mount(div2, null);
   			popover._mount(div4, null);
   			current = true;
   		},
@@ -1998,12 +1767,13 @@ var app = (function () {
   				each_blocks.length = each_value.length;
   			}
 
-  			var months_1_changes = {};
-  			if (changed.months) { months_1_changes.months = ctx.months; }
-  			if (changed.month) { months_1_changes.month = ctx.month; }
-  			if (changed.year) { months_1_changes.year = ctx.year; }
-  			if (changed.monthIndex) { months_1_changes.monthIndex = ctx.monthIndex; }
-  			months_1._set(months_1_changes);
+  			var month_changes = {};
+  			if (changed.months) { month_changes.months = ctx.months; }
+  			if (changed.month) { month_changes.month = ctx.month; }
+  			if (changed.year) { month_changes.year = ctx.year; }
+  			if (changed.monthIndex) { month_changes.monthIndex = ctx.monthIndex; }
+  			if (changed.selected) { month_changes.selected = ctx.selected; }
+  			month._set(month_changes);
 
   			var popover_changes = {};
   			if (!popover_updating.open && changed.isOpen) {
@@ -2038,7 +1808,7 @@ var app = (function () {
   			outrocallback = callAfter(outrocallback, 3);
 
   			if (navbar) { navbar._fragment.o(outrocallback); }
-  			if (months_1) { months_1._fragment.o(outrocallback); }
+  			if (month) { month._fragment.o(outrocallback); }
   			if (popover) { popover._fragment.o(outrocallback); }
   			current = false;
   		},
@@ -2056,14 +1826,14 @@ var app = (function () {
 
   			destroyEach(each_blocks, detach);
 
-  			months_1.destroy();
+  			month.destroy();
   			popover.destroy();
   			if (component.refs.popover === popover) { component.refs.popover = null; }
   		}
   	};
   }
 
-  // (21:10) {#each dayDict as day}
+  // (27:10) {#each dayDict as day}
   function create_each_block$3(component, ctx) {
   	var span, text_value = ctx.day.abbrev, text;
 
@@ -2072,7 +1842,7 @@ var app = (function () {
   			span = createElement("span");
   			text = createText(text_value);
   			span.className = "svelte-1af1a63";
-  			addLoc(span, file$4, 21, 12, 634);
+  			addLoc(span, file$4, 27, 12, 750);
   		},
 
   		m: function mount(target, anchor) {
@@ -2190,7 +1960,7 @@ var app = (function () {
   var file$5 = "src/App.html";
 
   function create_main_fragment$5(component, ctx) {
-  	var h1, text1, div2, p0, text3, text4, p1, text6, p2, text8, div0, text9, p3, text11, p4, text13, p5, text15, div1, a, datepicker2_updating = {}, text16, div4, p6, text18, p7, text20, p8, text22, p9, text24, p10, text26, p11, text28, div3, current;
+  	var h1, text1, div2, p0, text3, text4, p1, text6, p2, text8, div0, text9, p3, text11, p4, text13, p5, text15, div1, button, datepicker2_updating = {}, text16, div4, p6, text18, p7, text20, p8, text22, p9, text24, p10, text26, p11, text28, div3, current;
 
   	var datepicker0_initial_data = { format: ctx.dateFormat };
   	var datepicker0 = new Datepicker({
@@ -2279,7 +2049,7 @@ var app = (function () {
   			p5.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text15 = createText("\n\t");
   			div1 = createElement("div");
-  			a = createElement("a");
+  			button = createElement("button");
   			if_block.c();
   			datepicker2._fragment.c();
   			text16 = createText("\n");
@@ -2308,27 +2078,27 @@ var app = (function () {
   			addLoc(p0, file$5, 2, 1, 46);
   			addLoc(p1, file$5, 6, 1, 202);
   			addLoc(p2, file$5, 7, 1, 446);
-  			div0.className = "text-center svelte-14iyymo";
+  			div0.className = "text-center svelte-7mr4ne";
   			addLoc(div0, file$5, 9, 1, 691);
   			addLoc(p3, file$5, 13, 1, 744);
   			addLoc(p4, file$5, 14, 1, 988);
   			addLoc(p5, file$5, 15, 1, 1232);
-  			a.className = "custom-button svelte-14iyymo";
-  			addLoc(a, file$5, 18, 3, 1579);
-  			div1.className = "text-center svelte-14iyymo";
+  			button.className = "custom-button svelte-7mr4ne";
+  			addLoc(button, file$5, 18, 3, 1579);
+  			div1.className = "text-center svelte-7mr4ne";
   			addLoc(div1, file$5, 16, 1, 1476);
-  			div2.className = "container svelte-14iyymo";
+  			div2.className = "container svelte-7mr4ne";
   			addLoc(div2, file$5, 1, 0, 21);
-  			addLoc(p6, file$5, 29, 1, 1762);
-  			addLoc(p7, file$5, 30, 1, 2006);
-  			addLoc(p8, file$5, 31, 1, 2250);
-  			addLoc(p9, file$5, 33, 1, 2495);
-  			addLoc(p10, file$5, 34, 1, 2739);
-  			addLoc(p11, file$5, 35, 1, 2983);
-  			div3.className = "text-right svelte-14iyymo";
-  			addLoc(div3, file$5, 36, 1, 3227);
-  			div4.className = "container svelte-14iyymo";
-  			addLoc(div4, file$5, 28, 0, 1737);
+  			addLoc(p6, file$5, 29, 1, 1772);
+  			addLoc(p7, file$5, 30, 1, 2016);
+  			addLoc(p8, file$5, 31, 1, 2260);
+  			addLoc(p9, file$5, 33, 1, 2505);
+  			addLoc(p10, file$5, 34, 1, 2749);
+  			addLoc(p11, file$5, 35, 1, 2993);
+  			div3.className = "text-right svelte-7mr4ne";
+  			addLoc(div3, file$5, 36, 1, 3237);
+  			div4.className = "container svelte-7mr4ne";
+  			addLoc(div4, file$5, 28, 0, 1747);
   		},
 
   		m: function mount(target, anchor) {
@@ -2353,8 +2123,8 @@ var app = (function () {
   			append(div2, p5);
   			append(div2, text15);
   			append(div2, div1);
-  			append(datepicker2._slotted.default, a);
-  			if_block.m(a, null);
+  			append(datepicker2._slotted.default, button);
+  			if_block.m(button, null);
   			datepicker2._mount(div1, null);
   			insert(target, text16, anchor);
   			insert(target, div4, anchor);
@@ -2387,7 +2157,7 @@ var app = (function () {
   				if_block.d(1);
   				if_block = current_block_type(component, ctx);
   				if_block.c();
-  				if_block.m(a, null);
+  				if_block.m(button, null);
   			}
 
   			var datepicker2_changes = {};

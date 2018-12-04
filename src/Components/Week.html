@@ -2,10 +2,14 @@
   {#each days as day}
     <div 
       class="day" 
-      transition:fade
       class:outside-month="!day.partOfMonth"
-      class:is-today="day.isToday">
-      <button class="day--label" on:click="fire('dateSelected',day)">
+      class:is-today="day.isToday"
+      on:click="fire('dateSelected',day)"
+    >
+      <button 
+        class="day--label" 
+        class:selected="day.date.getTime() == selected.getTime()"
+      >
         {day.date.getDate()}
       </button>
     </div>
@@ -55,10 +59,10 @@
     padding: 0;
     align-items: center;
     background: none;
-  }
-
-  .day--label:hover { 
     cursor: pointer;
+  }
+  .day:hover .day--label,
+  .day--label.selected { 
     border-color: #f7901e;
   }
   .day.is-today .day--label { 
@@ -67,11 +71,3 @@
     background: #f7901e;
   }
 </style>
-
-<script>
-  import { fade } from 'svelte-transitions';
-
-  export default {
-    transitions: { fade }
-  }
-</script>

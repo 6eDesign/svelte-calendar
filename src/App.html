@@ -16,13 +16,13 @@
 	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
 	<div class="text-center">
 		<Datepicker format={dateFormat} bind:formattedSelected bind:dateChosen>
-			<a class="custom-button">
+			<button class="custom-button">
 				{#if dateChosen}
 					Chosen: {formattedSelected}
 				{:else}
 					Pick a date
 				{/if}
-			</a>
+			</button>
 		</Datepicker>
 	</div>
 </div>
@@ -51,6 +51,7 @@
 		border: 1px solid rgb(0,100,255);
 		text-align: center;
 		padding: 15px 30px;
+    cursor: pointer;
 	}
 	.text-center { 
 		text-align: center;
