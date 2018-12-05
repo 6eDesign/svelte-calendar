@@ -170,6 +170,7 @@
   import { dayDict, monthDict } from './lib/dictionaries';
   import { getMonths } from './lib/helpers';
   import { formatDate } from 'timeUtils';
+  import { keyCodes, keyCodesArray } from './lib/keyCodes';
 
   let today = new Date();
   today.setHours(0,0,0,0);
@@ -187,17 +188,6 @@
         dateChosen: false,
         month: today.getMonth(), 
         year: today.getFullYear(), 
-        keyCodes: { 
-          left: 37,
-          up: 38,
-          right: 39,
-          down: 40,
-          pgup: 33,
-          pgdown: 34,
-          enter: 13, 
-          escape: 27, 
-          tab: 9
-        }
       }
     },
     computed: { 
@@ -214,7 +204,6 @@
       canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,
       canDecrementMonth: ({monthIndex,months}) => monthIndex > 0,
       formattedSelected: ({selected,format}) => formatDate(selected,format), 
-      keyCodesArray: ({keyCodes}) => Object.keys(keyCodes).map(k => keyCodes[k])
     },
     methods: { 
       changeMonth(month) { 
@@ -228,13 +217,12 @@
         current.setMonth(current.getMonth() + direction); 
         month = current.getMonth(); 
         year = current.getFullYear(); 
-        if(!date) return this.set({month,year});
         let selected = new Date(year, month, date || 1);
         this.set({
           selected,
           month,
           year
-        })
+        });
       },
       incrementDay(amount) { 
         let { selected, visibleMonth, firstVisibleDate, lastVisibleDate } = this.get();
@@ -245,7 +233,6 @@
         this.set({selected});
       }, 
       handleKeyPress(evt) { 
-        let { keyCodes, keyCodesArray } = this.get(); 
         if(keyCodesArray.indexOf(evt.keyCode) == -1) return; 
         evt.preventDefault(); 
         switch(evt.keyCode) { 

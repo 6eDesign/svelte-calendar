@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "node"
+deploy:
+  provider: npm
+  email: jon@6eDesign.net
+  api_key: $NPM_TOKEN
+  on:
+    tags: true
