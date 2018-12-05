@@ -1,5 +1,5 @@
 <div class="month-container">
-  {#each currentMonth.weeks as week}
+  {#each visibleMonth.weeks as week}
     <Week days={week.days} {selected} on:dateSelected />
   {/each}
 </div>
@@ -21,9 +21,6 @@
         monthDict
       }
     }, 
-    computed: { 
-      currentMonth: ({monthIndex,months}) => months[monthIndex]
-    },
     components: { 
       Week: './Week.html'
     }

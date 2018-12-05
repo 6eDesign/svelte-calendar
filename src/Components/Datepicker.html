@@ -3,8 +3,8 @@
     ref:popover 
     bind:open="isOpen" 
     bind:shrink="isClosing"
-    on:opened="attachEventListeners(event)"
-    on:closed="detachEventListeners(event)"
+    on:opened="registerOpen(event)"
+    on:closed="registerClose(event)"
   >
     <div slot="trigger">
       <slot>
@@ -29,10 +29,7 @@
           {/each}
         </div>
         <Month 
-          {months} 
-          {month} 
-          {year} 
-          {monthIndex}
+          {visibleMonth}
           {selected}
           on:dateSelected="registerSelection(event)"
         />
@@ -189,7 +186,18 @@
         selected: today, 
         dateChosen: false,
         month: today.getMonth(), 
-        year: today.getFullYear()
+        year: today.getFullYear(), 
+        keyCodes: { 
+          left: 37,
+          up: 38,
+          right: 39,
+          down: 40,
+          pgup: 33,
+          pgdown: 34,
+          enter: 13, 
+          escape: 27, 
+          tab: 9
+        }
       }
     },
     computed: { 
@@ -200,68 +208,89 @@
         }
         return 0; 
       },
+      visibleMonth: ({monthIndex, months}) => months[monthIndex],
+      lastVisibleDate: ({visibleMonth}) => visibleMonth.weeks[visibleMonth.weeks.length-1].days[6].date,
+      firstVisibleDate: ({visibleMonth}) => visibleMonth.weeks[0].days[0].date,
       canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,
       canDecrementMonth: ({monthIndex,months}) => monthIndex > 0,
-      formattedSelected: ({selected,format}) => formatDate(selected,format)
+      formattedSelected: ({selected,format}) => formatDate(selected,format), 
+      keyCodesArray: ({keyCodes}) => Object.keys(keyCodes).map(k => keyCodes[k])
     },
     methods: { 
       changeMonth(month) { 
         this.set({month});
       },
-      incrementMonth(direction) {
+      incrementMonth(direction,date) {
         let { canIncrementMonth, canDecrementMonth, month, year } = this.get(); 
         if(direction == 1 && !canIncrementMonth) return;
         if(direction == -1 && !canDecrementMonth) return;
         let current = new Date(year,month,1); 
         current.setMonth(current.getMonth() + direction); 
+        month = current.getMonth(); 
+        year = current.getFullYear(); 
+        if(!date) return this.set({month,year});
+        let selected = new Date(year, month, date || 1);
         this.set({
-          month: current.getMonth(),
-          year: current.getFullYear()
+          selected,
+          month,
+          year
         })
       },
       incrementDay(amount) { 
-        let { selected } = this.get(); 
-        console.log('selected',selected);
+        let { selected, visibleMonth, firstVisibleDate, lastVisibleDate } = this.get();
+        selected = new Date(selected); 
         selected.setDate(selected.getDate() + amount); 
-        console.log('setting selected', selected);
+        if(amount > 0 && selected > lastVisibleDate) return this.incrementMonth(1,selected.getDate()); 
+        if(amount < 0 && selected < firstVisibleDate) return this.incrementMonth(-1,selected.getDate());
         this.set({selected});
       }, 
       handleKeyPress(evt) { 
+        let { keyCodes, keyCodesArray } = this.get(); 
+        if(keyCodesArray.indexOf(evt.keyCode) == -1) return; 
         evt.preventDefault(); 
         switch(evt.keyCode) { 
-          case 37: // left
+          case keyCodes.left:
             this.incrementDay(-1);
             break; 
-          case 38: // up
+          case keyCodes.up:
             this.incrementDay(-7);
             break; 
-          case 39: // right
+          case keyCodes.right:
             this.incrementDay(1);
             break; 
-          case 40: // down
+          case keyCodes.down:
             this.incrementDay(7);
             break; 
-          case 33: // pgup
+          case keyCodes.pgup:
             this.incrementMonth(-1);
             break;
-          case 34: // pgdown
+          case keyCodes.pgdown:
             this.incrementMonth(1);
             break;
-          case 13: // enter
-            this.selectDayViaKeyboard(); 
+          case keyCodes.escape: 
+          case keyCodes.enter:
+            let { selected } = this.get(); 
+            this.registerSelection(selected);
             break;
         }
       },
-      registerSelection(selection) { 
+      registerSelection(selected) { 
         this.refs.popover.close(); 
-        this.set({selected: selection.date, dateChosen: true});
+        this.set({selected, dateChosen: true});
       }, 
-      attachEventListeners() { 
-        console.log('invoked');
-        document.addEventListener('keydown', this.handleKeyPress.bind(this));
+      registerOpen() { 
+        let { selected } = this.get(); 
+        let keydownListener = this.handleKeyPress.bind(this); 
+        this.set({
+          keydownListener, 
+          month: selected.getMonth(), 
+          year: selected.getFullYear()
+        });
+        document.addEventListener('keydown', keydownListener);
       }, 
-      detachEventListeners() { 
-        document.removeEventListener('keydown', this.handleKeyPress.bind(this));
+      registerClose() { 
+        let { keydownListener } = this.get(); 
+        document.removeEventListener('keydown', keydownListener);
       }
     },
     oncreate() { 
