@@ -1,3 +1,4 @@
+<svelte:window bind:innerWidth="w" />
 <div class="popover" ref:popover>
   <div class="trigger" on:click="open()">
     <slot name="trigger">
@@ -20,10 +21,6 @@
 <style>
   .popover { 
     position: relative;
-  }
-
-  .contents, .contents-wrapper { 
-    transition: all 200ms cubic-bezier(.92,.09,.18,1.05);
   }
 
   .contents-wrapper { 
@@ -138,13 +135,14 @@
     },
     methods: { 
       getDistanceToEdges() { 
-        this.set({open: true})
+        let { open } = this.get(); 
+        if(!open) this.set({open: true})
         let { translateX, translateY } = this.get(); 
         let { contentsWrapper } = this.refs; 
         let width = contentsWrapper.offsetWidth; 
         let height = contentsWrapper.offsetHeight; 
         let rect = contentsWrapper.getBoundingClientRect(); 
-        this.set({open: false});
+        if(!open) this.set({open: false});
         return { 
           top: rect.top + (-1*translateY), 
           bottom: window.innerHeight - rect.bottom + translateY, 
@@ -153,9 +151,12 @@
         }
       }, 
       getTranslate() { 
+        let { w } = this.get(); 
         let dist = this.getDistanceToEdges(); 
         let translateX, translateY; 
-        if(dist.top < 0) { 
+        if(w < 480) { 
+          translateY = dist.bottom;
+        } else if(dist.top < 0) { 
           translateY = Math.abs(dist.top); 
         } else if(dist.bottom < 0) { 
           translateY = dist.bottom; 
@@ -171,6 +172,9 @@
         }
         return { translateX, translateY }  
       },
+      reposition() { 
+        this.set(this.getTranslate());
+      }, 
       open() { 
         this.set({open: true, ...this.getTranslate()});
         this.fire('opened');

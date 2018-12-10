@@ -1003,24 +1003,24 @@ var app = (function () {
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
-  			i0.className = "arrow left svelte-u7jga";
+  			i0.className = "arrow left svelte-nk6n96";
   			addLoc(i0, file$2, 5, 6, 174);
   			addListener(div0, "click", click_handler);
-  			div0.className = "control svelte-u7jga";
+  			div0.className = "control svelte-nk6n96";
   			toggleClass(div0, "enabled", ctx.canDecrementMonth);
   			addLoc(div0, file$2, 2, 4, 58);
   			addListener(div1, "click", click_handler_1);
-  			div1.className = "label svelte-u7jga";
+  			div1.className = "label svelte-nk6n96";
   			addLoc(div1, file$2, 7, 4, 218);
-  			i1.className = "arrow right svelte-u7jga";
+  			i1.className = "arrow right svelte-nk6n96";
   			addLoc(i1, file$2, 13, 6, 445);
   			addListener(div2, "click", click_handler_2);
-  			div2.className = "control svelte-u7jga";
+  			div2.className = "control svelte-nk6n96";
   			toggleClass(div2, "enabled", ctx.canIncrementMonth);
   			addLoc(div2, file$2, 10, 4, 331);
-  			div3.className = "heading-section svelte-u7jga";
+  			div3.className = "heading-section svelte-nk6n96";
   			addLoc(div3, file$2, 1, 2, 23);
-  			div4.className = "month-selector svelte-u7jga";
+  			div4.className = "month-selector svelte-nk6n96";
   			toggleClass(div4, "open", ctx.monthSelectorOpen);
   			addLoc(div4, file$2, 16, 2, 498);
   			div5.className = "title";
@@ -1125,13 +1125,13 @@ var app = (function () {
   			span = createElement("span");
   			text0 = createText(text0_value);
   			text1 = createText("\r\n      ");
-  			span.className = "svelte-u7jga";
+  			span.className = "svelte-nk6n96";
   			addLoc(span, file$2, 23, 8, 764);
 
   			div._svelte = { component: component, ctx: ctx };
 
   			addListener(div, "click", click_handler$1);
-  			div.className = "month-selector--month svelte-u7jga";
+  			div.className = "month-selector--month svelte-nk6n96";
   			toggleClass(div, "selected", ctx.index==ctx.month);
   			addLoc(div, file$2, 18, 6, 614);
   		},
@@ -1228,16 +1228,18 @@ var app = (function () {
   }
   var methods$1 = { 
     getDistanceToEdges: function getDistanceToEdges() { 
-      this.set({open: true});
       var ref = this.get();
-      var translateX = ref.translateX;
-      var translateY = ref.translateY; 
-      var ref$1 = this.refs;
-      var contentsWrapper = ref$1.contentsWrapper; 
+      var open = ref.open; 
+      if(!open) { this.set({open: true}); }
+      var ref$1 = this.get();
+      var translateX = ref$1.translateX;
+      var translateY = ref$1.translateY; 
+      var ref$2 = this.refs;
+      var contentsWrapper = ref$2.contentsWrapper; 
       var width = contentsWrapper.offsetWidth; 
       var height = contentsWrapper.offsetHeight; 
       var rect = contentsWrapper.getBoundingClientRect(); 
-      this.set({open: false});
+      if(!open) { this.set({open: false}); }
       return { 
         top: rect.top + (-1*translateY), 
         bottom: window.innerHeight - rect.bottom + translateY, 
@@ -1246,9 +1248,13 @@ var app = (function () {
       }
     }, 
     getTranslate: function getTranslate() { 
+      var ref = this.get();
+      var w = ref.w; 
       var dist = this.getDistanceToEdges(); 
       var translateX, translateY; 
-      if(dist.top < 0) { 
+      if(w < 480) { 
+        translateY = dist.bottom;
+      } else if(dist.top < 0) { 
         translateY = Math.abs(dist.top); 
       } else if(dist.bottom < 0) { 
         translateY = dist.bottom; 
@@ -1264,6 +1270,9 @@ var app = (function () {
       }
       return { translateX: translateX, translateY: translateY }  
     },
+    reposition: function reposition() { 
+      this.set(this.getTranslate());
+    }, 
     open: function open() { 
       this.set(Object.assign({}, {open: true}, this.getTranslate()));
       this.fire('opened');
@@ -1290,6 +1299,17 @@ var app = (function () {
   function create_main_fragment$3(component, ctx) {
   	var div4, div0, slot_content_trigger = component._slotted.trigger, text, div3, div2, div1, slot_content_contents = component._slotted.contents, current;
 
+  	function onwindowresize(event) {
+  		component._updatingReadonlyProperty = true;
+
+  		component.set({
+  			w: this.innerWidth
+  		});
+
+  		component._updatingReadonlyProperty = false;
+  	}
+  	window.addEventListener("resize", onwindowresize);
+
   	function click_handler(event) {
   		component.open();
   	}
@@ -1304,18 +1324,18 @@ var app = (function () {
   			div1 = createElement("div");
   			addListener(div0, "click", click_handler);
   			div0.className = "trigger";
-  			addLoc(div0, file$3, 1, 2, 37);
-  			div1.className = "contents-inner svelte-1yknc9t";
-  			addLoc(div1, file$3, 12, 6, 390);
-  			div2.className = "contents svelte-1yknc9t";
-  			addLoc(div2, file$3, 11, 4, 339);
-  			div3.className = "contents-wrapper svelte-1yknc9t";
+  			addLoc(div0, file$3, 2, 2, 76);
+  			div1.className = "contents-inner svelte-1d67j1i";
+  			addLoc(div1, file$3, 13, 6, 429);
+  			div2.className = "contents svelte-1d67j1i";
+  			addLoc(div2, file$3, 12, 4, 378);
+  			div3.className = "contents-wrapper svelte-1d67j1i";
   			setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
   			toggleClass(div3, "visible", ctx.open);
   			toggleClass(div3, "shrink", ctx.shrink);
-  			addLoc(div3, file$3, 5, 2, 130);
-  			div4.className = "popover svelte-1yknc9t";
-  			addLoc(div4, file$3, 0, 0, 0);
+  			addLoc(div3, file$3, 6, 2, 169);
+  			div4.className = "popover svelte-1d67j1i";
+  			addLoc(div4, file$3, 1, 0, 39);
   		},
 
   		m: function mount(target, anchor) {
@@ -1364,6 +1384,8 @@ var app = (function () {
   		o: run,
 
   		d: function destroy$$1(detach) {
+  			window.removeEventListener("resize", onwindowresize);
+
   			if (detach) {
   				detachNode(div4);
   			}
@@ -1396,6 +1418,8 @@ var app = (function () {
   	init(this, options);
   	this.refs = {};
   	this._state = assign$1(data$2(), options.data);
+  	this._state.w = window.innerWidth;
+  	if (!('w' in this._state)) { console.warn("<Popover> was created without expected data property 'w'"); }
   	if (!('open' in this._state)) { console.warn("<Popover> was created without expected data property 'open'"); }
   	if (!('shrink' in this._state)) { console.warn("<Popover> was created without expected data property 'shrink'"); }
   	if (!('translateX' in this._state)) { console.warn("<Popover> was created without expected data property 'translateX'"); }
@@ -1428,6 +1452,7 @@ var app = (function () {
   assign$1(Popover.prototype, methods$1);
 
   Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('w' in newState && !this._updatingReadonlyProperty) { throw new Error("<Popover>: Cannot set read-only property 'w'"); }
   };
 
   /* src\Components\Datepicker.html generated by Svelte v2.15.3 */
@@ -1531,6 +1556,7 @@ var app = (function () {
         month: month,
         year: year
       });
+      this.refs.popover.reposition(); 
     },
     incrementDay: function incrementDay(amount) { 
       var ref = this.get();
@@ -1543,6 +1569,7 @@ var app = (function () {
       if(amount > 0 && selected > lastVisibleDate) { return this.incrementMonth(1,selected.getDate()); } 
       if(amount < 0 && selected < firstVisibleDate) { return this.incrementMonth(-1,selected.getDate()); }
       this.set({selected: selected});
+      this.refs.popover.reposition(); 
     }, 
     handleKeyPress: function handleKeyPress(evt) { 
       if(keyCodesArray.indexOf(evt.keyCode) == -1) { return; } 
@@ -1996,14 +2023,14 @@ var app = (function () {
   function end(ref) {
   	var start = ref.start;
 
-  	return new Date(start.getTime() + (1000 * 3600 * 24 * 720));
+  	return new Date(start.getTime() + 1000 * 3600 * 24 * 720);
   }
 
-  function data$4() { 
-  	return { 
-          start: new Date(), 
-          dateFormat: '#{l}, #{F} #{j}, #{Y}'
-  	}
+  function data$4() {
+    return {
+      start: new Date(),
+      dateFormat: "#{l}, #{F} #{j}, #{Y}"
+    };
   }
   var file$5 = "src\\App.html";
 
@@ -2079,22 +2106,22 @@ var app = (function () {
   			datepicker0._fragment.c();
   			text4 = createText("\r\n\t\r\n\r\n\t");
   			p1 = createElement("p");
-  			p1.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p1.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text6 = createText("\r\n\t");
   			p2 = createElement("p");
-  			p2.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p2.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text8 = createText("\r\n\r\n\t");
   			div0 = createElement("div");
   			datepicker1._fragment.c();
   			text9 = createText("\r\n\r\n\t");
   			p3 = createElement("p");
-  			p3.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p3.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text11 = createText("\r\n\t");
   			p4 = createElement("p");
-  			p4.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p4.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text13 = createText("\r\n\t");
   			p5 = createElement("p");
-  			p5.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p5.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text15 = createText("\r\n\t");
   			div1 = createElement("div");
   			button = createElement("button");
@@ -2103,50 +2130,50 @@ var app = (function () {
   			text16 = createText("\r\n");
   			div4 = createElement("div");
   			p6 = createElement("p");
-  			p6.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p6.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text18 = createText("\r\n\t");
   			p7 = createElement("p");
-  			p7.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p7.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text20 = createText("\r\n\t");
   			p8 = createElement("p");
-  			p8.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p8.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text22 = createText("\r\n\r\n\t");
   			p9 = createElement("p");
-  			p9.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p9.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text24 = createText("\r\n\t");
   			p10 = createElement("p");
-  			p10.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p10.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text26 = createText("\r\n\t");
   			p11 = createElement("p");
-  			p11.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			p11.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
   			text28 = createText("\r\n\t");
   			div3 = createElement("div");
   			datepicker3._fragment.c();
   			addLoc(h1, file$5, 0, 0, 0);
   			addLoc(p0, file$5, 2, 1, 48);
   			addLoc(p1, file$5, 6, 1, 208);
-  			addLoc(p2, file$5, 7, 1, 453);
-  			div0.className = "text-center svelte-2yvh0s";
-  			addLoc(div0, file$5, 9, 1, 700);
-  			addLoc(p3, file$5, 13, 1, 757);
-  			addLoc(p4, file$5, 14, 1, 1002);
-  			addLoc(p5, file$5, 15, 1, 1247);
-  			button.className = "custom-button svelte-2yvh0s";
-  			addLoc(button, file$5, 18, 3, 1597);
-  			div1.className = "text-center svelte-2yvh0s";
-  			addLoc(div1, file$5, 16, 1, 1492);
-  			div2.className = "container svelte-2yvh0s";
+  			addLoc(p2, file$5, 8, 1, 456);
+  			div0.className = "text-center svelte-wud6u5";
+  			addLoc(div0, file$5, 11, 1, 706);
+  			addLoc(p3, file$5, 15, 1, 763);
+  			addLoc(p4, file$5, 17, 1, 1011);
+  			addLoc(p5, file$5, 19, 1, 1259);
+  			button.className = "custom-button svelte-wud6u5";
+  			addLoc(button, file$5, 23, 3, 1612);
+  			div1.className = "text-center svelte-wud6u5";
+  			addLoc(div1, file$5, 21, 1, 1507);
+  			div2.className = "container svelte-wud6u5";
   			addLoc(div2, file$5, 1, 0, 22);
-  			addLoc(p6, file$5, 29, 1, 1801);
-  			addLoc(p7, file$5, 30, 1, 2046);
-  			addLoc(p8, file$5, 31, 1, 2291);
-  			addLoc(p9, file$5, 33, 1, 2538);
-  			addLoc(p10, file$5, 34, 1, 2783);
-  			addLoc(p11, file$5, 35, 1, 3028);
-  			div3.className = "text-right svelte-2yvh0s";
-  			addLoc(div3, file$5, 36, 1, 3273);
-  			div4.className = "container svelte-2yvh0s";
-  			addLoc(div4, file$5, 28, 0, 1775);
+  			addLoc(p6, file$5, 30, 1, 1794);
+  			addLoc(p7, file$5, 32, 1, 2042);
+  			addLoc(p8, file$5, 34, 1, 2290);
+  			addLoc(p9, file$5, 37, 1, 2540);
+  			addLoc(p10, file$5, 39, 1, 2788);
+  			addLoc(p11, file$5, 41, 1, 3036);
+  			div3.className = "text-right svelte-wud6u5";
+  			addLoc(div3, file$5, 43, 1, 3284);
+  			div4.className = "container svelte-wud6u5";
+  			addLoc(div4, file$5, 29, 0, 1768);
   		},
 
   		m: function mount(target, anchor) {
@@ -2261,7 +2288,7 @@ var app = (function () {
   	};
   }
 
-  // (22:4) {:else}
+  // (25:49) {:else}
   function create_else_block(component, ctx) {
   	var text;
 
@@ -2284,7 +2311,7 @@ var app = (function () {
   	};
   }
 
-  // (20:4) {#if dateChosen}
+  // (25:4) {#if dateChosen}
   function create_if_block(component, ctx) {
   	var text0, text1;
 
@@ -2358,10 +2385,10 @@ var app = (function () {
   es6ObjectAssign_2();
 
   var app = new App({
-  	target: document.body,
-  	data: {
-  		// name: 'world'
-  	}
+    target: document.body,
+    data: {
+      // name: 'world'
+    }
   });
 
   return app;
