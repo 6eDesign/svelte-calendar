@@ -1,6 +1,6 @@
 <svelte:window bind:innerWidth="w" />
 <div class="popover" ref:popover>
-  <div class="trigger" on:click="open()">
+  <div class="trigger" on:click="open()" ref:triggerContainer>
     <slot name="trigger">
     </slot>
   </div>
@@ -124,6 +124,9 @@
   export default { 
     oncreate() { 
       document.addEventListener('click',checkForFocusLoss.bind(this)); 
+      let { trigger } = this.get(); 
+      if(!trigger) return; 
+      this.refs.triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
     }, 
     data() { 
       return { 

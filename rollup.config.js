@@ -7,12 +7,12 @@ import buble from "rollup-plugin-buble";
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
+const bundle = {
   input: "src/main.js",
   output: {
     sourcemap: true,
     format: "iife",
-    name: "app",
+    name: "SvelteCalendar",
     file: "public/bundle.js"
   },
   plugins: [
@@ -39,6 +39,44 @@ export default {
     commonjs(),
     buble({ objectAssign: true }),
 
+    // If we're building for production (npm run build
+    // instead of npm run dev), minify
+    production && terser()
+  ]
+};
+
+const test = {
+  input: "src/test.js",
+  output: {
+    sourcemap: true,
+    format: "iife",
+    name: "app",
+    file: "public/test.js"
+  },
+  plugins: [
+    svelte({
+      // opt in to v3 behaviour today
+      skipIntroByDefault: true,
+      nestedTransitions: true,
+
+      // enable run-time checks when not in production
+      dev: !production,
+      // we'll extract any component CSS out into
+      // a separate file — better for performance
+      css: css => {
+        css.write("public/test.css");
+      }
+    }),
+
+    // If you have external dependencies installed from
+    // npm, you'll most likely need these plugins. In
+    // some cases you'll need additional configuration —
+    // consult the documentation for details:
+    // https://github.com/rollup/rollup-plugin-commonjs
+    resolve(),
+    commonjs(),
+    buble({ objectAssign: true }),
+
     !production && browsersync({ server: "public" }),
 
     // If we're building for production (npm run build
@@ -46,3 +84,5 @@ export default {
     production && terser()
   ]
 };
+
+export default [bundle, test];

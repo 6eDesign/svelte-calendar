@@ -3,14 +3,17 @@
     ref:popover 
     bind:open="isOpen" 
     bind:shrink="isClosing"
+    {trigger}
     on:opened="registerOpen(event)"
     on:closed="registerClose(event)"
   >
     <div slot="trigger">
       <slot>
-        <button class="calendar-button">
-          {formattedSelected}
-        </button>
+        {#if !trigger}
+          <button class="calendar-button">
+            {formattedSelected}
+          </button>
+        {/if}
       </slot>
     </div>
     <div slot="contents">
@@ -188,6 +191,7 @@
         dateChosen: false,
         month: today.getMonth(), 
         year: today.getFullYear(), 
+        trigger: null
       }
     },
     computed: { 

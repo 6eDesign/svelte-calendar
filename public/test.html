@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Svelte app</title>
+
+    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="bundle.css" />
+    <style>
+      html {
+        box-sizing: border-box;
+      }
+      body {
+        padding: 0;
+        margin: 0;
+        background: #eee;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: border-box;
+      }
+      .container {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        height: 100vh;
+        padding-top: 100px;
+        background: #fff;
+      }
+      h2 {
+        margin-bottom: 250px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Testing usage without Svelte</h2>
+      <div style="display: inline-block" class="button-container">
+        <button id="test">Test button</button>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('test').addEventListener('click', () => console.log('clicked!'));
+    </script>
+    <script src="bundle.js"></script>
+  </body>
+</html>
