@@ -1,2 +1,2453 @@
-var app=function(){"use strict";function t(t,e){var n=arguments;if(null==t)throw new TypeError("Cannot convert first argument to object");for(var o=Object(t),i=1;i<arguments.length;i++){var r=n[i];if(null!=r)for(var a=Object.keys(Object(r)),s=0,c=a.length;s<c;s++){var u=a[s],l=Object.getOwnPropertyDescriptor(r,u);void 0!==l&&l.enumerable&&(o[u]=r[u])}}return o}var e=function(){Object.assign||Object.defineProperty(Object,"assign",{enumerable:!1,configurable:!0,writable:!0,value:t})};function n(){}function o(t,e){for(var n in e)t[n]=e[n];return t}function i(t,e){for(var n in e)t[n]=1;return t}function r(t,e){return 0===e&&t(),function(){--e||t()}}function a(t){t()}function s(t,e){t.appendChild(e)}function c(t,e,n){t.insertBefore(e,n)}function u(t){t.parentNode.removeChild(t)}function l(t,e){for(;t.firstChild;)e.appendChild(t.firstChild)}function m(t,e){for(var n=0;n<t.length;n+=1)t[n]&&t[n].d(e)}function d(){return document.createDocumentFragment()}function h(t){return document.createElement(t)}function f(t){return document.createTextNode(t)}function g(t,e,n,o){t.addEventListener(e,n,o)}function p(t,e,n,o){t.removeEventListener(e,n,o)}function v(t,e,n){null==n?t.removeAttribute(e):t.setAttribute(e,n)}function b(t,e){t.data=""+e}function _(t,e,n){t.style.setProperty(e,n)}function y(t,e,n){t.classList.toggle(e,!!n)}function k(){return Object.create(null)}function M(t){t._lock=!0,w(t._beforecreate),w(t._oncreate),w(t._aftercreate),t._lock=!1}function D(t,e){t._handlers=k(),t._slots=k(),t._bind=e._bind,t._staged={},t.options=e,t.root=e.root||t,t.store=e.store||t.root.store,e.root||(t._beforecreate=[],t._oncreate=[],t._aftercreate=[])}function w(t){for(;t&&t.length;)t.shift()()}var x={destroy:function(t){this.destroy=n,this.fire("destroy"),this.set=n,this._fragment.d(!1!==t),this._fragment=null,this._state={}},get:function(){return this._state},fire:function(t,e){var n=t in this._handlers&&this._handlers[t].slice();if(n)for(var o=0;o<n.length;o+=1){var i=n[o];if(!i.__calling)try{i.__calling=!0,i.call(this,e)}finally{i.__calling=!1}}},on:function(t,e){var n=this._handlers[t]||(this._handlers[t]=[]);return n.push(e),{cancel:function(){var t=n.indexOf(e);~t&&n.splice(t,1)}}},set:function(t){this._set(o({},t)),this.root._lock||M(this.root)},_recompute:n,_set:function(t){var e=this._state,n={},i=!1;for(var r in t=o(this._staged,t),this._staged={},t)this._differs(t[r],e[r])&&(n[r]=i=!0);i&&(this._state=o(o({},e),t),this._recompute(n,this._state),this._bind&&this._bind(n,this._state),this._fragment&&(this.fire("state",{changed:n,current:this._state,previous:e}),this._fragment.p(n,this._state),this.fire("update",{changed:n,current:this._state,previous:e})))},_stage:function(t){o(this._staged,t)},_mount:function(t,e){this._fragment[this._fragment.i?"i":"m"](t,e||null)},_differs:function(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}},C=[{name:"January",abbrev:"Jan"},{name:"February",abbrev:"Feb"},{name:"March",abbrev:"Mar"},{name:"April",abbrev:"Apr"},{name:"May",abbrev:"May"},{name:"June",abbrev:"Jun"},{name:"July",abbrev:"Jul"},{name:"August",abbrev:"Aug"},{name:"September",abbrev:"Sep"},{name:"October",abbrev:"Oct"},{name:"November",abbrev:"Nov"},{name:"December",abbrev:"Dec"}],S=[{name:"Sunday",abbrev:"Sun"},{name:"Monday",abbrev:"Mon"},{name:"Tuesday",abbrev:"Tue"},{name:"Wednesday",abbrev:"Wed"},{name:"Thursday",abbrev:"Thu"},{name:"Friday",abbrev:"Fri"},{name:"Saturday",abbrev:"Sat"}],O=function(t,e,n){var o=new Date(e,t,1);o.setDate(o.getDate()-o.getDay());for(var i=11==t?0:t+1,r=[];o.getMonth()!=i||0!=o.getDay()||6!=r.length;)0==o.getDay()&&r.unshift({days:[]}),r[0].days.push(Object.assign({},{partOfMonth:o.getMonth()==t,date:new Date(o)},n(o))),o.setDate(o.getDate()+1);return r.reverse(),{month:t,year:e,weeks:r}},N=function(t,e){var n=new Date;return n.setHours(0,0,0,0),function(o){return{selectable:o>=t&&o<=e,isToday:o.getTime()==n.getTime()}}};var V=function(t,e,n){return t.replace(new RegExp("#{"+e+"}","g"),n)},F=function(t,e,n){if(t=t.toString(),void 0===e)return t;if(t.length==e)return t;if(n=void 0!==n&&n,t.length<e)for(;e-t.length>0;)t="0"+t;else t.length>e&&(t=n?t.substring(t.length-e):t.substring(0,e));return t},L={daysOfWeek:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],monthsOfYear:["January","February","March","April","May","June","July","August","September","October","November","December"]},Y=[{key:"d",method:function(t){return F(t.getDate(),2)}},{key:"D",method:function(t){return F(L.daysOfWeek[t.getDay()],3)}},{key:"j",method:function(t){return t.getDate()}},{key:"l",method:function(t){return L.daysOfWeek[t.getDay()]}},{key:"F",method:function(t){return L.monthsOfYear[t.getMonth()]}},{key:"m",method:function(t){return F(t.getMonth()+1,2)}},{key:"M",method:function(t){return F(L.monthsOfYear[t.getMonth()],3)}},{key:"n",method:function(t){return t.getMonth()+1}},{key:"Y",method:function(t){return t.getFullYear()}},{key:"y",method:function(t){return F(t.getFullYear(),2,!0)}}],j=[{key:"a",method:function(t){return t.getHours()>11?"pm":"am"}},{key:"A",method:function(t){return t.getHours()>11?"PM":"AM"}},{key:"g",method:function(t){return t.getHours()%12||12}},{key:"G",method:function(t){return t.getHours()}},{key:"h",method:function(t){return F(t.getHours()%12||12,2)}},{key:"H",method:function(t){return F(t.getHours(),2)}},{key:"i",method:function(t){return F(t.getMinutes(),2)}},{key:"s",method:function(t){return F(t.getSeconds(),2)}}],I=function(t,e){return void 0===e&&(e="#{m}/#{d}/#{Y}"),Y.forEach(function(n){-1!=e.indexOf("#{"+n.key+"}")&&(e=V(e,n.key,n.method(t)))}),j.forEach(function(n){-1!=e.indexOf("#{"+n.key+"}")&&(e=V(e,n.key,n.method(t)))}),e},T={left:37,up:38,right:39,down:40,pgup:33,pgdown:34,enter:13,escape:27,tab:9},E=Object.keys(T).map(function(t){return T[t]});function H(t,e){return t.getDate()==e.getDate()&&t.getMonth()==e.getMonth()&&t.getFullYear()==e.getFullYear()}function A(t){var e=this._svelte,n=e.component,o=e.ctx;n.fire("dateSelected",o.day.date)}function W(t,e,n){var o=Object.create(t);return o.day=e[n],o}function q(t,e){var n,o,i,r,a=e.day.date.getDate();return{c:function(){n=h("div"),o=h("button"),i=f(a),r=f("\r\n    "),o.className="day--label svelte-a1dw5x",y(o,"selected",!0===H(e.day.date,e.selected)),n._svelte={component:t,ctx:e},g(n,"click",A),n.className="day svelte-a1dw5x",y(n,"outside-month",!e.day.partOfMonth),y(n,"is-today",e.day.isToday)},m:function(t,e){c(t,n,e),s(n,o),s(o,i),s(n,r)},p:function(t,r){e=r,t.days&&a!==(a=e.day.date.getDate())&&b(i,a),(t.days||t.selected)&&y(o,"selected",!0===H(e.day.date,e.selected)),n._svelte.ctx=e,t.days&&(y(n,"outside-month",!e.day.partOfMonth),y(n,"is-today",e.day.isToday))},d:function(t){t&&u(n),p(n,"click",A)}}}function z(t){D(this,t),this._state=o({},t.data),this._intro=!!t.intro,this._fragment=function(t,e){for(var n,o,i=e.days,r=[],s=0;s<i.length;s+=1)r[s]=q(t,W(e,i,s));return{c:function(){n=h("div");for(var t=0;t<r.length;t+=1)r[t].c();n.className="week svelte-a1dw5x"},m:function(t,e){c(t,n,e);for(var i=0;i<r.length;i+=1)r[i].m(n,null);o=!0},p:function(e,o){if(e.days||e.selected){i=o.days;for(var a=0;a<i.length;a+=1){var s=W(o,i,a);r[a]?r[a].p(e,s):(r[a]=q(t,s),r[a].c(),r[a].m(n,null))}for(;a<r.length;a+=1)r[a].d(1);r.length=i.length}},i:function(t,e){o||this.m(t,e)},o:a,d:function(t){t&&u(n),m(r,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor)),this._intro=!0}function J(t,e,n){var o=Object.create(t);return o.week=e[n],o}function P(t,e){var n,o={days:e.week.days,selected:e.selected},i=new z({root:t.root,store:t.store,data:o});return i.on("dateSelected",function(e){t.fire("dateSelected",e)}),{c:function(){i._fragment.c()},m:function(t,e){i._mount(t,e),n=!0},p:function(t,e){var n={};t.visibleMonth&&(n.days=e.week.days),t.selected&&(n.selected=e.selected),i._set(n)},i:function(t,e){n||this.m(t,e)},o:function(t){n&&(i&&i._fragment.o(t),n=!1)},d:function(t){i.destroy(t)}}}function X(t){D(this,t),this._state=o({monthDict:C},t.data),this._intro=!!t.intro,this._fragment=function(t,e){for(var n,o,i=e.visibleMonth.weeks,a=[],s=0;s<i.length;s+=1)a[s]=P(t,J(e,i,s));function l(t,e,n){a[t]&&a[t].o(function(){e&&(a[t].d(e),a[t]=null),n&&n()})}return{c:function(){n=h("div");for(var t=0;t<a.length;t+=1)a[t].c();n.className="month-container svelte-m2exrs"},m:function(t,e){c(t,n,e);for(var i=0;i<a.length;i+=1)a[i].i(n,null);o=!0},p:function(e,o){if(e.visibleMonth||e.selected){i=o.visibleMonth.weeks;for(var r=0;r<i.length;r+=1){var s=J(o,i,r);a[r]?a[r].p(e,s):(a[r]=P(t,s),a[r].c()),a[r].i(n,null)}for(;r<a.length;r+=1)l(r,1)}},i:function(t,e){o||this.m(t,e)},o:function(t){if(o){for(var e=r(t,(a=a.filter(Boolean)).length),n=0;n<a.length;n+=1)l(n,0,e);o=!1}},d:function(t){t&&u(n),m(a,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),M(this)),this._intro=!0}o(z.prototype,x),o(X.prototype,x);function B(t){var e=this._svelte,n=e.component,o=e.ctx;n.monthSelected(t,o.index)}function G(t,e,n){var o=Object.create(t);return o.monthDefinition=e[n],o.index=n,o}function K(t,e){var n,o,i,r,a=e.monthDefinition.abbrev;return{c:function(){n=h("div"),o=h("span"),i=f(a),r=f("\r\n      "),o.className="svelte-nk6n96",n._svelte={component:t,ctx:e},g(n,"click",B),n.className="month-selector--month svelte-nk6n96",y(n,"selected",e.index==e.month)},m:function(t,e){c(t,n,e),s(n,o),s(o,i),s(n,r)},p:function(t,o){e=o,t.monthDict&&a!==(a=e.monthDefinition.abbrev)&&b(i,a),n._svelte.ctx=e,t.month&&y(n,"selected",e.index==e.month)},d:function(t){t&&u(n),p(n,"click",B)}}}function R(t){D(this,t),this._state=o({monthDict:C,monthSelectorOpen:!1},t.data),this._intro=!!t.intro,this._fragment=function(t,e){var n,o,i,r,l,d,v,_,k,M,D,w,x,C=e.monthDict[e.month].name;function S(e){t.fire("incrementMonth",-1)}function O(e){t.toggleMonthSelectorOpen()}function N(e){t.fire("incrementMonth",1)}for(var V=e.monthDict,F=[],L=0;L<V.length;L+=1)F[L]=K(t,G(e,V,L));return{c:function(){n=h("div"),o=h("div"),(i=h("div")).innerHTML='<i class="arrow left svelte-nk6n96"></i>',r=f("\r\n    "),l=h("div"),d=f(C),v=f(" "),_=f(e.year),k=f(" \r\n    "),(M=h("div")).innerHTML='<i class="arrow right svelte-nk6n96"></i>',D=f("\r\n  "),w=h("div");for(var t=0;t<F.length;t+=1)F[t].c();g(i,"click",S),i.className="control svelte-nk6n96",y(i,"enabled",e.canDecrementMonth),g(l,"click",O),l.className="label svelte-nk6n96",g(M,"click",N),M.className="control svelte-nk6n96",y(M,"enabled",e.canIncrementMonth),o.className="heading-section svelte-nk6n96",w.className="month-selector svelte-nk6n96",y(w,"open",e.monthSelectorOpen),n.className="title"},m:function(t,e){c(t,n,e),s(n,o),s(o,i),s(o,r),s(o,l),s(l,d),s(l,v),s(l,_),s(o,k),s(o,M),s(n,D),s(n,w);for(var a=0;a<F.length;a+=1)F[a].m(w,null);x=!0},p:function(e,n){if(e.canDecrementMonth&&y(i,"enabled",n.canDecrementMonth),(e.monthDict||e.month)&&C!==(C=n.monthDict[n.month].name)&&b(d,C),e.year&&b(_,n.year),e.canIncrementMonth&&y(M,"enabled",n.canIncrementMonth),e.month||e.monthDict){V=n.monthDict;for(var o=0;o<V.length;o+=1){var r=G(n,V,o);F[o]?F[o].p(e,r):(F[o]=K(t,r),F[o].c(),F[o].m(w,null))}for(;o<F.length;o+=1)F[o].d(1);F.length=V.length}e.monthSelectorOpen&&y(w,"open",n.monthSelectorOpen)},i:function(t,e){x||this.m(t,e)},o:a,d:function(t){t&&u(n),p(i,"click",S),p(l,"click",O),p(M,"click",N),m(F,t)}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor)),this._intro=!0}function Q(t){if(this.get().open){var e=t.target;do{if(e==this.refs.popover)return}while(e=e.parentNode);this.close()}}o(R.prototype,x),o(R.prototype,{toggleMonthSelectorOpen:function(){var t=this.get().monthSelectorOpen;t=!t,this.set({monthSelectorOpen:t})},monthSelected:function(t,e){t.stopPropagation(),this.fire("monthSelected",e),this.toggleMonthSelectorOpen()}});var U={getDistanceToEdges:function(){var t=this.get().open;t||this.set({open:!0});var e=this.get(),n=e.translateX,o=e.translateY,i=this.refs.contentsWrapper,r=(i.offsetWidth,i.offsetHeight,i.getBoundingClientRect());return t||this.set({open:!1}),{top:r.top+-1*o,bottom:window.innerHeight-r.bottom+o,left:r.left+-1*n,right:document.body.clientWidth-r.right+n}},getTranslate:function(){var t,e=this.get().w,n=this.getDistanceToEdges();return t=e<480?n.bottom:n.top<0?Math.abs(n.top):n.bottom<0?n.bottom:0,{translateX:n.left<0?Math.abs(n.left):n.right<0?n.right:0,translateY:t}},reposition:function(){this.set(this.getTranslate())},open:function(){this.set(Object.assign({},{open:!0},this.getTranslate())),this.fire("opened")},close:function(){var t=this;this.set({shrink:!0}),function(t,e,n){t.addEventListener(e,function o(){n.apply(this,arguments),t.removeEventListener(e,o)})}(this.refs.contentsAnimated,"animationend",function(){t.set({shrink:!1,open:!1}),t.fire("closed")})}};function Z(){document.removeEventListener("click",Q)}function $(t){var e=this;D(this,t),this.refs={},this._state=o({open:!1,shrink:!1,translateY:0,translateX:0},t.data),this._state.w=window.innerWidth,this._intro=!!t.intro,this._handlers.destroy=[Z],this._slotted=t.slots||{},this._fragment=function(t,e){var n,o,i,r,m,d,v,b=t._slotted.trigger,k=t._slotted.contents;function M(e){t.set({w:this.innerWidth})}function D(e){t.open()}return window.addEventListener("resize",M),{c:function(){n=h("div"),o=h("div"),i=f("\r\n  "),r=h("div"),m=h("div"),d=h("div"),g(o,"click",D),o.className="trigger",d.className="contents-inner svelte-1d67j1i",m.className="contents svelte-1d67j1i",r.className="contents-wrapper svelte-1d67j1i",_(r,"transform","translate(-50%,-50%) translate("+e.translateX+"px, "+e.translateY+"px)"),y(r,"visible",e.open),y(r,"shrink",e.shrink),n.className="popover svelte-1d67j1i"},m:function(e,a){c(e,n,a),s(n,o),b&&s(o,b),t.refs.triggerContainer=o,s(n,i),s(n,r),s(r,m),s(m,d),k&&s(d,k),t.refs.contentsAnimated=m,t.refs.contentsWrapper=r,t.refs.popover=n,v=!0},p:function(t,e){(t.translateX||t.translateY)&&_(r,"transform","translate(-50%,-50%) translate("+e.translateX+"px, "+e.translateY+"px)"),t.open&&y(r,"visible",e.open),t.shrink&&y(r,"shrink",e.shrink)},i:function(t,e){v||this.m(t,e)},o:a,d:function(e){window.removeEventListener("resize",M),e&&u(n),b&&l(o,b),p(o,"click",D),t.refs.triggerContainer===o&&(t.refs.triggerContainer=null),k&&l(d,k),t.refs.contentsAnimated===m&&(t.refs.contentsAnimated=null),t.refs.contentsWrapper===r&&(t.refs.contentsWrapper=null),t.refs.popover===n&&(t.refs.popover=null)}}}(this,this._state),this.root._oncreate.push(function(){(function(){document.addEventListener("click",Q.bind(this));var t=this.get().trigger;t&&this.refs.triggerContainer.appendChild(t.parentNode.removeChild(t))}).call(e),e.fire("update",{changed:i({},e._state),current:e._state})}),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),M(this)),this._intro=!0}function tt(t){return function(t,e){t.setHours(0,0,0,0),e.setHours(0,0,0,0);for(var n=new Date(e.getFullYear(),e.getMonth()+1,1),o=[],i=new Date(t.getFullYear(),t.getMonth(),1),r=N(t,e);i<n;)o.push(O(i.getMonth(),i.getFullYear(),r)),i.setMonth(i.getMonth()+1);return o}(t.start,t.end)}o($.prototype,x),o($.prototype,U),(new Date).setHours(0,0,0,0);var et={changeMonth:function(t){this.set({month:t})},incrementMonth:function(t,e){var n=this.get(),o=n.canIncrementMonth,i=n.canDecrementMonth,r=n.month,a=n.year;if((1!=t||o)&&(-1!=t||i)){var s=new Date(a,r,1);s.setMonth(s.getMonth()+t),r=s.getMonth(),a=s.getFullYear();var c=new Date(a,r,e||1);this.set({selected:c,month:r,year:a}),this.refs.popover.reposition()}},incrementDay:function(t){var e=this.get(),n=e.selected,o=(e.visibleMonth,e.firstVisibleDate),i=e.lastVisibleDate;return(n=new Date(n)).setDate(n.getDate()+t),t>0&&n>i?this.incrementMonth(1,n.getDate()):t<0&&n<o?this.incrementMonth(-1,n.getDate()):(this.set({selected:n}),void this.refs.popover.reposition())},handleKeyPress:function(t){if(-1!=E.indexOf(t.keyCode))switch(t.preventDefault(),t.keyCode){case T.left:this.incrementDay(-1);break;case T.up:this.incrementDay(-7);break;case T.right:this.incrementDay(1);break;case T.down:this.incrementDay(7);break;case T.pgup:this.incrementMonth(-1);break;case T.pgdown:this.incrementMonth(1);break;case T.escape:case T.enter:var e=this.get().selected;this.registerSelection(e)}},registerSelection:function(t){this.refs.popover.close(),this.set({selected:t,dateChosen:!0})},registerOpen:function(){var t=this.get().selected,e=this.handleKeyPress.bind(this);this.set({keydownListener:e,month:t.getMonth(),year:t.getFullYear()}),document.addEventListener("keydown",e)},registerClose:function(){var t=this.get().keydownListener;document.removeEventListener("keydown",t)}};function nt(t,e,n){var o=Object.create(t);return o.day=e[n],o}function ot(t,e){var n,o;return{c:function(){n=h("button"),o=f(e.formattedSelected),n.className="calendar-button svelte-k35zfd"},m:function(t,e){c(t,n,e),s(n,o)},p:function(t,e){t.formattedSelected&&b(o,e.formattedSelected)},d:function(t){t&&u(n)}}}function it(t,e){var n,o,i=e.day.abbrev;return{c:function(){n=h("span"),o=f(i),n.className="svelte-k35zfd"},m:function(t,e){c(t,n,e),s(n,o)},p:function(t,e){t.dayDict&&i!==(i=e.day.abbrev)&&b(o,i)},d:function(t){t&&u(n)}}}function rt(t){var e,n=this;D(this,t),this.refs={},this._state=o({today:e=new Date,dayDict:S,format:"#{m}/#{d}/#{Y}",start:new Date(1987,9,29),end:new Date(2020,9,29),selected:e,dateChosen:!1,month:e.getMonth(),year:e.getFullYear(),trigger:null},t.data),this._recompute({start:1,end:1,month:1,year:1,months:1,monthIndex:1,visibleMonth:1,selected:1,format:1},this._state),this._intro=!!t.intro,this._slotted=t.slots||{},this._fragment=function(t,e){var n,o,i,a,g,p,b,_,k,M=t._slotted.default,D={},w=!e.trigger&&ot(0,e),x={month:e.month,year:e.year,canIncrementMonth:e.canIncrementMonth,canDecrementMonth:e.canDecrementMonth},C=new R({root:t.root,store:t.store,data:x});C.on("monthSelected",function(e){t.changeMonth(e)}),C.on("incrementMonth",function(e){t.incrementMonth(e)});for(var S=e.dayDict,O=[],N=0;N<S.length;N+=1)O[N]=it(0,nt(e,S,N));var V={visibleMonth:e.visibleMonth,selected:e.selected},F=new X({root:t.root,store:t.store,data:V});F.on("dateSelected",function(e){t.registerSelection(e)});var L={trigger:e.trigger};void 0!==e.isOpen&&(L.open=e.isOpen,D.open=!0),void 0!==e.isClosing&&(L.shrink=e.isClosing,D.shrink=!0);var Y=new $({root:t.root,store:t.store,slots:{default:d(),contents:d(),trigger:d()},data:L,_bind:function(e,n){var o={};!D.open&&e.open&&(o.isOpen=n.open),!D.shrink&&e.shrink&&(o.isClosing=n.shrink),t._set(o),D={}}});return t.root._beforecreate.push(function(){Y._bind({open:1,shrink:1},Y.get())}),Y.on("opened",function(e){t.registerOpen(e)}),Y.on("closed",function(e){t.registerClose(e)}),t.refs.popover=Y,{c:function(){n=h("div"),o=h("div"),M||w&&w.c(),i=f("\r\n    "),a=h("div"),g=h("div"),C._fragment.c(),p=f("\r\n        "),b=h("div");for(var t=0;t<O.length;t+=1)O[t].c();_=f("\r\n        "),F._fragment.c(),Y._fragment.c(),v(o,"slot","trigger"),o.className="svelte-k35zfd",b.className="legend svelte-k35zfd",g.className="calendar svelte-k35zfd",v(a,"slot","contents"),a.className="svelte-k35zfd",n.className="datepicker svelte-k35zfd",y(n,"open",e.isOpen),y(n,"closing",e.isClosing)},m:function(t,e){c(t,n,e),s(Y._slotted.trigger,o),M?s(o,M):w&&w.m(o,null),s(Y._slotted.default,i),s(Y._slotted.contents,a),s(a,g),C._mount(g,null),s(g,p),s(g,b);for(var r=0;r<O.length;r+=1)O[r].m(b,null);s(g,_),F._mount(g,null),Y._mount(n,null),k=!0},p:function(t,i){e=i,M||(e.trigger?w&&(w.d(1),w=null):w?w.p(t,e):((w=ot(0,e)).c(),w.m(o,null)));var r={};if(t.month&&(r.month=e.month),t.year&&(r.year=e.year),t.canIncrementMonth&&(r.canIncrementMonth=e.canIncrementMonth),t.canDecrementMonth&&(r.canDecrementMonth=e.canDecrementMonth),C._set(r),t.dayDict){S=e.dayDict;for(var a=0;a<S.length;a+=1){var s=nt(e,S,a);O[a]?O[a].p(t,s):(O[a]=it(0,s),O[a].c(),O[a].m(b,null))}for(;a<O.length;a+=1)O[a].d(1);O.length=S.length}var c={};t.visibleMonth&&(c.visibleMonth=e.visibleMonth),t.selected&&(c.selected=e.selected),F._set(c);var u={};t.trigger&&(u.trigger=e.trigger),!D.open&&t.isOpen&&(u.open=e.isOpen,D.open=void 0!==e.isOpen),!D.shrink&&t.isClosing&&(u.shrink=e.isClosing,D.shrink=void 0!==e.isClosing),Y._set(u),D={},t.isOpen&&y(n,"open",e.isOpen),t.isClosing&&y(n,"closing",e.isClosing)},i:function(t,e){k||this.m(t,e)},o:function(t){k&&(t=r(t,3),C&&C._fragment.o(t),F&&F._fragment.o(t),Y&&Y._fragment.o(t),k=!1)},d:function(e){e?(u(n),w&&w.d()):l(o,M),C.destroy(),m(O,e),F.destroy(),Y.destroy(),t.refs.popover===Y&&(t.refs.popover=null)}}}(this,this._state),this.root._oncreate.push(function(){(function(){var t=this.get().selected;this.set({month:t.getMonth(),year:t.getFullYear()})}).call(n),n.fire("update",{changed:i({},n._state),current:n._state})}),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),M(this)),this._intro=!0}function at(t,e){var o;return{c:function(){o=f("Pick a date")},m:function(t,e){c(t,o,e)},p:n,d:function(t){t&&u(o)}}}function st(t,e){var n,o;return{c:function(){n=f("Chosen: "),o=f(e.formattedSelected)},m:function(t,e){c(t,n,e),c(t,o,e)},p:function(t,e){t.formattedSelected&&b(o,e.formattedSelected)},d:function(t){t&&(u(n),u(o))}}}function ct(t){D(this,t),this._state=o({start:new Date,dateFormat:"#{l}, #{F} #{j}, #{Y}"},t.data),this._recompute({start:1},this._state),this._intro=!!t.intro,this._fragment=function(t,e){var n,o,i,a,l,m,g,p,v,b,_,y,k,M,D,w,x,C,S,O,N,V,F,L,Y,j,I,T,E,H,A,W,q,z,J,P,X={},B={format:e.dateFormat},G=new rt({root:t.root,store:t.store,data:B}),K=new rt({root:t.root,store:t.store});function R(t){return t.dateChosen?st:at}var Q=R(e),U=Q(t,e),Z={format:e.dateFormat};void 0!==e.formattedSelected&&(Z.formattedSelected=e.formattedSelected,X.formattedSelected=!0),void 0!==e.dateChosen&&(Z.dateChosen=e.dateChosen,X.dateChosen=!0);var $=new rt({root:t.root,store:t.store,slots:{default:d()},data:Z,_bind:function(e,n){var o={};!X.formattedSelected&&e.formattedSelected&&(o.formattedSelected=n.formattedSelected),!X.dateChosen&&e.dateChosen&&(o.dateChosen=n.dateChosen),t._set(o),X={}}});t.root._beforecreate.push(function(){$._bind({formattedSelected:1,dateChosen:1},$.get())});var tt=new rt({root:t.root,store:t.store});return{c:function(){(n=h("h1")).textContent="Date Picker",o=f("\r\n"),i=h("div"),(a=h("p")).textContent="Get your dates here, hot off the presses.",l=f("\r\n\t"),G._fragment.c(),m=f("\r\n\t\r\n\r\n\t"),(g=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",p=f("\r\n\t"),(v=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",b=f("\r\n\r\n\t"),_=h("div"),K._fragment.c(),y=f("\r\n\r\n\t"),(k=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",M=f("\r\n\t"),(D=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",w=f("\r\n\t"),(x=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",C=f("\r\n\t"),S=h("div"),O=h("button"),U.c(),$._fragment.c(),N=f("\r\n"),V=h("div"),(F=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",L=f("\r\n\t"),(Y=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",j=f("\r\n\t"),(I=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",T=f("\r\n\r\n\t"),(E=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",H=f("\r\n\t"),(A=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",W=f("\r\n\t"),(q=h("p")).textContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?",z=f("\r\n\t"),J=h("div"),tt._fragment.c(),_.className="text-center svelte-wud6u5",O.className="custom-button svelte-wud6u5",S.className="text-center svelte-wud6u5",i.className="container svelte-wud6u5",J.className="text-right svelte-wud6u5",V.className="container svelte-wud6u5"},m:function(t,e){c(t,n,e),c(t,o,e),c(t,i,e),s(i,a),s(i,l),G._mount(i,null),s(i,m),s(i,g),s(i,p),s(i,v),s(i,b),s(i,_),K._mount(_,null),s(i,y),s(i,k),s(i,M),s(i,D),s(i,w),s(i,x),s(i,C),s(i,S),s($._slotted.default,O),U.m(O,null),$._mount(S,null),c(t,N,e),c(t,V,e),s(V,F),s(V,L),s(V,Y),s(V,j),s(V,I),s(V,T),s(V,E),s(V,H),s(V,A),s(V,W),s(V,q),s(V,z),s(V,J),tt._mount(J,null),P=!0},p:function(n,o){e=o;var i={};n.dateFormat&&(i.format=e.dateFormat),G._set(i),Q===(Q=R(e))&&U?U.p(n,e):(U.d(1),(U=Q(t,e)).c(),U.m(O,null));var r={};n.dateFormat&&(r.format=e.dateFormat),!X.formattedSelected&&n.formattedSelected&&(r.formattedSelected=e.formattedSelected,X.formattedSelected=void 0!==e.formattedSelected),!X.dateChosen&&n.dateChosen&&(r.dateChosen=e.dateChosen,X.dateChosen=void 0!==e.dateChosen),$._set(r),X={}},i:function(t,e){P||this.m(t,e)},o:function(t){P&&(t=r(t,4),G&&G._fragment.o(t),K&&K._fragment.o(t),$&&$._fragment.o(t),tt&&tt._fragment.o(t),P=!1)},d:function(t){t&&(u(n),u(o),u(i)),G.destroy(),K.destroy(),U.d(),$.destroy(),t&&(u(N),u(V)),tt.destroy()}}}(this,this._state),t.target&&(this._fragment.c(),this._mount(t.target,t.anchor),M(this)),this._intro=!0}return o(rt.prototype,x),o(rt.prototype,et),rt.prototype._recompute=function(t,e){(t.start||t.end)&&this._differs(e.months,e.months=tt(e))&&(t.months=!0),(t.month||t.year||t.months)&&this._differs(e.monthIndex,e.monthIndex=function(t){for(var e=t.month,n=t.year,o=t.months,i=0;i<o.length;++i)if(o[i].month==e&&o[i].year==n)return i;return 0}(e))&&(t.monthIndex=!0),(t.monthIndex||t.months)&&this._differs(e.visibleMonth,e.visibleMonth=function(t){var e=t.monthIndex;return t.months[e]}(e))&&(t.visibleMonth=!0),t.visibleMonth&&(this._differs(e.lastVisibleDate,e.lastVisibleDate=function(t){var e=t.visibleMonth;return e.weeks[e.weeks.length-1].days[6].date}(e))&&(t.lastVisibleDate=!0),this._differs(e.firstVisibleDate,e.firstVisibleDate=e.visibleMonth.weeks[0].days[0].date)&&(t.firstVisibleDate=!0)),(t.monthIndex||t.months)&&(this._differs(e.canIncrementMonth,e.canIncrementMonth=function(t){return t.monthIndex<t.months.length-1}(e))&&(t.canIncrementMonth=!0),this._differs(e.canDecrementMonth,e.canDecrementMonth=function(t){var e=t.monthIndex;return t.months,e>0}(e))&&(t.canDecrementMonth=!0)),(t.selected||t.format)&&this._differs(e.formattedSelected,e.formattedSelected=function(t){var e=t.selected,n=t.format;return I(e,n)}(e))&&(t.formattedSelected=!0)},o(ct.prototype,x),ct.prototype._recompute=function(t,e){var n;t.start&&this._differs(e.end,e.end=(n=e.start,new Date(n.getTime()+62208e6)))&&(t.end=!0)},e(),new ct({target:document.body,data:{}})}();
+var app = (function () {
+  'use strict';
+
+  /**
+   * Code refactored from Mozilla Developer Network:
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+   */
+
+  function assign(target, firstSource) {
+    var arguments$1 = arguments;
+
+    if (target === undefined || target === null) {
+      throw new TypeError('Cannot convert first argument to object');
+    }
+
+    var to = Object(target);
+    for (var i = 1; i < arguments.length; i++) {
+      var nextSource = arguments$1[i];
+      if (nextSource === undefined || nextSource === null) {
+        continue;
+      }
+
+      var keysArray = Object.keys(Object(nextSource));
+      for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+        var nextKey = keysArray[nextIndex];
+        var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+        if (desc !== undefined && desc.enumerable) {
+          to[nextKey] = nextSource[nextKey];
+        }
+      }
+    }
+    return to;
+  }
+
+  function polyfill() {
+    if (!Object.assign) {
+      Object.defineProperty(Object, 'assign', {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: assign
+      });
+    }
+  }
+
+  var es6ObjectAssign = {
+    assign: assign,
+    polyfill: polyfill
+  };
+  var es6ObjectAssign_2 = es6ObjectAssign.polyfill;
+
+  function noop() {}
+
+  function assign$1(tar, src) {
+  	for (var k in src) { tar[k] = src[k]; }
+  	return tar;
+  }
+
+  function assignTrue(tar, src) {
+  	for (var k in src) { tar[k] = 1; }
+  	return tar;
+  }
+
+  function callAfter(fn, i) {
+  	if (i === 0) { fn(); }
+  	return function () {
+  		if (!--i) { fn(); }
+  	};
+  }
+
+  function addLoc(element, file, line, column, char) {
+  	element.__svelte_meta = {
+  		loc: { file: file, line: line, column: column, char: char }
+  	};
+  }
+
+  function run(fn) {
+  	fn();
+  }
+
+  function append(target, node) {
+  	target.appendChild(node);
+  }
+
+  function insert(target, node, anchor) {
+  	target.insertBefore(node, anchor);
+  }
+
+  function detachNode(node) {
+  	node.parentNode.removeChild(node);
+  }
+
+  function reinsertChildren(parent, target) {
+  	while (parent.firstChild) { target.appendChild(parent.firstChild); }
+  }
+
+  function destroyEach(iterations, detach) {
+  	for (var i = 0; i < iterations.length; i += 1) {
+  		if (iterations[i]) { iterations[i].d(detach); }
+  	}
+  }
+
+  function createFragment() {
+  	return document.createDocumentFragment();
+  }
+
+  function createElement(name) {
+  	return document.createElement(name);
+  }
+
+  function createText(data) {
+  	return document.createTextNode(data);
+  }
+
+  function addListener(node, event, handler, options) {
+  	node.addEventListener(event, handler, options);
+  }
+
+  function removeListener(node, event, handler, options) {
+  	node.removeEventListener(event, handler, options);
+  }
+
+  function setAttribute(node, attribute, value) {
+  	if (value == null) { node.removeAttribute(attribute); }
+  	else { node.setAttribute(attribute, value); }
+  }
+
+  function setData(text, data) {
+  	text.data = '' + data;
+  }
+
+  function setStyle(node, key, value) {
+  	node.style.setProperty(key, value);
+  }
+
+  function toggleClass(element, name, toggle) {
+  	element.classList[toggle ? 'add' : 'remove'](name);
+  }
+
+  function blankObject() {
+  	return Object.create(null);
+  }
+
+  function destroy(detach) {
+  	this.destroy = noop;
+  	this.fire('destroy');
+  	this.set = noop;
+
+  	this._fragment.d(detach !== false);
+  	this._fragment = null;
+  	this._state = {};
+  }
+
+  function destroyDev(detach) {
+  	destroy.call(this, detach);
+  	this.destroy = function() {
+  		console.warn('Component was already destroyed');
+  	};
+  }
+
+  function _differs(a, b) {
+  	return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+  }
+
+  function fire(eventName, data) {
+  	var handlers =
+  		eventName in this._handlers && this._handlers[eventName].slice();
+  	if (!handlers) { return; }
+
+  	for (var i = 0; i < handlers.length; i += 1) {
+  		var handler = handlers[i];
+
+  		if (!handler.__calling) {
+  			try {
+  				handler.__calling = true;
+  				handler.call(this, data);
+  			} finally {
+  				handler.__calling = false;
+  			}
+  		}
+  	}
+  }
+
+  function flush(component) {
+  	component._lock = true;
+  	callAll(component._beforecreate);
+  	callAll(component._oncreate);
+  	callAll(component._aftercreate);
+  	component._lock = false;
+  }
+
+  function get() {
+  	return this._state;
+  }
+
+  function init(component, options) {
+  	component._handlers = blankObject();
+  	component._slots = blankObject();
+  	component._bind = options._bind;
+  	component._staged = {};
+
+  	component.options = options;
+  	component.root = options.root || component;
+  	component.store = options.store || component.root.store;
+
+  	if (!options.root) {
+  		component._beforecreate = [];
+  		component._oncreate = [];
+  		component._aftercreate = [];
+  	}
+  }
+
+  function on(eventName, handler) {
+  	var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
+  	handlers.push(handler);
+
+  	return {
+  		cancel: function() {
+  			var index = handlers.indexOf(handler);
+  			if (~index) { handlers.splice(index, 1); }
+  		}
+  	};
+  }
+
+  function set(newState) {
+  	this._set(assign$1({}, newState));
+  	if (this.root._lock) { return; }
+  	flush(this.root);
+  }
+
+  function _set(newState) {
+  	var oldState = this._state,
+  		changed = {},
+  		dirty = false;
+
+  	newState = assign$1(this._staged, newState);
+  	this._staged = {};
+
+  	for (var key in newState) {
+  		if (this._differs(newState[key], oldState[key])) { changed[key] = dirty = true; }
+  	}
+  	if (!dirty) { return; }
+
+  	this._state = assign$1(assign$1({}, oldState), newState);
+  	this._recompute(changed, this._state);
+  	if (this._bind) { this._bind(changed, this._state); }
+
+  	if (this._fragment) {
+  		this.fire("state", { changed: changed, current: this._state, previous: oldState });
+  		this._fragment.p(changed, this._state);
+  		this.fire("update", { changed: changed, current: this._state, previous: oldState });
+  	}
+  }
+
+  function _stage(newState) {
+  	assign$1(this._staged, newState);
+  }
+
+  function setDev(newState) {
+  	if (typeof newState !== 'object') {
+  		throw new Error(
+  			this._debugName + '.set was called without an object of data key-values to update.'
+  		);
+  	}
+
+  	this._checkReadOnly(newState);
+  	set.call(this, newState);
+  }
+
+  function callAll(fns) {
+  	while (fns && fns.length) { fns.shift()(); }
+  }
+
+  function _mount(target, anchor) {
+  	this._fragment[this._fragment.i ? 'i' : 'm'](target, anchor || null);
+  }
+
+  var protoDev = {
+  	destroy: destroyDev,
+  	get: get,
+  	fire: fire,
+  	on: on,
+  	set: setDev,
+  	_recompute: noop,
+  	_set: _set,
+  	_stage: _stage,
+  	_mount: _mount,
+  	_differs: _differs
+  };
+
+  var monthDict = [
+    {name: 'January', abbrev: 'Jan' },
+    {name: 'February', abbrev: 'Feb' },
+    {name: 'March', abbrev: 'Mar' },
+    {name: 'April', abbrev: 'Apr' },
+    {name: 'May', abbrev: 'May' },
+    {name: 'June', abbrev: 'Jun' },
+    {name: 'July', abbrev: 'Jul' },
+    {name: 'August', abbrev: 'Aug' },
+    {name: 'September', abbrev: 'Sep' },
+    {name: 'October', abbrev: 'Oct' },
+    {name: 'November', abbrev: 'Nov' },
+    {name: 'December', abbrev: 'Dec' }
+  ]; 
+
+  var dayDict = [
+    {name: 'Sunday', abbrev: 'Sun'}, 
+    {name: 'Monday', abbrev: 'Mon'}, 
+    {name: 'Tuesday', abbrev: 'Tue'}, 
+    {name: 'Wednesday', abbrev: 'Wed'}, 
+    {name: 'Thursday', abbrev: 'Thu'}, 
+    {name: 'Friday', abbrev: 'Fri'}, 
+    {name: 'Saturday', abbrev: 'Sat'}
+  ];
+
+  var getCalendarPage = function (month,year,dayProps) {
+    var date = new Date(year,month,1);
+    date.setDate(date.getDate() - date.getDay());
+    var nextMonth = month == 11 ? 0 : month + 1; 
+    // ensure days starts on Sunday
+    // and end on saturday
+    var weeks = []; 
+    while(date.getMonth() != nextMonth || date.getDay() != 0 || weeks.length != 6) { 
+      if(date.getDay() == 0) { weeks.unshift({days: []}); }
+      weeks[0].days.push(Object.assign({}, {partOfMonth: date.getMonth() == month,
+        date: new Date(date)}, 
+        dayProps(date))); 
+      date.setDate(date.getDate() + 1);
+    }
+    weeks.reverse(); 
+    return { month: month, year: year, weeks: weeks }
+  };
+
+  var getDayPropsHandler = function (start,end) {
+    var today = new Date(); 
+    today.setHours(0,0,0,0);
+    return function (date) { return ({
+      selectable: date >= start && date <= end,
+      isToday: date.getTime() == today.getTime()
+    }); };
+  };
+
+  function getMonths(start, end) { 
+    start.setHours(0,0,0,0);
+    end.setHours(0,0,0,0);
+    var endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1); 
+    var months = [ ]; 
+    var date = new Date(start.getFullYear(),start.getMonth(),1);
+    var dayPropsHandler = getDayPropsHandler(start,end);
+    while(date < endDate) { 
+      months.push(getCalendarPage(date.getMonth(),date.getFullYear(),dayPropsHandler)); 
+      date.setMonth(date.getMonth() + 1); 
+    }
+    return months;
+  }
+
+  /**
+   * generic function to inject data into token-laden string
+   * @param str {String} Required
+   * @param name {String} Required
+   * @param value {String|Integer} Required
+   * @returns {String}
+   *
+   * @example
+   * injectStringData("The following is a token: #{tokenName}", "tokenName", 123); 
+   * @returns {String} "The following is a token: 123"
+   *
+   */
+  var injectStringData = function (str,name,value) { return str
+    .replace(new RegExp('#{'+name+'}','g'), value); };
+
+  /**
+   * Generic function to enforce length of string. 
+   * 
+   * Pass a string or number to this function and specify the desired length.
+   * This function will either pad the # with leading 0's (if str.length < length)
+   * or remove data from the end (@fromBack==false) or beginning (@fromBack==true)
+   * of the string when str.length > length.
+   *
+   * When length == str.length or typeof length == 'undefined', this function
+   * returns the original @str parameter.
+   * 
+   * @param str {String} Required
+   * @param length {Integer} Required
+   * @param fromBack {Boolean} Optional
+   * @returns {String}
+   *
+   */
+  var enforceLength = function(str,length,fromBack) {
+    str = str.toString();
+    if(typeof length == 'undefined') { return str; }
+    if(str.length == length) { return str; }
+    fromBack = (typeof fromBack == 'undefined') ? false : fromBack;
+    if(str.length < length) {
+      // pad the beginning of the string w/ enough 0's to reach desired length:
+      while(length - str.length > 0) { str = '0' + str; }
+    } else if(str.length > length) {
+      if(fromBack) {
+        // grab the desired #/chars from end of string: ex: '2015' -> '15'
+        str = str.substring(str.length-length);
+      } else {
+        // grab the desired #/chars from beginning of string: ex: '2015' -> '20'
+        str = str.substring(0,length);
+      }
+    }
+    return str;
+  };
+
+  var daysOfWeek = [ 
+    'Sunday', 
+    'Monday', 
+    'Tuesday', 
+    'Wednesday', 
+    'Thursday', 
+    'Friday', 
+    'Saturday' 
+  ];
+
+  var monthsOfYear = [ 
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  var dictionary = { 
+    daysOfWeek: daysOfWeek, 
+    monthsOfYear: monthsOfYear
+  };
+
+  var acceptedDateTokens = [
+    { 
+      // d: day of the month, 2 digits with leading zeros:
+      key: 'd', 
+      method: function(date) { return enforceLength(date.getDate(), 2); } 
+    }, { 
+      // D: textual representation of day, 3 letters: Sun thru Sat
+      key: 'D', 
+      method: function(date) { return enforceLength(dictionary.daysOfWeek[date.getDay()],3); } 
+    }, { 
+      // j: day of month without leading 0's
+      key: 'j', 
+      method: function(date) { return date.getDate(); } 
+    }, { 
+      // l: full textual representation of day of week: Sunday thru Saturday
+      key: 'l', 
+      method: function(date) { return dictionary.daysOfWeek[date.getDay()]; } 
+    }, { 
+      // F: full text month: 'January' thru 'December'
+      key: 'F', 
+      method: function(date) { return dictionary.monthsOfYear[date.getMonth()]; } 
+    }, { 
+      // m: 2 digit numeric month: '01' - '12':
+      key: 'm', 
+      method: function(date) { return enforceLength(date.getMonth()+1,2); } 
+    }, { 
+      // M: a short textual representation of the month, 3 letters: 'Jan' - 'Dec'
+      key: 'M', 
+      method: function(date) { return enforceLength(dictionary.monthsOfYear[date.getMonth()],3); } 
+    }, { 
+      // n: numeric represetation of month w/o leading 0's, '1' - '12':
+      key: 'n', 
+      method: function(date) { return date.getMonth() + 1; } 
+    }, { 
+      // Y: Full numeric year, 4 digits
+      key: 'Y', 
+      method: function(date) { return date.getFullYear(); } 
+    }, { 
+      // y: 2 digit numeric year:
+      key: 'y', 
+      method: function(date) { return enforceLength(date.getFullYear(),2,true); }
+     }
+  ];
+
+  var acceptedTimeTokens = [
+    { 
+      // a: lowercase ante meridiem and post meridiem 'am' or 'pm'
+      key: 'a', 
+      method: function(date) { return (date.getHours() > 11) ? 'pm' : 'am'; } 
+    }, { 
+      // A: uppercase ante merdiiem and post meridiem 'AM' or 'PM'
+      key: 'A', 
+      method: function(date) { return (date.getHours() > 11) ? 'PM' : 'AM'; } 
+    }, { 
+      // g: 12-hour format of an hour without leading zeros 1-12
+      key: 'g', 
+      method: function(date) { return date.getHours() % 12 || 12; } 
+    }, { 
+      // G: 24-hour format of an hour without leading zeros 0-23
+      key: 'G', 
+      method: function(date) { return date.getHours(); } 
+    }, { 
+      // h: 12-hour format of an hour with leading zeros 01-12
+      key: 'h', 
+      method: function(date) { return enforceLength(date.getHours()%12 || 12,2); } 
+    }, { 
+      // H: 24-hour format of an hour with leading zeros: 00-23
+      key: 'H', 
+      method: function(date) { return enforceLength(date.getHours(),2); } 
+    }, { 
+      // i: Minutes with leading zeros 00-59
+      key: 'i', 
+      method: function(date) { return enforceLength(date.getMinutes(),2); } 
+    }, { 
+      // s: Seconds with leading zeros 00-59
+      key: 's', 
+      method: function(date) { return enforceLength(date.getSeconds(),2); }
+     }
+  ];
+
+  /**
+   * generic formatDate function which accepts dynamic templates
+   * @param date {Date} Required
+   * @param template {String} Optional
+   * @returns {String}
+   *
+   * @example
+   * formatDate(new Date(), '#{M}. #{j}, #{Y}')
+   * @returns {Number} Returns a formatted date
+   *
+   */
+  var formatDate = function (date,template) {
+    if ( template === void 0 ) template='#{m}/#{d}/#{Y}';
+
+    acceptedDateTokens.forEach(function (token) {
+      if(template.indexOf(("#{" + (token.key) + "}")) == -1) { return; } 
+      template = injectStringData(template,token.key,token.method(date));
+    }); 
+    acceptedTimeTokens.forEach(function (token) {
+      if(template.indexOf(("#{" + (token.key) + "}")) == -1) { return; }
+      template = injectStringData(template,token.key,token.method(date));
+    });
+    return template;
+  };
+
+  var keyCodes = { 
+    left: 37,
+    up: 38,
+    right: 39,
+    down: 40,
+    pgup: 33,
+    pgdown: 34,
+    enter: 13, 
+    escape: 27, 
+    tab: 9
+  };
+
+  var keyCodesArray = Object.keys(keyCodes).map(function (k) { return keyCodes[k]; });
+
+  /* src\Components\Week.html generated by Svelte v2.15.3 */
+
+  function datesAreSameDay(a,b) {
+    return a.getDate() == b.getDate() 
+      && a.getMonth() == b.getMonth()
+      && a.getFullYear() == b.getFullYear()
+  }
+  var file = "src\\Components\\Week.html";
+
+  function click_handler(event) {
+  	var ref = this._svelte;
+  	var component = ref.component;
+  	var ctx = ref.ctx;
+
+  	component.fire('dateSelected',ctx.day.date);
+  }
+
+  function get_each_context(ctx, list, i) {
+  	var child_ctx = Object.create(ctx);
+  	child_ctx.day = list[i];
+  	return child_ctx;
+  }
+
+  function create_main_fragment(component, ctx) {
+  	var div, current;
+
+  	var each_value = ctx.days;
+
+  	var each_blocks = [];
+
+  	for (var i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block(component, get_each_context(ctx, each_value, i));
+  	}
+
+  	return {
+  		c: function create() {
+  			div = createElement("div");
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+  			div.className = "week svelte-a1dw5x";
+  			addLoc(div, file, 0, 0, 0);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div, anchor);
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(div, null);
+  			}
+
+  			current = true;
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.days || changed.selected) {
+  				each_value = ctx.days;
+
+  				for (var i = 0; i < each_value.length; i += 1) {
+  					var child_ctx = get_each_context(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(changed, child_ctx);
+  					} else {
+  						each_blocks[i] = create_each_block(component, child_ctx);
+  						each_blocks[i].c();
+  						each_blocks[i].m(div, null);
+  					}
+  				}
+
+  				for (; i < each_blocks.length; i += 1) {
+  					each_blocks[i].d(1);
+  				}
+  				each_blocks.length = each_value.length;
+  			}
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: run,
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div);
+  			}
+
+  			destroyEach(each_blocks, detach);
+  		}
+  	};
+  }
+
+  // (2:2) {#each days as day}
+  function create_each_block(component, ctx) {
+  	var div, button, text0_value = ctx.day.date.getDate(), text0, text1;
+
+  	return {
+  		c: function create() {
+  			div = createElement("div");
+  			button = createElement("button");
+  			text0 = createText(text0_value);
+  			text1 = createText("\r\n    ");
+  			button.className = "day--label svelte-a1dw5x";
+  			toggleClass(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
+  			addLoc(button, file, 8, 6, 217);
+
+  			div._svelte = { component: component, ctx: ctx };
+
+  			addListener(div, "click", click_handler);
+  			div.className = "day svelte-a1dw5x";
+  			toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  			toggleClass(div, "is-today", ctx.day.isToday);
+  			addLoc(div, file, 2, 4, 47);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div, anchor);
+  			append(div, button);
+  			append(button, text0);
+  			append(div, text1);
+  		},
+
+  		p: function update(changed, _ctx) {
+  			ctx = _ctx;
+  			if ((changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
+  				setData(text0, text0_value);
+  			}
+
+  			if ((changed.days || changed.selected)) {
+  				toggleClass(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
+  			}
+
+  			div._svelte.ctx = ctx;
+  			if (changed.days) {
+  				toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  				toggleClass(div, "is-today", ctx.day.isToday);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div);
+  			}
+
+  			removeListener(div, "click", click_handler);
+  		}
+  	};
+  }
+
+  function Week(options) {
+  	this._debugName = '<Week>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this._state = assign$1({}, options.data);
+  	if (!('days' in this._state)) { console.warn("<Week> was created without expected data property 'days'"); }
+  	if (!('selected' in this._state)) { console.warn("<Week> was created without expected data property 'selected'"); }
+  	this._intro = !!options.intro;
+
+  	this._fragment = create_main_fragment(this, this._state);
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(Week.prototype, protoDev);
+
+  Week.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  };
+
+  /* src\Components\Month.html generated by Svelte v2.15.3 */
+
+  function data() { 
+    return { 
+      monthDict: monthDict
+    }
+  }
+  var file$1 = "src\\Components\\Month.html";
+
+  function get_each_context$1(ctx, list, i) {
+  	var child_ctx = Object.create(ctx);
+  	child_ctx.week = list[i];
+  	return child_ctx;
+  }
+
+  function create_main_fragment$1(component, ctx) {
+  	var div, current;
+
+  	var each_value = ctx.visibleMonth.weeks;
+
+  	var each_blocks = [];
+
+  	for (var i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block$1(component, get_each_context$1(ctx, each_value, i));
+  	}
+
+  	function outroBlock(i, detach, fn) {
+  		if (each_blocks[i]) {
+  			each_blocks[i].o(function () {
+  				if (detach) {
+  					each_blocks[i].d(detach);
+  					each_blocks[i] = null;
+  				}
+  				if (fn) { fn(); }
+  			});
+  		}
+  	}
+
+  	return {
+  		c: function create() {
+  			div = createElement("div");
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+  			div.className = "month-container svelte-m2exrs";
+  			addLoc(div, file$1, 0, 0, 0);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div, anchor);
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].i(div, null);
+  			}
+
+  			current = true;
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.visibleMonth || changed.selected) {
+  				each_value = ctx.visibleMonth.weeks;
+
+  				for (var i = 0; i < each_value.length; i += 1) {
+  					var child_ctx = get_each_context$1(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(changed, child_ctx);
+  					} else {
+  						each_blocks[i] = create_each_block$1(component, child_ctx);
+  						each_blocks[i].c();
+  					}
+  					each_blocks[i].i(div, null);
+  				}
+  				for (; i < each_blocks.length; i += 1) { outroBlock(i, 1); }
+  			}
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: function outro(outrocallback) {
+  			if (!current) { return; }
+
+  			each_blocks = each_blocks.filter(Boolean);
+  			var countdown = callAfter(outrocallback, each_blocks.length);
+  			for (var i = 0; i < each_blocks.length; i += 1) { outroBlock(i, 0, countdown); }
+
+  			current = false;
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div);
+  			}
+
+  			destroyEach(each_blocks, detach);
+  		}
+  	};
+  }
+
+  // (2:2) {#each visibleMonth.weeks as week}
+  function create_each_block$1(component, ctx) {
+  	var current;
+
+  	var week_initial_data = { days: ctx.week.days, selected: ctx.selected };
+  	var week = new Week({
+  		root: component.root,
+  		store: component.store,
+  		data: week_initial_data
+  	});
+
+  	week.on("dateSelected", function(event) {
+  		component.fire("dateSelected", event);
+  	});
+
+  	return {
+  		c: function create() {
+  			week._fragment.c();
+  		},
+
+  		m: function mount(target, anchor) {
+  			week._mount(target, anchor);
+  			current = true;
+  		},
+
+  		p: function update(changed, ctx) {
+  			var week_changes = {};
+  			if (changed.visibleMonth) { week_changes.days = ctx.week.days; }
+  			if (changed.selected) { week_changes.selected = ctx.selected; }
+  			week._set(week_changes);
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: function outro(outrocallback) {
+  			if (!current) { return; }
+
+  			if (week) { week._fragment.o(outrocallback); }
+  			current = false;
+  		},
+
+  		d: function destroy$$1(detach) {
+  			week.destroy(detach);
+  		}
+  	};
+  }
+
+  function Month(options) {
+  	this._debugName = '<Month>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this._state = assign$1(data(), options.data);
+  	if (!('visibleMonth' in this._state)) { console.warn("<Month> was created without expected data property 'visibleMonth'"); }
+  	if (!('selected' in this._state)) { console.warn("<Month> was created without expected data property 'selected'"); }
+  	this._intro = !!options.intro;
+
+  	this._fragment = create_main_fragment$1(this, this._state);
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+
+  		flush(this);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(Month.prototype, protoDev);
+
+  Month.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  };
+
+  /* src\Components\NavBar.html generated by Svelte v2.15.3 */
+
+  function data$1() { 
+    return { 
+      monthDict: monthDict, 
+      monthSelectorOpen: false
+    }
+  }
+  var methods = { 
+    toggleMonthSelectorOpen: function toggleMonthSelectorOpen() { 
+      var ref = this.get();
+      var monthSelectorOpen = ref.monthSelectorOpen; 
+      monthSelectorOpen = !monthSelectorOpen;
+      this.set({monthSelectorOpen: monthSelectorOpen});
+    }, 
+    monthSelected: function monthSelected(event,month) { 
+      event.stopPropagation(); 
+      this.fire('monthSelected', month);
+      this.toggleMonthSelectorOpen();
+    }
+  };
+
+  var file$2 = "src\\Components\\NavBar.html";
+
+  function click_handler$1(event) {
+  	var ref = this._svelte;
+  	var component = ref.component;
+  	var ctx = ref.ctx;
+
+  	component.monthSelected(event,ctx.index);
+  }
+
+  function get_each_context$2(ctx, list, i) {
+  	var child_ctx = Object.create(ctx);
+  	child_ctx.monthDefinition = list[i];
+  	child_ctx.index = i;
+  	return child_ctx;
+  }
+
+  function create_main_fragment$2(component, ctx) {
+  	var div5, div3, div0, i0, text0, div1, text1_value = ctx.monthDict[ctx.month].name, text1, text2, text3, text4, div2, i1, text5, div4, current;
+
+  	function click_handler(event) {
+  		component.fire('incrementMonth', -1);
+  	}
+
+  	function click_handler_1(event) {
+  		component.toggleMonthSelectorOpen();
+  	}
+
+  	function click_handler_2(event) {
+  		component.fire('incrementMonth', 1);
+  	}
+
+  	var each_value = ctx.monthDict;
+
+  	var each_blocks = [];
+
+  	for (var i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block$2(component, get_each_context$2(ctx, each_value, i));
+  	}
+
+  	return {
+  		c: function create() {
+  			div5 = createElement("div");
+  			div3 = createElement("div");
+  			div0 = createElement("div");
+  			i0 = createElement("i");
+  			text0 = createText("\r\n    ");
+  			div1 = createElement("div");
+  			text1 = createText(text1_value);
+  			text2 = createText(" ");
+  			text3 = createText(ctx.year);
+  			text4 = createText(" \r\n    ");
+  			div2 = createElement("div");
+  			i1 = createElement("i");
+  			text5 = createText("\r\n  ");
+  			div4 = createElement("div");
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+  			i0.className = "arrow left svelte-nk6n96";
+  			addLoc(i0, file$2, 5, 6, 174);
+  			addListener(div0, "click", click_handler);
+  			div0.className = "control svelte-nk6n96";
+  			toggleClass(div0, "enabled", ctx.canDecrementMonth);
+  			addLoc(div0, file$2, 2, 4, 58);
+  			addListener(div1, "click", click_handler_1);
+  			div1.className = "label svelte-nk6n96";
+  			addLoc(div1, file$2, 7, 4, 218);
+  			i1.className = "arrow right svelte-nk6n96";
+  			addLoc(i1, file$2, 13, 6, 445);
+  			addListener(div2, "click", click_handler_2);
+  			div2.className = "control svelte-nk6n96";
+  			toggleClass(div2, "enabled", ctx.canIncrementMonth);
+  			addLoc(div2, file$2, 10, 4, 331);
+  			div3.className = "heading-section svelte-nk6n96";
+  			addLoc(div3, file$2, 1, 2, 23);
+  			div4.className = "month-selector svelte-nk6n96";
+  			toggleClass(div4, "open", ctx.monthSelectorOpen);
+  			addLoc(div4, file$2, 16, 2, 498);
+  			div5.className = "title";
+  			addLoc(div5, file$2, 0, 0, 0);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div5, anchor);
+  			append(div5, div3);
+  			append(div3, div0);
+  			append(div0, i0);
+  			append(div3, text0);
+  			append(div3, div1);
+  			append(div1, text1);
+  			append(div1, text2);
+  			append(div1, text3);
+  			append(div3, text4);
+  			append(div3, div2);
+  			append(div2, i1);
+  			append(div5, text5);
+  			append(div5, div4);
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(div4, null);
+  			}
+
+  			current = true;
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.canDecrementMonth) {
+  				toggleClass(div0, "enabled", ctx.canDecrementMonth);
+  			}
+
+  			if ((changed.monthDict || changed.month) && text1_value !== (text1_value = ctx.monthDict[ctx.month].name)) {
+  				setData(text1, text1_value);
+  			}
+
+  			if (changed.year) {
+  				setData(text3, ctx.year);
+  			}
+
+  			if (changed.canIncrementMonth) {
+  				toggleClass(div2, "enabled", ctx.canIncrementMonth);
+  			}
+
+  			if (changed.month || changed.monthDict) {
+  				each_value = ctx.monthDict;
+
+  				for (var i = 0; i < each_value.length; i += 1) {
+  					var child_ctx = get_each_context$2(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(changed, child_ctx);
+  					} else {
+  						each_blocks[i] = create_each_block$2(component, child_ctx);
+  						each_blocks[i].c();
+  						each_blocks[i].m(div4, null);
+  					}
+  				}
+
+  				for (; i < each_blocks.length; i += 1) {
+  					each_blocks[i].d(1);
+  				}
+  				each_blocks.length = each_value.length;
+  			}
+
+  			if (changed.monthSelectorOpen) {
+  				toggleClass(div4, "open", ctx.monthSelectorOpen);
+  			}
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: run,
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div5);
+  			}
+
+  			removeListener(div0, "click", click_handler);
+  			removeListener(div1, "click", click_handler_1);
+  			removeListener(div2, "click", click_handler_2);
+
+  			destroyEach(each_blocks, detach);
+  		}
+  	};
+  }
+
+  // (18:4) {#each monthDict as monthDefinition, index}
+  function create_each_block$2(component, ctx) {
+  	var div, span, text0_value = ctx.monthDefinition.abbrev, text0, text1;
+
+  	return {
+  		c: function create() {
+  			div = createElement("div");
+  			span = createElement("span");
+  			text0 = createText(text0_value);
+  			text1 = createText("\r\n      ");
+  			span.className = "svelte-nk6n96";
+  			addLoc(span, file$2, 23, 8, 764);
+
+  			div._svelte = { component: component, ctx: ctx };
+
+  			addListener(div, "click", click_handler$1);
+  			div.className = "month-selector--month svelte-nk6n96";
+  			toggleClass(div, "selected", ctx.index==ctx.month);
+  			addLoc(div, file$2, 18, 6, 614);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div, anchor);
+  			append(div, span);
+  			append(span, text0);
+  			append(div, text1);
+  		},
+
+  		p: function update(changed, _ctx) {
+  			ctx = _ctx;
+  			if ((changed.monthDict) && text0_value !== (text0_value = ctx.monthDefinition.abbrev)) {
+  				setData(text0, text0_value);
+  			}
+
+  			div._svelte.ctx = ctx;
+  			if (changed.month) {
+  				toggleClass(div, "selected", ctx.index==ctx.month);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div);
+  			}
+
+  			removeListener(div, "click", click_handler$1);
+  		}
+  	};
+  }
+
+  function NavBar(options) {
+  	this._debugName = '<NavBar>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this._state = assign$1(data$1(), options.data);
+  	if (!('canDecrementMonth' in this._state)) { console.warn("<NavBar> was created without expected data property 'canDecrementMonth'"); }
+  	if (!('monthDict' in this._state)) { console.warn("<NavBar> was created without expected data property 'monthDict'"); }
+  	if (!('month' in this._state)) { console.warn("<NavBar> was created without expected data property 'month'"); }
+  	if (!('year' in this._state)) { console.warn("<NavBar> was created without expected data property 'year'"); }
+  	if (!('canIncrementMonth' in this._state)) { console.warn("<NavBar> was created without expected data property 'canIncrementMonth'"); }
+  	if (!('monthSelectorOpen' in this._state)) { console.warn("<NavBar> was created without expected data property 'monthSelectorOpen'"); }
+  	this._intro = !!options.intro;
+
+  	this._fragment = create_main_fragment$2(this, this._state);
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(NavBar.prototype, protoDev);
+  assign$1(NavBar.prototype, methods);
+
+  NavBar.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  };
+
+  /* src\Components\Popover.html generated by Svelte v2.15.3 */
+
+  function checkForFocusLoss(evt) { 
+    var ref = this.get();
+    var open = ref.open; 
+    if(!open) { return; }
+    var el = evt.target;
+    do {
+      if(el == this.refs.popover) { return; }
+    } while(el = el.parentNode)
+    this.close();
+  }
+  var once = function (el,evt,cb) { 
+    function handler() { 
+      cb.apply(this,arguments); 
+      el.removeEventListener(evt,handler);
+    }
+    el.addEventListener(evt,handler);
+  };
+
+  function data$2() { 
+    return { 
+      open: false,
+      shrink: false,
+      translateY: 0,
+      translateX: 0
+    }
+  }
+  var methods$1 = { 
+    getDistanceToEdges: function getDistanceToEdges() { 
+      var ref = this.get();
+      var open = ref.open; 
+      if(!open) { this.set({open: true}); }
+      var ref$1 = this.get();
+      var translateX = ref$1.translateX;
+      var translateY = ref$1.translateY; 
+      var ref$2 = this.refs;
+      var contentsWrapper = ref$2.contentsWrapper; 
+      var width = contentsWrapper.offsetWidth; 
+      var height = contentsWrapper.offsetHeight; 
+      var rect = contentsWrapper.getBoundingClientRect(); 
+      if(!open) { this.set({open: false}); }
+      return { 
+        top: rect.top + (-1*translateY), 
+        bottom: window.innerHeight - rect.bottom + translateY, 
+        left: rect.left + (-1*translateX), 
+        right: document.body.clientWidth - rect.right + translateX
+      }
+    }, 
+    getTranslate: function getTranslate() { 
+      var ref = this.get();
+      var w = ref.w; 
+      var dist = this.getDistanceToEdges(); 
+      var translateX, translateY; 
+      if(w < 480) { 
+        translateY = dist.bottom;
+      } else if(dist.top < 0) { 
+        translateY = Math.abs(dist.top); 
+      } else if(dist.bottom < 0) { 
+        translateY = dist.bottom; 
+      } else { 
+        translateY = 0; 
+      }
+      if(dist.left < 0) { 
+        translateX = Math.abs(dist.left); 
+      } else if(dist.right < 0) { 
+        translateX = dist.right;
+      } else { 
+        translateX = 0; 
+      }
+      return { translateX: translateX, translateY: translateY }  
+    },
+    reposition: function reposition() { 
+      this.set(this.getTranslate());
+    }, 
+    open: function open() { 
+      this.set(Object.assign({}, {open: true}, this.getTranslate()));
+      this.fire('opened');
+    },
+    close: function close() {
+      var this$1 = this;
+   
+      this.set({shrink:true});
+      once(this.refs.contentsAnimated, 'animationend', function () {
+        this$1.set({shrink: false, open: false});
+        this$1.fire('closed');
+      });
+    }
+  };
+
+  function oncreate() { 
+    document.addEventListener('click',checkForFocusLoss.bind(this)); 
+    var ref = this.get();
+    var trigger = ref.trigger; 
+    if(!trigger) { return; } 
+    this.refs.triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
+  }
+  function ondestroy() { 
+    document.removeEventListener('click', checkForFocusLoss);
+  }
+  var file$3 = "src\\Components\\Popover.html";
+
+  function create_main_fragment$3(component, ctx) {
+  	var div4, div0, slot_content_trigger = component._slotted.trigger, text, div3, div2, div1, slot_content_contents = component._slotted.contents, current;
+
+  	function onwindowresize(event) {
+  		component._updatingReadonlyProperty = true;
+
+  		component.set({
+  			w: this.innerWidth
+  		});
+
+  		component._updatingReadonlyProperty = false;
+  	}
+  	window.addEventListener("resize", onwindowresize);
+
+  	function click_handler(event) {
+  		component.open();
+  	}
+
+  	return {
+  		c: function create() {
+  			div4 = createElement("div");
+  			div0 = createElement("div");
+  			text = createText("\r\n  ");
+  			div3 = createElement("div");
+  			div2 = createElement("div");
+  			div1 = createElement("div");
+  			addListener(div0, "click", click_handler);
+  			div0.className = "trigger";
+  			addLoc(div0, file$3, 2, 2, 76);
+  			div1.className = "contents-inner svelte-1d67j1i";
+  			addLoc(div1, file$3, 13, 6, 450);
+  			div2.className = "contents svelte-1d67j1i";
+  			addLoc(div2, file$3, 12, 4, 399);
+  			div3.className = "contents-wrapper svelte-1d67j1i";
+  			setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+  			toggleClass(div3, "visible", ctx.open);
+  			toggleClass(div3, "shrink", ctx.shrink);
+  			addLoc(div3, file$3, 6, 2, 190);
+  			div4.className = "popover svelte-1d67j1i";
+  			addLoc(div4, file$3, 1, 0, 39);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div4, anchor);
+  			append(div4, div0);
+
+  			if (slot_content_trigger) {
+  				append(div0, slot_content_trigger);
+  			}
+
+  			component.refs.triggerContainer = div0;
+  			append(div4, text);
+  			append(div4, div3);
+  			append(div3, div2);
+  			append(div2, div1);
+
+  			if (slot_content_contents) {
+  				append(div1, slot_content_contents);
+  			}
+
+  			component.refs.contentsAnimated = div2;
+  			component.refs.contentsWrapper = div3;
+  			component.refs.popover = div4;
+  			current = true;
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.translateX || changed.translateY) {
+  				setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+  			}
+
+  			if (changed.open) {
+  				toggleClass(div3, "visible", ctx.open);
+  			}
+
+  			if (changed.shrink) {
+  				toggleClass(div3, "shrink", ctx.shrink);
+  			}
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: run,
+
+  		d: function destroy$$1(detach) {
+  			window.removeEventListener("resize", onwindowresize);
+
+  			if (detach) {
+  				detachNode(div4);
+  			}
+
+  			if (slot_content_trigger) {
+  				reinsertChildren(div0, slot_content_trigger);
+  			}
+
+  			removeListener(div0, "click", click_handler);
+  			if (component.refs.triggerContainer === div0) { component.refs.triggerContainer = null; }
+
+  			if (slot_content_contents) {
+  				reinsertChildren(div1, slot_content_contents);
+  			}
+
+  			if (component.refs.contentsAnimated === div2) { component.refs.contentsAnimated = null; }
+  			if (component.refs.contentsWrapper === div3) { component.refs.contentsWrapper = null; }
+  			if (component.refs.popover === div4) { component.refs.popover = null; }
+  		}
+  	};
+  }
+
+  function Popover(options) {
+  	var this$1 = this;
+
+  	this._debugName = '<Popover>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this.refs = {};
+  	this._state = assign$1(data$2(), options.data);
+  	this._state.w = window.innerWidth;
+  	if (!('w' in this._state)) { console.warn("<Popover> was created without expected data property 'w'"); }
+  	if (!('open' in this._state)) { console.warn("<Popover> was created without expected data property 'open'"); }
+  	if (!('shrink' in this._state)) { console.warn("<Popover> was created without expected data property 'shrink'"); }
+  	if (!('translateX' in this._state)) { console.warn("<Popover> was created without expected data property 'translateX'"); }
+  	if (!('translateY' in this._state)) { console.warn("<Popover> was created without expected data property 'translateY'"); }
+  	this._intro = !!options.intro;
+
+  	this._handlers.destroy = [ondestroy];
+
+  	this._slotted = options.slots || {};
+
+  	this._fragment = create_main_fragment$3(this, this._state);
+
+  	this.root._oncreate.push(function () {
+  		oncreate.call(this$1);
+  		this$1.fire("update", { changed: assignTrue({}, this$1._state), current: this$1._state });
+  	});
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+
+  		flush(this);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(Popover.prototype, protoDev);
+  assign$1(Popover.prototype, methods$1);
+
+  Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('w' in newState && !this._updatingReadonlyProperty) { throw new Error("<Popover>: Cannot set read-only property 'w'"); }
+  };
+
+  /* src\Components\Datepicker.html generated by Svelte v2.15.3 */
+
+
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+
+  function months(ref) {
+  	var start = ref.start;
+  	var end = ref.end;
+
+  	return getMonths(start,end);
+  }
+
+  function monthIndex(ref) {
+    var month = ref.month;
+    var year = ref.year;
+    var months = ref.months;
+   
+    for(var i = 0; i < months.length; ++i) { 
+      if(months[i].month == month && months[i].year == year) { return i }
+    }
+    return 0; 
+  }
+
+  function visibleMonth(ref) {
+  	var monthIndex = ref.monthIndex;
+  	var months = ref.months;
+
+  	return months[monthIndex];
+  }
+
+  function lastVisibleDate(ref) {
+  	var visibleMonth = ref.visibleMonth;
+
+  	return visibleMonth.weeks[visibleMonth.weeks.length-1].days[6].date;
+  }
+
+  function firstVisibleDate(ref) {
+  	var visibleMonth = ref.visibleMonth;
+
+  	return visibleMonth.weeks[0].days[0].date;
+  }
+
+  function canIncrementMonth(ref) {
+  	var monthIndex = ref.monthIndex;
+  	var months = ref.months;
+
+  	return monthIndex < months.length -1;
+  }
+
+  function canDecrementMonth(ref) {
+  	var monthIndex = ref.monthIndex;
+  	var months = ref.months;
+
+  	return monthIndex > 0;
+  }
+
+  function formattedSelected(ref) {
+  	var selected = ref.selected;
+  	var format = ref.format;
+
+  	return formatDate(selected,format);
+  }
+
+  function data$3() { 
+    var today = new Date(); 
+    return { 
+      today: today,
+      dayDict: dayDict,
+      format: '#{m}/#{d}/#{Y}',
+      start: new Date(1987, 9, 29), 
+      end: new Date(2020, 9, 29),
+      selected: today, 
+      dateChosen: false,
+      month: today.getMonth(), 
+      year: today.getFullYear(), 
+      trigger: null, 
+      assignmentHandler: function assignmentHandler(trigger,formatted) { 
+        trigger.innerHTML = formatted;
+      }
+    }
+  }
+  var methods$2 = { 
+    changeMonth: function changeMonth(month) { 
+      this.set({month: month});
+    },
+    incrementMonth: function incrementMonth(direction,date) {
+      var ref = this.get();
+      var canIncrementMonth = ref.canIncrementMonth;
+      var canDecrementMonth = ref.canDecrementMonth;
+      var month = ref.month;
+      var year = ref.year; 
+      if(direction == 1 && !canIncrementMonth) { return; }
+      if(direction == -1 && !canDecrementMonth) { return; }
+      var current = new Date(year,month,1); 
+      current.setMonth(current.getMonth() + direction); 
+      month = current.getMonth(); 
+      year = current.getFullYear(); 
+      var selected = new Date(year, month, date || 1);
+      this.set({
+        selected: selected,
+        month: month,
+        year: year
+      });
+      this.refs.popover.reposition(); 
+    },
+    incrementDay: function incrementDay(amount) { 
+      var ref = this.get();
+      var selected = ref.selected;
+      var visibleMonth = ref.visibleMonth;
+      var firstVisibleDate = ref.firstVisibleDate;
+      var lastVisibleDate = ref.lastVisibleDate;
+      selected = new Date(selected); 
+      selected.setDate(selected.getDate() + amount); 
+      if(amount > 0 && selected > lastVisibleDate) { return this.incrementMonth(1,selected.getDate()); } 
+      if(amount < 0 && selected < firstVisibleDate) { return this.incrementMonth(-1,selected.getDate()); }
+      this.set({selected: selected});
+      this.refs.popover.reposition(); 
+    }, 
+    handleKeyPress: function handleKeyPress(evt) { 
+      if(keyCodesArray.indexOf(evt.keyCode) == -1) { return; } 
+      evt.preventDefault(); 
+      switch(evt.keyCode) { 
+        case keyCodes.left:
+          this.incrementDay(-1);
+          break; 
+        case keyCodes.up:
+          this.incrementDay(-7);
+          break; 
+        case keyCodes.right:
+          this.incrementDay(1);
+          break; 
+        case keyCodes.down:
+          this.incrementDay(7);
+          break; 
+        case keyCodes.pgup:
+          this.incrementMonth(-1);
+          break;
+        case keyCodes.pgdown:
+          this.incrementMonth(1);
+          break;
+        case keyCodes.escape: 
+        case keyCodes.enter:
+          var ref = this.get();
+      var selected = ref.selected; 
+          this.registerSelection(selected);
+          break;
+      }
+    },
+    registerSelection: function registerSelection(selected) { 
+      var ref = this.get();
+      var trigger = ref.trigger;
+      var formattedSelected = ref.formattedSelected; 
+      this.refs.popover.close(); 
+      this.set({selected: selected, dateChosen: true});
+      this.assignValueToTrigger(trigger,formattedSelected); 
+    },
+    assignValueToTrigger: function assignValueToTrigger(trigger,formatted) { 
+      if(!trigger) { return; } 
+      this.get().assignmentHandler(trigger,formatted);
+    }, 
+    registerOpen: function registerOpen() { 
+      var ref = this.get();
+      var selected = ref.selected; 
+      var keydownListener = this.handleKeyPress.bind(this); 
+      this.set({
+        keydownListener: keydownListener, 
+        month: selected.getMonth(), 
+        year: selected.getFullYear()
+      });
+      document.addEventListener('keydown', keydownListener);
+    }, 
+    registerClose: function registerClose() { 
+      var ref = this.get();
+      var keydownListener = ref.keydownListener; 
+      document.removeEventListener('keydown', keydownListener);
+    }
+  };
+
+  function oncreate$1() { 
+    var ref = this.get();
+    var selected = ref.selected; 
+    this.set({
+      month: selected.getMonth(), 
+      year: selected.getFullYear()
+    });
+  }
+  var file$4 = "src\\Components\\Datepicker.html";
+
+  function get_each_context$3(ctx, list, i) {
+  	var child_ctx = Object.create(ctx);
+  	child_ctx.day = list[i];
+  	return child_ctx;
+  }
+
+  function create_main_fragment$4(component, ctx) {
+  	var div4, div0, slot_content_default = component._slotted.default, text0, div3, div2, text1, div1, text2, popover_updating = {}, current;
+
+  	var if_block = (!ctx.trigger) && create_if_block(component, ctx);
+
+  	var navbar_initial_data = {
+  	 	month: ctx.month,
+  	 	year: ctx.year,
+  	 	canIncrementMonth: ctx.canIncrementMonth,
+  	 	canDecrementMonth: ctx.canDecrementMonth
+  	 };
+  	var navbar = new NavBar({
+  		root: component.root,
+  		store: component.store,
+  		data: navbar_initial_data
+  	});
+
+  	navbar.on("monthSelected", function(event) {
+  		component.changeMonth(event);
+  	});
+  	navbar.on("incrementMonth", function(event) {
+  		component.incrementMonth(event);
+  	});
+
+  	var each_value = ctx.dayDict;
+
+  	var each_blocks = [];
+
+  	for (var i = 0; i < each_value.length; i += 1) {
+  		each_blocks[i] = create_each_block$3(component, get_each_context$3(ctx, each_value, i));
+  	}
+
+  	var month_initial_data = {
+  	 	visibleMonth: ctx.visibleMonth,
+  	 	selected: ctx.selected
+  	 };
+  	var month = new Month({
+  		root: component.root,
+  		store: component.store,
+  		data: month_initial_data
+  	});
+
+  	month.on("dateSelected", function(event) {
+  		component.registerSelection(event);
+  	});
+
+  	var popover_initial_data = { trigger: ctx.trigger };
+  	if (ctx.isOpen !== void 0) {
+  		popover_initial_data.open = ctx.isOpen;
+  		popover_updating.open = true;
+  	}
+  	if (ctx.isClosing !== void 0) {
+  		popover_initial_data.shrink = ctx.isClosing;
+  		popover_updating.shrink = true;
+  	}
+  	var popover = new Popover({
+  		root: component.root,
+  		store: component.store,
+  		slots: { default: createFragment(), contents: createFragment(), trigger: createFragment() },
+  		data: popover_initial_data,
+  		_bind: function _bind(changed, childState) {
+  			var newState = {};
+  			if (!popover_updating.open && changed.open) {
+  				newState.isOpen = childState.open;
+  			}
+
+  			if (!popover_updating.shrink && changed.shrink) {
+  				newState.isClosing = childState.shrink;
+  			}
+  			component._set(newState);
+  			popover_updating = {};
+  		}
+  	});
+
+  	component.root._beforecreate.push(function () {
+  		popover._bind({ open: 1, shrink: 1 }, popover.get());
+  	});
+
+  	popover.on("opened", function(event) {
+  		component.registerOpen(event);
+  	});
+  	popover.on("closed", function(event) {
+  		component.registerClose(event);
+  	});
+
+  	component.refs.popover = popover;
+
+  	return {
+  		c: function create() {
+  			div4 = createElement("div");
+  			div0 = createElement("div");
+  			if (!slot_content_default) {
+  				if (if_block) { if_block.c(); }
+  			}
+  			text0 = createText("\r\n    ");
+  			div3 = createElement("div");
+  			div2 = createElement("div");
+  			navbar._fragment.c();
+  			text1 = createText("\r\n        ");
+  			div1 = createElement("div");
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].c();
+  			}
+
+  			text2 = createText("\r\n        ");
+  			month._fragment.c();
+  			popover._fragment.c();
+  			setAttribute(div0, "slot", "trigger");
+  			div0.className = "svelte-k35zfd";
+  			addLoc(div0, file$4, 9, 4, 256);
+  			div1.className = "legend svelte-k35zfd";
+  			addLoc(div1, file$4, 28, 8, 754);
+  			div2.className = "calendar svelte-k35zfd";
+  			addLoc(div2, file$4, 19, 6, 489);
+  			setAttribute(div3, "slot", "contents");
+  			div3.className = "svelte-k35zfd";
+  			addLoc(div3, file$4, 18, 4, 460);
+  			div4.className = "datepicker svelte-k35zfd";
+  			toggleClass(div4, "open", ctx.isOpen);
+  			toggleClass(div4, "closing", ctx.isClosing);
+  			addLoc(div4, file$4, 0, 0, 0);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, div4, anchor);
+  			append(popover._slotted.trigger, div0);
+  			if (!slot_content_default) {
+  				if (if_block) { if_block.m(div0, null); }
+  			}
+
+  			else {
+  				append(div0, slot_content_default);
+  			}
+
+  			append(popover._slotted.default, text0);
+  			append(popover._slotted.contents, div3);
+  			append(div3, div2);
+  			navbar._mount(div2, null);
+  			append(div2, text1);
+  			append(div2, div1);
+
+  			for (var i = 0; i < each_blocks.length; i += 1) {
+  				each_blocks[i].m(div1, null);
+  			}
+
+  			append(div2, text2);
+  			month._mount(div2, null);
+  			popover._mount(div4, null);
+  			current = true;
+  		},
+
+  		p: function update(changed, _ctx) {
+  			ctx = _ctx;
+  			if (!slot_content_default) {
+
+  					if (!ctx.trigger) {
+  					if (if_block) {
+  						if_block.p(changed, ctx);
+  					} else {
+  						if_block = create_if_block(component, ctx);
+  						if_block.c();
+  						if_block.m(div0, null);
+  					}
+  				} else if (if_block) {
+  					if_block.d(1);
+  					if_block = null;
+  				}
+
+  			}
+
+  			var navbar_changes = {};
+  			if (changed.month) { navbar_changes.month = ctx.month; }
+  			if (changed.year) { navbar_changes.year = ctx.year; }
+  			if (changed.canIncrementMonth) { navbar_changes.canIncrementMonth = ctx.canIncrementMonth; }
+  			if (changed.canDecrementMonth) { navbar_changes.canDecrementMonth = ctx.canDecrementMonth; }
+  			navbar._set(navbar_changes);
+
+  			if (changed.dayDict) {
+  				each_value = ctx.dayDict;
+
+  				for (var i = 0; i < each_value.length; i += 1) {
+  					var child_ctx = get_each_context$3(ctx, each_value, i);
+
+  					if (each_blocks[i]) {
+  						each_blocks[i].p(changed, child_ctx);
+  					} else {
+  						each_blocks[i] = create_each_block$3(component, child_ctx);
+  						each_blocks[i].c();
+  						each_blocks[i].m(div1, null);
+  					}
+  				}
+
+  				for (; i < each_blocks.length; i += 1) {
+  					each_blocks[i].d(1);
+  				}
+  				each_blocks.length = each_value.length;
+  			}
+
+  			var month_changes = {};
+  			if (changed.visibleMonth) { month_changes.visibleMonth = ctx.visibleMonth; }
+  			if (changed.selected) { month_changes.selected = ctx.selected; }
+  			month._set(month_changes);
+
+  			var popover_changes = {};
+  			if (changed.trigger) { popover_changes.trigger = ctx.trigger; }
+  			if (!popover_updating.open && changed.isOpen) {
+  				popover_changes.open = ctx.isOpen;
+  				popover_updating.open = ctx.isOpen !== void 0;
+  			}
+  			if (!popover_updating.shrink && changed.isClosing) {
+  				popover_changes.shrink = ctx.isClosing;
+  				popover_updating.shrink = ctx.isClosing !== void 0;
+  			}
+  			popover._set(popover_changes);
+  			popover_updating = {};
+
+  			if (changed.isOpen) {
+  				toggleClass(div4, "open", ctx.isOpen);
+  			}
+
+  			if (changed.isClosing) {
+  				toggleClass(div4, "closing", ctx.isClosing);
+  			}
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: function outro(outrocallback) {
+  			if (!current) { return; }
+
+  			outrocallback = callAfter(outrocallback, 3);
+
+  			if (navbar) { navbar._fragment.o(outrocallback); }
+  			if (month) { month._fragment.o(outrocallback); }
+  			if (popover) { popover._fragment.o(outrocallback); }
+  			current = false;
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(div4);
+  				if (if_block) { if_block.d(); }
+  			}
+
+  			else {
+  				reinsertChildren(div0, slot_content_default);
+  			}
+
+  			navbar.destroy();
+
+  			destroyEach(each_blocks, detach);
+
+  			month.destroy();
+  			popover.destroy();
+  			if (component.refs.popover === popover) { component.refs.popover = null; }
+  		}
+  	};
+  }
+
+  // (12:8) {#if !trigger}
+  function create_if_block(component, ctx) {
+  	var button, text;
+
+  	return {
+  		c: function create() {
+  			button = createElement("button");
+  			text = createText(ctx.formattedSelected);
+  			button.className = "calendar-button svelte-k35zfd";
+  			addLoc(button, file$4, 12, 10, 326);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, button, anchor);
+  			append(button, text);
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.formattedSelected) {
+  				setData(text, ctx.formattedSelected);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(button);
+  			}
+  		}
+  	};
+  }
+
+  // (30:10) {#each dayDict as day}
+  function create_each_block$3(component, ctx) {
+  	var span, text_value = ctx.day.abbrev, text;
+
+  	return {
+  		c: function create() {
+  			span = createElement("span");
+  			text = createText(text_value);
+  			span.className = "svelte-k35zfd";
+  			addLoc(span, file$4, 30, 12, 822);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, span, anchor);
+  			append(span, text);
+  		},
+
+  		p: function update(changed, ctx) {
+  			if ((changed.dayDict) && text_value !== (text_value = ctx.day.abbrev)) {
+  				setData(text, text_value);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(span);
+  			}
+  		}
+  	};
+  }
+
+  function Datepicker(options) {
+  	var this$1 = this;
+
+  	this._debugName = '<Datepicker>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this.refs = {};
+  	this._state = assign$1(data$3(), options.data);
+
+  	this._recompute({ start: 1, end: 1, month: 1, year: 1, months: 1, monthIndex: 1, visibleMonth: 1, selected: 1, format: 1 }, this._state);
+  	if (!('start' in this._state)) { console.warn("<Datepicker> was created without expected data property 'start'"); }
+  	if (!('end' in this._state)) { console.warn("<Datepicker> was created without expected data property 'end'"); }
+  	if (!('month' in this._state)) { console.warn("<Datepicker> was created without expected data property 'month'"); }
+  	if (!('year' in this._state)) { console.warn("<Datepicker> was created without expected data property 'year'"); }
+
+
+
+  	if (!('selected' in this._state)) { console.warn("<Datepicker> was created without expected data property 'selected'"); }
+  	if (!('format' in this._state)) { console.warn("<Datepicker> was created without expected data property 'format'"); }
+  	if (!('isOpen' in this._state)) { console.warn("<Datepicker> was created without expected data property 'isOpen'"); }
+  	if (!('isClosing' in this._state)) { console.warn("<Datepicker> was created without expected data property 'isClosing'"); }
+  	if (!('trigger' in this._state)) { console.warn("<Datepicker> was created without expected data property 'trigger'"); }
+
+
+
+  	if (!('dayDict' in this._state)) { console.warn("<Datepicker> was created without expected data property 'dayDict'"); }
+  	this._intro = !!options.intro;
+
+  	this._slotted = options.slots || {};
+
+  	this._fragment = create_main_fragment$4(this, this._state);
+
+  	this.root._oncreate.push(function () {
+  		oncreate$1.call(this$1);
+  		this$1.fire("update", { changed: assignTrue({}, this$1._state), current: this$1._state });
+  	});
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+
+  		flush(this);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(Datepicker.prototype, protoDev);
+  assign$1(Datepicker.prototype, methods$2);
+
+  Datepicker.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('months' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'months'"); }
+  	if ('monthIndex' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'monthIndex'"); }
+  	if ('visibleMonth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'visibleMonth'"); }
+  	if ('lastVisibleDate' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'lastVisibleDate'"); }
+  	if ('firstVisibleDate' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'firstVisibleDate'"); }
+  	if ('canIncrementMonth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'canIncrementMonth'"); }
+  	if ('canDecrementMonth' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'canDecrementMonth'"); }
+  	if ('formattedSelected' in newState && !this._updatingReadonlyProperty) { throw new Error("<Datepicker>: Cannot set read-only property 'formattedSelected'"); }
+  };
+
+  Datepicker.prototype._recompute = function _recompute(changed, state) {
+  	if (changed.start || changed.end) {
+  		if (this._differs(state.months, (state.months = months(state)))) { changed.months = true; }
+  	}
+
+  	if (changed.month || changed.year || changed.months) {
+  		if (this._differs(state.monthIndex, (state.monthIndex = monthIndex(state)))) { changed.monthIndex = true; }
+  	}
+
+  	if (changed.monthIndex || changed.months) {
+  		if (this._differs(state.visibleMonth, (state.visibleMonth = visibleMonth(state)))) { changed.visibleMonth = true; }
+  	}
+
+  	if (changed.visibleMonth) {
+  		if (this._differs(state.lastVisibleDate, (state.lastVisibleDate = lastVisibleDate(state)))) { changed.lastVisibleDate = true; }
+  		if (this._differs(state.firstVisibleDate, (state.firstVisibleDate = firstVisibleDate(state)))) { changed.firstVisibleDate = true; }
+  	}
+
+  	if (changed.monthIndex || changed.months) {
+  		if (this._differs(state.canIncrementMonth, (state.canIncrementMonth = canIncrementMonth(state)))) { changed.canIncrementMonth = true; }
+  		if (this._differs(state.canDecrementMonth, (state.canDecrementMonth = canDecrementMonth(state)))) { changed.canDecrementMonth = true; }
+  	}
+
+  	if (changed.selected || changed.format) {
+  		if (this._differs(state.formattedSelected, (state.formattedSelected = formattedSelected(state)))) { changed.formattedSelected = true; }
+  	}
+  };
+
+  /* src\App.html generated by Svelte v2.15.3 */
+
+  function end(ref) {
+  	var start = ref.start;
+
+  	return new Date(start.getTime() + 1000 * 3600 * 24 * 720);
+  }
+
+  function data$4() {
+    return {
+      start: new Date(),
+      dateFormat: "#{l}, #{F} #{j}, #{Y}"
+    };
+  }
+  var file$5 = "src\\App.html";
+
+  function create_main_fragment$5(component, ctx) {
+  	var h1, text1, div2, p0, text3, text4, p1, text6, p2, text8, div0, text9, p3, text11, p4, text13, p5, text15, div1, button, datepicker2_updating = {}, text16, div4, p6, text18, p7, text20, p8, text22, p9, text24, p10, text26, p11, text28, div3, current;
+
+  	var datepicker0_initial_data = { format: ctx.dateFormat };
+  	var datepicker0 = new Datepicker({
+  		root: component.root,
+  		store: component.store,
+  		data: datepicker0_initial_data
+  	});
+
+  	var datepicker1 = new Datepicker({
+  		root: component.root,
+  		store: component.store
+  	});
+
+  	function select_block_type(ctx) {
+  		if (ctx.dateChosen) { return create_if_block$1; }
+  		return create_else_block;
+  	}
+
+  	var current_block_type = select_block_type(ctx);
+  	var if_block = current_block_type(component, ctx);
+
+  	var datepicker2_initial_data = { format: ctx.dateFormat };
+  	if (ctx.formattedSelected  !== void 0) {
+  		datepicker2_initial_data.formattedSelected = ctx.formattedSelected ;
+  		datepicker2_updating.formattedSelected = true;
+  	}
+  	if (ctx.dateChosen !== void 0) {
+  		datepicker2_initial_data.dateChosen = ctx.dateChosen;
+  		datepicker2_updating.dateChosen = true;
+  	}
+  	var datepicker2 = new Datepicker({
+  		root: component.root,
+  		store: component.store,
+  		slots: { default: createFragment() },
+  		data: datepicker2_initial_data,
+  		_bind: function _bind(changed, childState) {
+  			var newState = {};
+  			if (!datepicker2_updating.formattedSelected && changed.formattedSelected) {
+  				newState.formattedSelected = childState.formattedSelected;
+  			}
+
+  			if (!datepicker2_updating.dateChosen && changed.dateChosen) {
+  				newState.dateChosen = childState.dateChosen;
+  			}
+  			component._set(newState);
+  			datepicker2_updating = {};
+  		}
+  	});
+
+  	component.root._beforecreate.push(function () {
+  		datepicker2._bind({ formattedSelected: 1, dateChosen: 1 }, datepicker2.get());
+  	});
+
+  	var datepicker3 = new Datepicker({
+  		root: component.root,
+  		store: component.store
+  	});
+
+  	return {
+  		c: function create() {
+  			h1 = createElement("h1");
+  			h1.textContent = "Date Picker";
+  			text1 = createText("\r\n");
+  			div2 = createElement("div");
+  			p0 = createElement("p");
+  			p0.textContent = "Get your dates here, hot off the presses.";
+  			text3 = createText("\r\n\t");
+  			datepicker0._fragment.c();
+  			text4 = createText("\r\n\t\r\n\r\n\t");
+  			p1 = createElement("p");
+  			p1.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text6 = createText("\r\n\t");
+  			p2 = createElement("p");
+  			p2.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text8 = createText("\r\n\r\n\t");
+  			div0 = createElement("div");
+  			datepicker1._fragment.c();
+  			text9 = createText("\r\n\r\n\t");
+  			p3 = createElement("p");
+  			p3.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text11 = createText("\r\n\t");
+  			p4 = createElement("p");
+  			p4.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text13 = createText("\r\n\t");
+  			p5 = createElement("p");
+  			p5.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text15 = createText("\r\n\t");
+  			div1 = createElement("div");
+  			button = createElement("button");
+  			if_block.c();
+  			datepicker2._fragment.c();
+  			text16 = createText("\r\n");
+  			div4 = createElement("div");
+  			p6 = createElement("p");
+  			p6.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text18 = createText("\r\n\t");
+  			p7 = createElement("p");
+  			p7.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text20 = createText("\r\n\t");
+  			p8 = createElement("p");
+  			p8.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text22 = createText("\r\n\r\n\t");
+  			p9 = createElement("p");
+  			p9.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text24 = createText("\r\n\t");
+  			p10 = createElement("p");
+  			p10.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text26 = createText("\r\n\t");
+  			p11 = createElement("p");
+  			p11.textContent = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam\r\n\t\tvoluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?";
+  			text28 = createText("\r\n\t");
+  			div3 = createElement("div");
+  			datepicker3._fragment.c();
+  			addLoc(h1, file$5, 0, 0, 0);
+  			addLoc(p0, file$5, 2, 1, 48);
+  			addLoc(p1, file$5, 6, 1, 208);
+  			addLoc(p2, file$5, 8, 1, 456);
+  			div0.className = "text-center svelte-wud6u5";
+  			addLoc(div0, file$5, 11, 1, 706);
+  			addLoc(p3, file$5, 15, 1, 763);
+  			addLoc(p4, file$5, 17, 1, 1011);
+  			addLoc(p5, file$5, 19, 1, 1259);
+  			button.className = "custom-button svelte-wud6u5";
+  			addLoc(button, file$5, 23, 3, 1612);
+  			div1.className = "text-center svelte-wud6u5";
+  			addLoc(div1, file$5, 21, 1, 1507);
+  			div2.className = "container svelte-wud6u5";
+  			addLoc(div2, file$5, 1, 0, 22);
+  			addLoc(p6, file$5, 30, 1, 1794);
+  			addLoc(p7, file$5, 32, 1, 2042);
+  			addLoc(p8, file$5, 34, 1, 2290);
+  			addLoc(p9, file$5, 37, 1, 2540);
+  			addLoc(p10, file$5, 39, 1, 2788);
+  			addLoc(p11, file$5, 41, 1, 3036);
+  			div3.className = "text-right svelte-wud6u5";
+  			addLoc(div3, file$5, 43, 1, 3284);
+  			div4.className = "container svelte-wud6u5";
+  			addLoc(div4, file$5, 29, 0, 1768);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, h1, anchor);
+  			insert(target, text1, anchor);
+  			insert(target, div2, anchor);
+  			append(div2, p0);
+  			append(div2, text3);
+  			datepicker0._mount(div2, null);
+  			append(div2, text4);
+  			append(div2, p1);
+  			append(div2, text6);
+  			append(div2, p2);
+  			append(div2, text8);
+  			append(div2, div0);
+  			datepicker1._mount(div0, null);
+  			append(div2, text9);
+  			append(div2, p3);
+  			append(div2, text11);
+  			append(div2, p4);
+  			append(div2, text13);
+  			append(div2, p5);
+  			append(div2, text15);
+  			append(div2, div1);
+  			append(datepicker2._slotted.default, button);
+  			if_block.m(button, null);
+  			datepicker2._mount(div1, null);
+  			insert(target, text16, anchor);
+  			insert(target, div4, anchor);
+  			append(div4, p6);
+  			append(div4, text18);
+  			append(div4, p7);
+  			append(div4, text20);
+  			append(div4, p8);
+  			append(div4, text22);
+  			append(div4, p9);
+  			append(div4, text24);
+  			append(div4, p10);
+  			append(div4, text26);
+  			append(div4, p11);
+  			append(div4, text28);
+  			append(div4, div3);
+  			datepicker3._mount(div3, null);
+  			current = true;
+  		},
+
+  		p: function update(changed, _ctx) {
+  			ctx = _ctx;
+  			var datepicker0_changes = {};
+  			if (changed.dateFormat) { datepicker0_changes.format = ctx.dateFormat; }
+  			datepicker0._set(datepicker0_changes);
+
+  			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+  				if_block.p(changed, ctx);
+  			} else {
+  				if_block.d(1);
+  				if_block = current_block_type(component, ctx);
+  				if_block.c();
+  				if_block.m(button, null);
+  			}
+
+  			var datepicker2_changes = {};
+  			if (changed.dateFormat) { datepicker2_changes.format = ctx.dateFormat; }
+  			if (!datepicker2_updating.formattedSelected && changed.formattedSelected) {
+  				datepicker2_changes.formattedSelected = ctx.formattedSelected ;
+  				datepicker2_updating.formattedSelected = ctx.formattedSelected  !== void 0;
+  			}
+  			if (!datepicker2_updating.dateChosen && changed.dateChosen) {
+  				datepicker2_changes.dateChosen = ctx.dateChosen;
+  				datepicker2_updating.dateChosen = ctx.dateChosen !== void 0;
+  			}
+  			datepicker2._set(datepicker2_changes);
+  			datepicker2_updating = {};
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: function outro(outrocallback) {
+  			if (!current) { return; }
+
+  			outrocallback = callAfter(outrocallback, 4);
+
+  			if (datepicker0) { datepicker0._fragment.o(outrocallback); }
+  			if (datepicker1) { datepicker1._fragment.o(outrocallback); }
+  			if (datepicker2) { datepicker2._fragment.o(outrocallback); }
+  			if (datepicker3) { datepicker3._fragment.o(outrocallback); }
+  			current = false;
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(h1);
+  				detachNode(text1);
+  				detachNode(div2);
+  			}
+
+  			datepicker0.destroy();
+  			datepicker1.destroy();
+  			if_block.d();
+  			datepicker2.destroy();
+  			if (detach) {
+  				detachNode(text16);
+  				detachNode(div4);
+  			}
+
+  			datepicker3.destroy();
+  		}
+  	};
+  }
+
+  // (25:49) {:else}
+  function create_else_block(component, ctx) {
+  	var text;
+
+  	return {
+  		c: function create() {
+  			text = createText("Pick a date");
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, text, anchor);
+  		},
+
+  		p: noop,
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(text);
+  			}
+  		}
+  	};
+  }
+
+  // (25:4) {#if dateChosen}
+  function create_if_block$1(component, ctx) {
+  	var text0, text1;
+
+  	return {
+  		c: function create() {
+  			text0 = createText("Chosen: ");
+  			text1 = createText(ctx.formattedSelected);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, text0, anchor);
+  			insert(target, text1, anchor);
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.formattedSelected) {
+  				setData(text1, ctx.formattedSelected);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(text0);
+  				detachNode(text1);
+  			}
+  		}
+  	};
+  }
+
+  function App(options) {
+  	this._debugName = '<App>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this._state = assign$1(data$4(), options.data);
+
+  	this._recompute({ start: 1 }, this._state);
+  	if (!('start' in this._state)) { console.warn("<App> was created without expected data property 'start'"); }
+  	if (!('dateFormat' in this._state)) { console.warn("<App> was created without expected data property 'dateFormat'"); }
+  	if (!('formattedSelected' in this._state)) { console.warn("<App> was created without expected data property 'formattedSelected'"); }
+  	if (!('dateChosen' in this._state)) { console.warn("<App> was created without expected data property 'dateChosen'"); }
+  	this._intro = !!options.intro;
+
+  	this._fragment = create_main_fragment$5(this, this._state);
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+
+  		flush(this);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(App.prototype, protoDev);
+
+  App.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('end' in newState && !this._updatingReadonlyProperty) { throw new Error("<App>: Cannot set read-only property 'end'"); }
+  };
+
+  App.prototype._recompute = function _recompute(changed, state) {
+  	if (changed.start) {
+  		if (this._differs(state.end, (state.end = end(state)))) { changed.end = true; }
+  	}
+  };
+
+  es6ObjectAssign_2();
+
+  var app = new App({
+    target: document.body,
+    data: {}
+  });
+
+  return app;
+
+}());
 //# sourceMappingURL=test.js.map

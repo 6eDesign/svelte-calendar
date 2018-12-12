@@ -47,9 +47,17 @@
       </div>
     </div>
 
-    <script>
-      document.getElementById('test').addEventListener('click', () => console.log('clicked!'));
-    </script>
     <script src="bundle.js"></script>
+    <script>
+      var trigger = document.getElementById('test');
+      var cal = new SvelteCalendar({ 
+        target: document.querySelector('.button-container'),
+        anchor: trigger, 
+        data: { 
+          trigger: trigger
+        }
+      });
+    </script>
+    
   </body>
 </html>
