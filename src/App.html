@@ -35,13 +35,14 @@
 		</Datepicker>
 	</div>
 
-	<h4>Without Svelte:</h4>
+	<h4>Without Svelte HTML:</h4>
 	<pre><code class="html">
 &lt;div class="button-container"&gt;
   &lt;button id="test"&gt;My Custom Button&lt;/button&gt;
 &lt;/div&gt;
 	</code></pre>
 
+	<h4>Without Svelte JS:</h4>
 	<pre><code class="js">
 var trigger = document.getElementById('test');
 var cal = new SvelteCalendar(&#123; 
@@ -53,7 +54,7 @@ var cal = new SvelteCalendar(&#123;
 });
 	</code></pre>
 
-	<div>
+	<div class="text-center">
 		<Datepicker>
 			<button id="test">My Custom Button</button>
 		</Datepicker>
