@@ -1,4 +1,4 @@
-var SvelteCalendar = (function () {
+var app = (function () {
   'use strict';
 
   /**
@@ -74,6 +74,10 @@ var SvelteCalendar = (function () {
   	};
   }
 
+  function run(fn) {
+  	fn();
+  }
+
   function append(target, node) {
   	target.appendChild(node);
   }
@@ -108,6 +112,14 @@ var SvelteCalendar = (function () {
   	return document.createTextNode(data);
   }
 
+  function addListener(node, event, handler, options) {
+  	node.addEventListener(event, handler, options);
+  }
+
+  function removeListener(node, event, handler, options) {
+  	node.removeEventListener(event, handler, options);
+  }
+
   function setAttribute(node, attribute, value) {
   	if (value == null) { node.removeAttribute(attribute); }
   	else { node.setAttribute(attribute, value); }
@@ -115,6 +127,10 @@ var SvelteCalendar = (function () {
 
   function setData(text, data) {
   	text.data = '' + data;
+  }
+
+  function setStyle(node, key, value) {
+  	node.style.setProperty(key, value);
   }
 
   function toggleClass(element, name, toggle) {
@@ -539,236 +555,6 @@ var SvelteCalendar = (function () {
 
   var keyCodesArray = Object.keys(keyCodes).map(function (k) { return keyCodes[k]; });
 
-  function noop$1() {}
-
-  function assign$2(tar, src) {
-  	for (var k in src) { tar[k] = src[k]; }
-  	return tar;
-  }
-
-  function assignTrue$1(tar, src) {
-  	for (var k in src) { tar[k] = 1; }
-  	return tar;
-  }
-
-  function callAfter$1(fn, i) {
-  	if (i === 0) { fn(); }
-  	return function () {
-  		if (!--i) { fn(); }
-  	};
-  }
-
-  function addLoc$1(element, file, line, column, char) {
-  	element.__svelte_meta = {
-  		loc: { file: file, line: line, column: column, char: char }
-  	};
-  }
-
-  function run$1(fn) {
-  	fn();
-  }
-
-  function append$1(target, node) {
-  	target.appendChild(node);
-  }
-
-  function insert$1(target, node, anchor) {
-  	target.insertBefore(node, anchor);
-  }
-
-  function detachNode$1(node) {
-  	node.parentNode.removeChild(node);
-  }
-
-  function reinsertChildren$1(parent, target) {
-  	while (parent.firstChild) { target.appendChild(parent.firstChild); }
-  }
-
-  function destroyEach$1(iterations, detach) {
-  	for (var i = 0; i < iterations.length; i += 1) {
-  		if (iterations[i]) { iterations[i].d(detach); }
-  	}
-  }
-
-  function createElement$1(name) {
-  	return document.createElement(name);
-  }
-
-  function createText$1(data) {
-  	return document.createTextNode(data);
-  }
-
-  function addListener$1(node, event, handler, options) {
-  	node.addEventListener(event, handler, options);
-  }
-
-  function removeListener$1(node, event, handler, options) {
-  	node.removeEventListener(event, handler, options);
-  }
-
-  function setData$1(text, data) {
-  	text.data = '' + data;
-  }
-
-  function setStyle$1(node, key, value) {
-  	node.style.setProperty(key, value);
-  }
-
-  function toggleClass$1(element, name, toggle) {
-  	element.classList[toggle ? 'add' : 'remove'](name);
-  }
-
-  function blankObject$1() {
-  	return Object.create(null);
-  }
-
-  function destroy$1(detach) {
-  	this.destroy = noop$1;
-  	this.fire('destroy');
-  	this.set = noop$1;
-
-  	this._fragment.d(detach !== false);
-  	this._fragment = null;
-  	this._state = {};
-  }
-
-  function destroyDev$1(detach) {
-  	destroy$1.call(this, detach);
-  	this.destroy = function() {
-  		console.warn('Component was already destroyed');
-  	};
-  }
-
-  function _differs$1(a, b) {
-  	return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
-  }
-
-  function fire$1(eventName, data) {
-  	var handlers =
-  		eventName in this._handlers && this._handlers[eventName].slice();
-  	if (!handlers) { return; }
-
-  	for (var i = 0; i < handlers.length; i += 1) {
-  		var handler = handlers[i];
-
-  		if (!handler.__calling) {
-  			try {
-  				handler.__calling = true;
-  				handler.call(this, data);
-  			} finally {
-  				handler.__calling = false;
-  			}
-  		}
-  	}
-  }
-
-  function flush$1(component) {
-  	component._lock = true;
-  	callAll$1(component._beforecreate);
-  	callAll$1(component._oncreate);
-  	callAll$1(component._aftercreate);
-  	component._lock = false;
-  }
-
-  function get$1() {
-  	return this._state;
-  }
-
-  function init$1(component, options) {
-  	component._handlers = blankObject$1();
-  	component._slots = blankObject$1();
-  	component._bind = options._bind;
-  	component._staged = {};
-
-  	component.options = options;
-  	component.root = options.root || component;
-  	component.store = options.store || component.root.store;
-
-  	if (!options.root) {
-  		component._beforecreate = [];
-  		component._oncreate = [];
-  		component._aftercreate = [];
-  	}
-  }
-
-  function on$1(eventName, handler) {
-  	var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
-  	handlers.push(handler);
-
-  	return {
-  		cancel: function() {
-  			var index = handlers.indexOf(handler);
-  			if (~index) { handlers.splice(index, 1); }
-  		}
-  	};
-  }
-
-  function set$1(newState) {
-  	this._set(assign$2({}, newState));
-  	if (this.root._lock) { return; }
-  	flush$1(this.root);
-  }
-
-  function _set$1(newState) {
-  	var oldState = this._state,
-  		changed = {},
-  		dirty = false;
-
-  	newState = assign$2(this._staged, newState);
-  	this._staged = {};
-
-  	for (var key in newState) {
-  		if (this._differs(newState[key], oldState[key])) { changed[key] = dirty = true; }
-  	}
-  	if (!dirty) { return; }
-
-  	this._state = assign$2(assign$2({}, oldState), newState);
-  	this._recompute(changed, this._state);
-  	if (this._bind) { this._bind(changed, this._state); }
-
-  	if (this._fragment) {
-  		this.fire("state", { changed: changed, current: this._state, previous: oldState });
-  		this._fragment.p(changed, this._state);
-  		this.fire("update", { changed: changed, current: this._state, previous: oldState });
-  	}
-  }
-
-  function _stage$1(newState) {
-  	assign$2(this._staged, newState);
-  }
-
-  function setDev$1(newState) {
-  	if (typeof newState !== 'object') {
-  		throw new Error(
-  			this._debugName + '.set was called without an object of data key-values to update.'
-  		);
-  	}
-
-  	this._checkReadOnly(newState);
-  	set$1.call(this, newState);
-  }
-
-  function callAll$1(fns) {
-  	while (fns && fns.length) { fns.shift()(); }
-  }
-
-  function _mount$1(target, anchor) {
-  	this._fragment[this._fragment.i ? 'i' : 'm'](target, anchor || null);
-  }
-
-  var protoDev$1 = {
-  	destroy: destroyDev$1,
-  	get: get$1,
-  	fire: fire$1,
-  	on: on$1,
-  	set: setDev$1,
-  	_recompute: noop$1,
-  	_set: _set$1,
-  	_stage: _stage$1,
-  	_mount: _mount$1,
-  	_differs: _differs$1
-  };
-
   /* src\Components\Week.html generated by Svelte v2.15.3 */
 
   function datesAreSameDay(a,b) {
@@ -805,17 +591,17 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div = createElement$1("div");
+  			div = createElement("div");
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
   			div.className = "week svelte-a1dw5x";
-  			addLoc$1(div, file, 0, 0, 0);
+  			addLoc(div, file, 0, 0, 0);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div, anchor);
+  			insert(target, div, anchor);
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].m(div, null);
@@ -853,14 +639,14 @@ var SvelteCalendar = (function () {
   			this.m(target, anchor);
   		},
 
-  		o: run$1,
+  		o: run,
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode$1(div);
+  				detachNode(div);
   			}
 
-  			destroyEach$1(each_blocks, detach);
+  			destroyEach(each_blocks, detach);
   		}
   	};
   }
@@ -871,53 +657,53 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div = createElement$1("div");
-  			button = createElement$1("button");
-  			text0 = createText$1(text0_value);
-  			text1 = createText$1("\r\n    ");
+  			div = createElement("div");
+  			button = createElement("button");
+  			text0 = createText(text0_value);
+  			text1 = createText("\r\n    ");
   			button.className = "day--label svelte-a1dw5x";
-  			toggleClass$1(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
-  			addLoc$1(button, file, 8, 6, 217);
+  			toggleClass(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
+  			addLoc(button, file, 8, 6, 217);
 
   			div._svelte = { component: component, ctx: ctx };
 
-  			addListener$1(div, "click", click_handler);
+  			addListener(div, "click", click_handler);
   			div.className = "day svelte-a1dw5x";
-  			toggleClass$1(div, "outside-month", !ctx.day.partOfMonth);
-  			toggleClass$1(div, "is-today", ctx.day.isToday);
-  			addLoc$1(div, file, 2, 4, 47);
+  			toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  			toggleClass(div, "is-today", ctx.day.isToday);
+  			addLoc(div, file, 2, 4, 47);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div, anchor);
-  			append$1(div, button);
-  			append$1(button, text0);
-  			append$1(div, text1);
+  			insert(target, div, anchor);
+  			append(div, button);
+  			append(button, text0);
+  			append(div, text1);
   		},
 
   		p: function update(changed, _ctx) {
   			ctx = _ctx;
   			if ((changed.days) && text0_value !== (text0_value = ctx.day.date.getDate())) {
-  				setData$1(text0, text0_value);
+  				setData(text0, text0_value);
   			}
 
   			if ((changed.days || changed.selected)) {
-  				toggleClass$1(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
+  				toggleClass(button, "selected", datesAreSameDay(ctx.day.date,ctx.selected) === true);
   			}
 
   			div._svelte.ctx = ctx;
   			if (changed.days) {
-  				toggleClass$1(div, "outside-month", !ctx.day.partOfMonth);
-  				toggleClass$1(div, "is-today", ctx.day.isToday);
+  				toggleClass(div, "outside-month", !ctx.day.partOfMonth);
+  				toggleClass(div, "is-today", ctx.day.isToday);
   			}
   		},
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode$1(div);
+  				detachNode(div);
   			}
 
-  			removeListener$1(div, "click", click_handler);
+  			removeListener(div, "click", click_handler);
   		}
   	};
   }
@@ -928,8 +714,8 @@ var SvelteCalendar = (function () {
   		throw new Error("'target' is a required option");
   	}
 
-  	init$1(this, options);
-  	this._state = assign$2({}, options.data);
+  	init(this, options);
+  	this._state = assign$1({}, options.data);
   	if (!('days' in this._state)) { console.warn("<Week> was created without expected data property 'days'"); }
   	if (!('selected' in this._state)) { console.warn("<Week> was created without expected data property 'selected'"); }
   	this._intro = !!options.intro;
@@ -945,7 +731,7 @@ var SvelteCalendar = (function () {
   	this._intro = true;
   }
 
-  assign$2(Week.prototype, protoDev$1);
+  assign$1(Week.prototype, protoDev);
 
   Week.prototype._checkReadOnly = function _checkReadOnly(newState) {
   };
@@ -990,17 +776,17 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div = createElement$1("div");
+  			div = createElement("div");
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
   			div.className = "month-container svelte-m2exrs";
-  			addLoc$1(div, file$1, 0, 0, 0);
+  			addLoc(div, file$1, 0, 0, 0);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div, anchor);
+  			insert(target, div, anchor);
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].i(div, null);
@@ -1038,18 +824,18 @@ var SvelteCalendar = (function () {
   			if (!current) { return; }
 
   			each_blocks = each_blocks.filter(Boolean);
-  			var countdown = callAfter$1(outrocallback, each_blocks.length);
+  			var countdown = callAfter(outrocallback, each_blocks.length);
   			for (var i = 0; i < each_blocks.length; i += 1) { outroBlock(i, 0, countdown); }
 
   			current = false;
   		},
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode$1(div);
+  				detachNode(div);
   			}
 
-  			destroyEach$1(each_blocks, detach);
+  			destroyEach(each_blocks, detach);
   		}
   	};
   }
@@ -1099,7 +885,7 @@ var SvelteCalendar = (function () {
   			current = false;
   		},
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			week.destroy(detach);
   		}
   	};
@@ -1111,8 +897,8 @@ var SvelteCalendar = (function () {
   		throw new Error("'target' is a required option");
   	}
 
-  	init$1(this, options);
-  	this._state = assign$2(data(), options.data);
+  	init(this, options);
+  	this._state = assign$1(data(), options.data);
   	if (!('visibleMonth' in this._state)) { console.warn("<Month> was created without expected data property 'visibleMonth'"); }
   	if (!('selected' in this._state)) { console.warn("<Month> was created without expected data property 'selected'"); }
   	this._intro = !!options.intro;
@@ -1124,13 +910,13 @@ var SvelteCalendar = (function () {
   		this._fragment.c();
   		this._mount(options.target, options.anchor);
 
-  		flush$1(this);
+  		flush(this);
   	}
 
   	this._intro = true;
   }
 
-  assign$2(Month.prototype, protoDev$1);
+  assign$1(Month.prototype, protoDev);
 
   Month.prototype._checkReadOnly = function _checkReadOnly(newState) {
   };
@@ -1199,63 +985,63 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div5 = createElement$1("div");
-  			div3 = createElement$1("div");
-  			div0 = createElement$1("div");
-  			i0 = createElement$1("i");
-  			text0 = createText$1("\r\n    ");
-  			div1 = createElement$1("div");
-  			text1 = createText$1(text1_value);
-  			text2 = createText$1(" ");
-  			text3 = createText$1(ctx.year);
-  			text4 = createText$1(" \r\n    ");
-  			div2 = createElement$1("div");
-  			i1 = createElement$1("i");
-  			text5 = createText$1("\r\n  ");
-  			div4 = createElement$1("div");
+  			div5 = createElement("div");
+  			div3 = createElement("div");
+  			div0 = createElement("div");
+  			i0 = createElement("i");
+  			text0 = createText("\r\n    ");
+  			div1 = createElement("div");
+  			text1 = createText(text1_value);
+  			text2 = createText(" ");
+  			text3 = createText(ctx.year);
+  			text4 = createText(" \r\n    ");
+  			div2 = createElement("div");
+  			i1 = createElement("i");
+  			text5 = createText("\r\n  ");
+  			div4 = createElement("div");
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].c();
   			}
   			i0.className = "arrow left svelte-nk6n96";
-  			addLoc$1(i0, file$2, 5, 6, 174);
-  			addListener$1(div0, "click", click_handler);
+  			addLoc(i0, file$2, 5, 6, 174);
+  			addListener(div0, "click", click_handler);
   			div0.className = "control svelte-nk6n96";
-  			toggleClass$1(div0, "enabled", ctx.canDecrementMonth);
-  			addLoc$1(div0, file$2, 2, 4, 58);
-  			addListener$1(div1, "click", click_handler_1);
+  			toggleClass(div0, "enabled", ctx.canDecrementMonth);
+  			addLoc(div0, file$2, 2, 4, 58);
+  			addListener(div1, "click", click_handler_1);
   			div1.className = "label svelte-nk6n96";
-  			addLoc$1(div1, file$2, 7, 4, 218);
+  			addLoc(div1, file$2, 7, 4, 218);
   			i1.className = "arrow right svelte-nk6n96";
-  			addLoc$1(i1, file$2, 13, 6, 445);
-  			addListener$1(div2, "click", click_handler_2);
+  			addLoc(i1, file$2, 13, 6, 445);
+  			addListener(div2, "click", click_handler_2);
   			div2.className = "control svelte-nk6n96";
-  			toggleClass$1(div2, "enabled", ctx.canIncrementMonth);
-  			addLoc$1(div2, file$2, 10, 4, 331);
+  			toggleClass(div2, "enabled", ctx.canIncrementMonth);
+  			addLoc(div2, file$2, 10, 4, 331);
   			div3.className = "heading-section svelte-nk6n96";
-  			addLoc$1(div3, file$2, 1, 2, 23);
+  			addLoc(div3, file$2, 1, 2, 23);
   			div4.className = "month-selector svelte-nk6n96";
-  			toggleClass$1(div4, "open", ctx.monthSelectorOpen);
-  			addLoc$1(div4, file$2, 16, 2, 498);
+  			toggleClass(div4, "open", ctx.monthSelectorOpen);
+  			addLoc(div4, file$2, 16, 2, 498);
   			div5.className = "title";
-  			addLoc$1(div5, file$2, 0, 0, 0);
+  			addLoc(div5, file$2, 0, 0, 0);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div5, anchor);
-  			append$1(div5, div3);
-  			append$1(div3, div0);
-  			append$1(div0, i0);
-  			append$1(div3, text0);
-  			append$1(div3, div1);
-  			append$1(div1, text1);
-  			append$1(div1, text2);
-  			append$1(div1, text3);
-  			append$1(div3, text4);
-  			append$1(div3, div2);
-  			append$1(div2, i1);
-  			append$1(div5, text5);
-  			append$1(div5, div4);
+  			insert(target, div5, anchor);
+  			append(div5, div3);
+  			append(div3, div0);
+  			append(div0, i0);
+  			append(div3, text0);
+  			append(div3, div1);
+  			append(div1, text1);
+  			append(div1, text2);
+  			append(div1, text3);
+  			append(div3, text4);
+  			append(div3, div2);
+  			append(div2, i1);
+  			append(div5, text5);
+  			append(div5, div4);
 
   			for (var i = 0; i < each_blocks.length; i += 1) {
   				each_blocks[i].m(div4, null);
@@ -1266,19 +1052,19 @@ var SvelteCalendar = (function () {
 
   		p: function update(changed, ctx) {
   			if (changed.canDecrementMonth) {
-  				toggleClass$1(div0, "enabled", ctx.canDecrementMonth);
+  				toggleClass(div0, "enabled", ctx.canDecrementMonth);
   			}
 
   			if ((changed.monthDict || changed.month) && text1_value !== (text1_value = ctx.monthDict[ctx.month].name)) {
-  				setData$1(text1, text1_value);
+  				setData(text1, text1_value);
   			}
 
   			if (changed.year) {
-  				setData$1(text3, ctx.year);
+  				setData(text3, ctx.year);
   			}
 
   			if (changed.canIncrementMonth) {
-  				toggleClass$1(div2, "enabled", ctx.canIncrementMonth);
+  				toggleClass(div2, "enabled", ctx.canIncrementMonth);
   			}
 
   			if (changed.month || changed.monthDict) {
@@ -1303,7 +1089,7 @@ var SvelteCalendar = (function () {
   			}
 
   			if (changed.monthSelectorOpen) {
-  				toggleClass$1(div4, "open", ctx.monthSelectorOpen);
+  				toggleClass(div4, "open", ctx.monthSelectorOpen);
   			}
   		},
 
@@ -1313,18 +1099,18 @@ var SvelteCalendar = (function () {
   			this.m(target, anchor);
   		},
 
-  		o: run$1,
+  		o: run,
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode$1(div5);
+  				detachNode(div5);
   			}
 
-  			removeListener$1(div0, "click", click_handler);
-  			removeListener$1(div1, "click", click_handler_1);
-  			removeListener$1(div2, "click", click_handler_2);
+  			removeListener(div0, "click", click_handler);
+  			removeListener(div1, "click", click_handler_1);
+  			removeListener(div2, "click", click_handler_2);
 
-  			destroyEach$1(each_blocks, detach);
+  			destroyEach(each_blocks, detach);
   		}
   	};
   }
@@ -1335,46 +1121,46 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div = createElement$1("div");
-  			span = createElement$1("span");
-  			text0 = createText$1(text0_value);
-  			text1 = createText$1("\r\n      ");
+  			div = createElement("div");
+  			span = createElement("span");
+  			text0 = createText(text0_value);
+  			text1 = createText("\r\n      ");
   			span.className = "svelte-nk6n96";
-  			addLoc$1(span, file$2, 23, 8, 764);
+  			addLoc(span, file$2, 23, 8, 764);
 
   			div._svelte = { component: component, ctx: ctx };
 
-  			addListener$1(div, "click", click_handler$1);
+  			addListener(div, "click", click_handler$1);
   			div.className = "month-selector--month svelte-nk6n96";
-  			toggleClass$1(div, "selected", ctx.index==ctx.month);
-  			addLoc$1(div, file$2, 18, 6, 614);
+  			toggleClass(div, "selected", ctx.index==ctx.month);
+  			addLoc(div, file$2, 18, 6, 614);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div, anchor);
-  			append$1(div, span);
-  			append$1(span, text0);
-  			append$1(div, text1);
+  			insert(target, div, anchor);
+  			append(div, span);
+  			append(span, text0);
+  			append(div, text1);
   		},
 
   		p: function update(changed, _ctx) {
   			ctx = _ctx;
   			if ((changed.monthDict) && text0_value !== (text0_value = ctx.monthDefinition.abbrev)) {
-  				setData$1(text0, text0_value);
+  				setData(text0, text0_value);
   			}
 
   			div._svelte.ctx = ctx;
   			if (changed.month) {
-  				toggleClass$1(div, "selected", ctx.index==ctx.month);
+  				toggleClass(div, "selected", ctx.index==ctx.month);
   			}
   		},
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			if (detach) {
-  				detachNode$1(div);
+  				detachNode(div);
   			}
 
-  			removeListener$1(div, "click", click_handler$1);
+  			removeListener(div, "click", click_handler$1);
   		}
   	};
   }
@@ -1385,8 +1171,8 @@ var SvelteCalendar = (function () {
   		throw new Error("'target' is a required option");
   	}
 
-  	init$1(this, options);
-  	this._state = assign$2(data$1(), options.data);
+  	init(this, options);
+  	this._state = assign$1(data$1(), options.data);
   	if (!('canDecrementMonth' in this._state)) { console.warn("<NavBar> was created without expected data property 'canDecrementMonth'"); }
   	if (!('monthDict' in this._state)) { console.warn("<NavBar> was created without expected data property 'monthDict'"); }
   	if (!('month' in this._state)) { console.warn("<NavBar> was created without expected data property 'month'"); }
@@ -1406,8 +1192,8 @@ var SvelteCalendar = (function () {
   	this._intro = true;
   }
 
-  assign$2(NavBar.prototype, protoDev$1);
-  assign$2(NavBar.prototype, methods);
+  assign$1(NavBar.prototype, protoDev);
+  assign$1(NavBar.prototype, methods);
 
   NavBar.prototype._checkReadOnly = function _checkReadOnly(newState) {
   };
@@ -1534,44 +1320,44 @@ var SvelteCalendar = (function () {
 
   	return {
   		c: function create() {
-  			div4 = createElement$1("div");
-  			div0 = createElement$1("div");
-  			text = createText$1("\r\n  ");
-  			div3 = createElement$1("div");
-  			div2 = createElement$1("div");
-  			div1 = createElement$1("div");
-  			addListener$1(div0, "click", click_handler);
+  			div4 = createElement("div");
+  			div0 = createElement("div");
+  			text = createText("\r\n  ");
+  			div3 = createElement("div");
+  			div2 = createElement("div");
+  			div1 = createElement("div");
+  			addListener(div0, "click", click_handler);
   			div0.className = "trigger";
-  			addLoc$1(div0, file$3, 2, 2, 76);
+  			addLoc(div0, file$3, 2, 2, 76);
   			div1.className = "contents-inner svelte-1d67j1i";
-  			addLoc$1(div1, file$3, 13, 6, 450);
+  			addLoc(div1, file$3, 13, 6, 450);
   			div2.className = "contents svelte-1d67j1i";
-  			addLoc$1(div2, file$3, 12, 4, 399);
+  			addLoc(div2, file$3, 12, 4, 399);
   			div3.className = "contents-wrapper svelte-1d67j1i";
-  			setStyle$1(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
-  			toggleClass$1(div3, "visible", ctx.open);
-  			toggleClass$1(div3, "shrink", ctx.shrink);
-  			addLoc$1(div3, file$3, 6, 2, 190);
+  			setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+  			toggleClass(div3, "visible", ctx.open);
+  			toggleClass(div3, "shrink", ctx.shrink);
+  			addLoc(div3, file$3, 6, 2, 190);
   			div4.className = "popover svelte-1d67j1i";
-  			addLoc$1(div4, file$3, 1, 0, 39);
+  			addLoc(div4, file$3, 1, 0, 39);
   		},
 
   		m: function mount(target, anchor) {
-  			insert$1(target, div4, anchor);
-  			append$1(div4, div0);
+  			insert(target, div4, anchor);
+  			append(div4, div0);
 
   			if (slot_content_trigger) {
-  				append$1(div0, slot_content_trigger);
+  				append(div0, slot_content_trigger);
   			}
 
   			component.refs.triggerContainer = div0;
-  			append$1(div4, text);
-  			append$1(div4, div3);
-  			append$1(div3, div2);
-  			append$1(div2, div1);
+  			append(div4, text);
+  			append(div4, div3);
+  			append(div3, div2);
+  			append(div2, div1);
 
   			if (slot_content_contents) {
-  				append$1(div1, slot_content_contents);
+  				append(div1, slot_content_contents);
   			}
 
   			component.refs.contentsAnimated = div2;
@@ -1582,15 +1368,15 @@ var SvelteCalendar = (function () {
 
   		p: function update(changed, ctx) {
   			if (changed.translateX || changed.translateY) {
-  				setStyle$1(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
+  				setStyle(div3, "transform", "translate(-50%,-50%) translate(" + ctx.translateX + "px, " + ctx.translateY + "px)");
   			}
 
   			if (changed.open) {
-  				toggleClass$1(div3, "visible", ctx.open);
+  				toggleClass(div3, "visible", ctx.open);
   			}
 
   			if (changed.shrink) {
-  				toggleClass$1(div3, "shrink", ctx.shrink);
+  				toggleClass(div3, "shrink", ctx.shrink);
   			}
   		},
 
@@ -1600,24 +1386,24 @@ var SvelteCalendar = (function () {
   			this.m(target, anchor);
   		},
 
-  		o: run$1,
+  		o: run,
 
-  		d: function destroy(detach) {
+  		d: function destroy$$1(detach) {
   			window.removeEventListener("resize", onwindowresize);
 
   			if (detach) {
-  				detachNode$1(div4);
+  				detachNode(div4);
   			}
 
   			if (slot_content_trigger) {
-  				reinsertChildren$1(div0, slot_content_trigger);
+  				reinsertChildren(div0, slot_content_trigger);
   			}
 
-  			removeListener$1(div0, "click", click_handler);
+  			removeListener(div0, "click", click_handler);
   			if (component.refs.triggerContainer === div0) { component.refs.triggerContainer = null; }
 
   			if (slot_content_contents) {
-  				reinsertChildren$1(div1, slot_content_contents);
+  				reinsertChildren(div1, slot_content_contents);
   			}
 
   			if (component.refs.contentsAnimated === div2) { component.refs.contentsAnimated = null; }
@@ -1635,9 +1421,9 @@ var SvelteCalendar = (function () {
   		throw new Error("'target' is a required option");
   	}
 
-  	init$1(this, options);
+  	init(this, options);
   	this.refs = {};
-  	this._state = assign$2(data$2(), options.data);
+  	this._state = assign$1(data$2(), options.data);
   	this._state.w = window.innerWidth;
   	if (!('w' in this._state)) { console.warn("<Popover> was created without expected data property 'w'"); }
   	if (!('open' in this._state)) { console.warn("<Popover> was created without expected data property 'open'"); }
@@ -1654,7 +1440,7 @@ var SvelteCalendar = (function () {
 
   	this.root._oncreate.push(function () {
   		oncreate.call(this$1);
-  		this$1.fire("update", { changed: assignTrue$1({}, this$1._state), current: this$1._state });
+  		this$1.fire("update", { changed: assignTrue({}, this$1._state), current: this$1._state });
   	});
 
   	if (options.target) {
@@ -1662,14 +1448,14 @@ var SvelteCalendar = (function () {
   		this._fragment.c();
   		this._mount(options.target, options.anchor);
 
-  		flush$1(this);
+  		flush(this);
   	}
 
   	this._intro = true;
   }
 
-  assign$2(Popover.prototype, protoDev$1);
-  assign$2(Popover.prototype, methods$1);
+  assign$1(Popover.prototype, protoDev);
+  assign$1(Popover.prototype, methods$1);
 
   Popover.prototype._checkReadOnly = function _checkReadOnly(newState) {
   	if ('w' in newState && !this._updatingReadonlyProperty) { throw new Error("<Popover>: Cannot set read-only property 'w'"); }
@@ -2290,9 +2076,412 @@ var SvelteCalendar = (function () {
   	}
   };
 
+  /* src\App.html generated by Svelte v2.15.3 */
+
+  function end(ref) {
+  	var start = ref.start;
+
+  	return new Date(start.getTime() + 1000 * 3600 * 24 * 720);
+  }
+
+  function data$4() {
+    return {
+      start: new Date(),
+      dateFormat: "#{l}, #{F} #{j}, #{Y}"
+    };
+  }
+  function oncreate$2() { 
+  	hljs.initHighlightingOnLoad();
+  }
+  var file$5 = "src\\App.html";
+
+  function create_main_fragment$5(component, ctx) {
+  	var h1, text1, div2, p0, text3, text4, p1, text6, ul, li0, text8, li1, text10, li2, text12, li3, text14, li4, text16, li5, text18, li6, text20, p2, text22, h40, text24, pre0, code0, text25, text26, text27, text28, div0, button0, datepicker1_updating = {}, text29, h41, text31, pre1, code1, text33, pre2, code2, text35, div1, button1, current;
+
+  	var datepicker0_initial_data = { format: ctx.dateFormat };
+  	var datepicker0 = new Datepicker({
+  		root: component.root,
+  		store: component.store,
+  		data: datepicker0_initial_data
+  	});
+
+  	function select_block_type(ctx) {
+  		if (ctx.dateChosen) { return create_if_block$1; }
+  		return create_else_block;
+  	}
+
+  	var current_block_type = select_block_type(ctx);
+  	var if_block = current_block_type(component, ctx);
+
+  	var datepicker1_initial_data = { format: ctx.dateFormat };
+  	if (ctx.formattedSelected  !== void 0) {
+  		datepicker1_initial_data.formattedSelected = ctx.formattedSelected ;
+  		datepicker1_updating.formattedSelected = true;
+  	}
+  	if (ctx.dateChosen !== void 0) {
+  		datepicker1_initial_data.dateChosen = ctx.dateChosen;
+  		datepicker1_updating.dateChosen = true;
+  	}
+  	var datepicker1 = new Datepicker({
+  		root: component.root,
+  		store: component.store,
+  		slots: { default: createFragment() },
+  		data: datepicker1_initial_data,
+  		_bind: function _bind(changed, childState) {
+  			var newState = {};
+  			if (!datepicker1_updating.formattedSelected && changed.formattedSelected) {
+  				newState.formattedSelected = childState.formattedSelected;
+  			}
+
+  			if (!datepicker1_updating.dateChosen && changed.dateChosen) {
+  				newState.dateChosen = childState.dateChosen;
+  			}
+  			component._set(newState);
+  			datepicker1_updating = {};
+  		}
+  	});
+
+  	component.root._beforecreate.push(function () {
+  		datepicker1._bind({ formattedSelected: 1, dateChosen: 1 }, datepicker1.get());
+  	});
+
+  	var datepicker2 = new Datepicker({
+  		root: component.root,
+  		store: component.store,
+  		slots: { default: createFragment() }
+  	});
+
+  	return {
+  		c: function create() {
+  			h1 = createElement("h1");
+  			h1.textContent = "SvelteCalendar";
+  			text1 = createText("\r\n");
+  			div2 = createElement("div");
+  			p0 = createElement("p");
+  			p0.textContent = "A lightweight date picker written with Svelte. Here is an example:";
+  			text3 = createText("\r\n\r\n\t");
+  			datepicker0._fragment.c();
+  			text4 = createText("\r\n\t\r\n\r\n\t");
+  			p1 = createElement("p");
+  			p1.textContent = "This component can be used with or without the Svelte compiler.";
+  			text6 = createText("\r\n\t");
+  			ul = createElement("ul");
+  			li0 = createElement("li");
+  			li0.textContent = "Lightweight (~7KB)";
+  			text8 = createText("\r\n\t\t");
+  			li1 = createElement("li");
+  			li1.textContent = "IE11+ Compatible";
+  			text10 = createText("\r\n\t\t");
+  			li2 = createElement("li");
+  			li2.textContent = "Usable as a Svelte component";
+  			text12 = createText("\r\n\t\t");
+  			li3 = createElement("li");
+  			li3.textContent = "Usable with Vanilla JS / <Your Framework Here>";
+  			text14 = createText("\r\n\t\t");
+  			li4 = createElement("li");
+  			li4.textContent = "Usable as custom element";
+  			text16 = createText("\r\n\t\t");
+  			li5 = createElement("li");
+  			li5.textContent = "Mobile/thumb friendly";
+  			text18 = createText("\r\n\t\t");
+  			li6 = createElement("li");
+  			li6.textContent = "Keyboard navigation";
+  			text20 = createText("\r\n\r\n\t");
+  			p2 = createElement("p");
+  			p2.textContent = "Above you can see the default styling of this component.  This will be created for you by default when using the component but you can also pass in your own calendar 'trigger' either as a slot (custom element or svelte) or as a DOM node reference (use as vanilla JS).  Here are some examples:";
+  			text22 = createText("\r\n\r\n\t");
+  			h40 = createElement("h4");
+  			h40.textContent = "With Svelte:";
+  			text24 = createText("\r\n\t");
+  			pre0 = createElement("pre");
+  			code0 = createElement("code");
+  			text25 = createText("<Datepicker format=");
+  			text26 = createText(ctx.dateFormat);
+  			text27 = createText(" bind:formattedSelected bind:dateChosen>\r\n  <button class=\"custom-button\">\r\n    {#if dateChosen} Chosen: {formattedSelected} {:else} Pick a date {/if}\r\n  </button>\r\n</Datepicker>");
+  			text28 = createText("\r\n\r\n\t");
+  			div0 = createElement("div");
+  			button0 = createElement("button");
+  			if_block.c();
+  			datepicker1._fragment.c();
+  			text29 = createText("\r\n\r\n\t");
+  			h41 = createElement("h4");
+  			h41.textContent = "Without Svelte:";
+  			text31 = createText("\r\n\t");
+  			pre1 = createElement("pre");
+  			code1 = createElement("code");
+  			code1.textContent = "<div class=\"button-container\">\r\n  <button id=\"test\">My Custom Button</button>\r\n</div>";
+  			text33 = createText("\r\n\r\n\t");
+  			pre2 = createElement("pre");
+  			code2 = createElement("code");
+  			code2.textContent = "var trigger = document.getElementById('test');\r\nvar cal = new SvelteCalendar({ \r\n  target: document.querySelector('.button-container'),\r\n  anchor: trigger, \r\n  data: {\r\n    trigger: trigger\r\n  }\r\n});";
+  			text35 = createText("\r\n\r\n\t");
+  			div1 = createElement("div");
+  			button1 = createElement("button");
+  			button1.textContent = "My Custom Button";
+  			datepicker2._fragment.c();
+  			h1.className = "svelte-122tapd";
+  			addLoc(h1, file$5, 0, 0, 0);
+  			addLoc(p0, file$5, 2, 1, 51);
+  			addLoc(p1, file$5, 7, 1, 239);
+  			addLoc(li0, file$5, 9, 2, 320);
+  			addLoc(li1, file$5, 10, 2, 351);
+  			addLoc(li2, file$5, 11, 2, 380);
+  			addLoc(li3, file$5, 12, 2, 421);
+  			addLoc(li4, file$5, 13, 2, 486);
+  			addLoc(li5, file$5, 14, 2, 523);
+  			addLoc(li6, file$5, 15, 2, 557);
+  			addLoc(ul, file$5, 8, 1, 312);
+  			addLoc(p2, file$5, 18, 1, 598);
+  			addLoc(h40, file$5, 20, 1, 902);
+  			code0.className = "html";
+  			addLoc(code0, file$5, 21, 6, 931);
+  			addLoc(pre0, file$5, 21, 1, 926);
+  			button0.className = "custom-button svelte-122tapd";
+  			addLoc(button0, file$5, 31, 3, 1331);
+  			div0.className = "text-center svelte-122tapd";
+  			addLoc(div0, file$5, 29, 1, 1226);
+  			addLoc(h41, file$5, 37, 1, 1482);
+  			code1.className = "html";
+  			addLoc(code1, file$5, 38, 6, 1514);
+  			addLoc(pre1, file$5, 38, 1, 1509);
+  			code2.className = "js";
+  			addLoc(code2, file$5, 44, 6, 1670);
+  			addLoc(pre2, file$5, 44, 1, 1665);
+  			button1.id = "test";
+  			addLoc(button1, file$5, 57, 3, 1945);
+  			addLoc(div1, file$5, 55, 1, 1919);
+  			div2.className = "container svelte-122tapd";
+  			addLoc(div2, file$5, 1, 0, 25);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, h1, anchor);
+  			insert(target, text1, anchor);
+  			insert(target, div2, anchor);
+  			append(div2, p0);
+  			append(div2, text3);
+  			datepicker0._mount(div2, null);
+  			append(div2, text4);
+  			append(div2, p1);
+  			append(div2, text6);
+  			append(div2, ul);
+  			append(ul, li0);
+  			append(ul, text8);
+  			append(ul, li1);
+  			append(ul, text10);
+  			append(ul, li2);
+  			append(ul, text12);
+  			append(ul, li3);
+  			append(ul, text14);
+  			append(ul, li4);
+  			append(ul, text16);
+  			append(ul, li5);
+  			append(ul, text18);
+  			append(ul, li6);
+  			append(div2, text20);
+  			append(div2, p2);
+  			append(div2, text22);
+  			append(div2, h40);
+  			append(div2, text24);
+  			append(div2, pre0);
+  			append(pre0, code0);
+  			append(code0, text25);
+  			append(code0, text26);
+  			append(code0, text27);
+  			append(div2, text28);
+  			append(div2, div0);
+  			append(datepicker1._slotted.default, button0);
+  			if_block.m(button0, null);
+  			datepicker1._mount(div0, null);
+  			append(div2, text29);
+  			append(div2, h41);
+  			append(div2, text31);
+  			append(div2, pre1);
+  			append(pre1, code1);
+  			append(div2, text33);
+  			append(div2, pre2);
+  			append(pre2, code2);
+  			append(div2, text35);
+  			append(div2, div1);
+  			append(datepicker2._slotted.default, button1);
+  			datepicker2._mount(div1, null);
+  			current = true;
+  		},
+
+  		p: function update(changed, _ctx) {
+  			ctx = _ctx;
+  			var datepicker0_changes = {};
+  			if (changed.dateFormat) { datepicker0_changes.format = ctx.dateFormat; }
+  			datepicker0._set(datepicker0_changes);
+
+  			if (!current || changed.dateFormat) {
+  				setData(text26, ctx.dateFormat);
+  			}
+
+  			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
+  				if_block.p(changed, ctx);
+  			} else {
+  				if_block.d(1);
+  				if_block = current_block_type(component, ctx);
+  				if_block.c();
+  				if_block.m(button0, null);
+  			}
+
+  			var datepicker1_changes = {};
+  			if (changed.dateFormat) { datepicker1_changes.format = ctx.dateFormat; }
+  			if (!datepicker1_updating.formattedSelected && changed.formattedSelected) {
+  				datepicker1_changes.formattedSelected = ctx.formattedSelected ;
+  				datepicker1_updating.formattedSelected = ctx.formattedSelected  !== void 0;
+  			}
+  			if (!datepicker1_updating.dateChosen && changed.dateChosen) {
+  				datepicker1_changes.dateChosen = ctx.dateChosen;
+  				datepicker1_updating.dateChosen = ctx.dateChosen !== void 0;
+  			}
+  			datepicker1._set(datepicker1_changes);
+  			datepicker1_updating = {};
+  		},
+
+  		i: function intro(target, anchor) {
+  			if (current) { return; }
+
+  			this.m(target, anchor);
+  		},
+
+  		o: function outro(outrocallback) {
+  			if (!current) { return; }
+
+  			outrocallback = callAfter(outrocallback, 3);
+
+  			if (datepicker0) { datepicker0._fragment.o(outrocallback); }
+  			if (datepicker1) { datepicker1._fragment.o(outrocallback); }
+  			if (datepicker2) { datepicker2._fragment.o(outrocallback); }
+  			current = false;
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(h1);
+  				detachNode(text1);
+  				detachNode(div2);
+  			}
+
+  			datepicker0.destroy();
+  			if_block.d();
+  			datepicker1.destroy();
+  			datepicker2.destroy();
+  		}
+  	};
+  }
+
+  // (33:49) {:else}
+  function create_else_block(component, ctx) {
+  	var text;
+
+  	return {
+  		c: function create() {
+  			text = createText("Pick a date");
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, text, anchor);
+  		},
+
+  		p: noop,
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(text);
+  			}
+  		}
+  	};
+  }
+
+  // (33:4) {#if dateChosen}
+  function create_if_block$1(component, ctx) {
+  	var text0, text1;
+
+  	return {
+  		c: function create() {
+  			text0 = createText("Chosen: ");
+  			text1 = createText(ctx.formattedSelected);
+  		},
+
+  		m: function mount(target, anchor) {
+  			insert(target, text0, anchor);
+  			insert(target, text1, anchor);
+  		},
+
+  		p: function update(changed, ctx) {
+  			if (changed.formattedSelected) {
+  				setData(text1, ctx.formattedSelected);
+  			}
+  		},
+
+  		d: function destroy$$1(detach) {
+  			if (detach) {
+  				detachNode(text0);
+  				detachNode(text1);
+  			}
+  		}
+  	};
+  }
+
+  function App(options) {
+  	var this$1 = this;
+
+  	this._debugName = '<App>';
+  	if (!options || (!options.target && !options.root)) {
+  		throw new Error("'target' is a required option");
+  	}
+
+  	init(this, options);
+  	this._state = assign$1(data$4(), options.data);
+
+  	this._recompute({ start: 1 }, this._state);
+  	if (!('start' in this._state)) { console.warn("<App> was created without expected data property 'start'"); }
+  	if (!('dateFormat' in this._state)) { console.warn("<App> was created without expected data property 'dateFormat'"); }
+  	if (!('formattedSelected' in this._state)) { console.warn("<App> was created without expected data property 'formattedSelected'"); }
+  	if (!('dateChosen' in this._state)) { console.warn("<App> was created without expected data property 'dateChosen'"); }
+  	this._intro = !!options.intro;
+
+  	this._fragment = create_main_fragment$5(this, this._state);
+
+  	this.root._oncreate.push(function () {
+  		oncreate$2.call(this$1);
+  		this$1.fire("update", { changed: assignTrue({}, this$1._state), current: this$1._state });
+  	});
+
+  	if (options.target) {
+  		if (options.hydrate) { throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option"); }
+  		this._fragment.c();
+  		this._mount(options.target, options.anchor);
+
+  		flush(this);
+  	}
+
+  	this._intro = true;
+  }
+
+  assign$1(App.prototype, protoDev);
+
+  App.prototype._checkReadOnly = function _checkReadOnly(newState) {
+  	if ('end' in newState && !this._updatingReadonlyProperty) { throw new Error("<App>: Cannot set read-only property 'end'"); }
+  };
+
+  App.prototype._recompute = function _recompute(changed, state) {
+  	if (changed.start) {
+  		if (this._differs(state.end, (state.end = end(state)))) { changed.end = true; }
+  	}
+  };
+
   es6ObjectAssign_2();
 
-  return Datepicker;
+  var app = new App({
+    target: document.body,
+    data: {}
+  });
+
+  return app;
 
 }());
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=test.js.map

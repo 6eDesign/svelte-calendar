@@ -13,7 +13,7 @@ const bundle = {
     sourcemap: true,
     format: "iife",
     name: "SvelteCalendar",
-    file: "public/bundle.js"
+    file: "docs/bundle.js"
   },
   plugins: [
     svelte({
@@ -26,7 +26,7 @@ const bundle = {
       // we'll extract any component CSS out into
       // a separate file — better for performance
       css: css => {
-        css.write("public/bundle.css");
+        css.write("docs/bundle.css");
       }
     }),
 
@@ -51,7 +51,7 @@ const test = {
     sourcemap: true,
     format: "iife",
     name: "app",
-    file: "public/test.js"
+    file: "docs/test.js"
   },
   plugins: [
     svelte({
@@ -64,7 +64,7 @@ const test = {
       // we'll extract any component CSS out into
       // a separate file — better for performance
       css: css => {
-        css.write("public/test.css");
+        css.write("docs/test.css");
       }
     }),
 
@@ -77,7 +77,7 @@ const test = {
     commonjs(),
     buble({ objectAssign: true }),
 
-    !production && browsersync({ server: "public" }),
+    !production && browsersync({ server: "docs" }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

@@ -1,24 +1,32 @@
-<h1>Date Picker</h1>
+<h1>SvelteCalendar</h1>
 <div class="container">
-	<p>Get your dates here, hot off the presses.</p>
+	<p>A lightweight date picker written with Svelte. Here is an example: </p>
+
 	<Datepicker format="{dateFormat}" />
 	<!-- <Datepicker ref:cal {start} {end} format="mm/dd/yyyy" /> -->
 
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+	<p>This component can be used with or without the Svelte compiler.</p>
+	<ul>
+		<li>Lightweight (~7KB)</li>
+		<li>IE11+ Compatible</li>
+		<li>Usable as a Svelte component</li>
+		<li>Usable with Vanilla JS / &lt;Your Framework Here&gt;</li>
+		<li>Usable as custom element</li>
+		<li>Mobile/thumb friendly</li>
+		<li>Keyboard navigation</li>
+	</ul>
 
-	<div class="text-center">
-		<Datepicker />
-	</div>
+	<p>Above you can see the default styling of this component.  This will be created for you by default when using the component but you can also pass in your own calendar 'trigger' either as a slot (custom element or svelte) or as a DOM node reference (use as vanilla JS).  Here are some examples:</p>
 
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
+	<h4>With Svelte:</h4>
+	<pre><code class="html">
+&lt;Datepicker format={dateFormat} bind:formattedSelected bind:dateChosen&gt;
+  &lt;button class="custom-button"&gt;
+    &#123;#if dateChosen} Chosen: &#123;formattedSelected} &#123;:else} Pick a date &#123;/if}
+  &lt;/button&gt;
+&lt;/Datepicker&gt;
+	</code></pre>
+
 	<div class="text-center">
 		<Datepicker format={dateFormat} bind:formattedSelected bind:dateChosen>
 			<button class="custom-button">
@@ -26,30 +34,43 @@
 			</button>
 		</Datepicker>
 	</div>
-</div>
-<div class="container">
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
 
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit mollitia fugiat praesentium, beatae possimus vero ullam
-		voluptatibus numquam nostrum magni enim expedita commodi doloribus assumenda fuga? Veniam pariatur laudantium amet?</p>
-	<div class="text-right">
-		<Datepicker />
+	<h4>Without Svelte:</h4>
+	<pre><code class="html">
+&lt;div class="button-container"&gt;
+  &lt;button id="test"&gt;My Custom Button&lt;/button&gt;
+&lt;/div&gt;
+	</code></pre>
+
+	<pre><code class="js">
+var trigger = document.getElementById('test');
+var cal = new SvelteCalendar(&#123; 
+  target: document.querySelector('.button-container'),
+  anchor: trigger, 
+  data: &#123;
+    trigger: trigger
+  }
+});
+	</code></pre>
+
+	<div>
+		<Datepicker>
+			<button id="test">My Custom Button</button>
+		</Datepicker>
 	</div>
 </div>
 
 <style>
+	h1 { 
+		text-align: center;
+		margin: 100px 0;
+	}
 	.container {
 	  background: #eee;
-	  padding: 10px;
+		padding: 15px;
+		max-width: 100%; 
+		width: 800px;
+		margin: 0 auto;
 	}
 	.custom-button {
 	  display: inline-block;
@@ -81,6 +102,9 @@
 	  },
 	  components: {
 	    Datepicker: "./Components/Datepicker.html"
-	  }
+		},
+		oncreate() { 
+			hljs.initHighlightingOnLoad();
+		}
 	};
 </script>
