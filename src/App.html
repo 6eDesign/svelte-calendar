@@ -13,7 +13,7 @@
 		<li>Usable with Vanilla JS / &lt;Your Framework Here&gt;</li>
 		<li>Usable as custom element</li>
 		<li>Mobile/thumb friendly</li>
-		<li>Keyboard navigation</li>
+		<li>Keyboard navigation (arrows, pgup/pgdown, tab, esc)</li>
 	</ul>
 
 	<p>Above you can see the default styling of this component.  This will be created for you by default when using the component but you can also pass in your own calendar 'trigger' either as a slot (custom element or svelte) or as a DOM node reference (use as vanilla JS).  Here are some examples:</p>
@@ -55,8 +55,10 @@ var cal = new SvelteCalendar(&#123;
 	</code></pre>
 
 	<div class="text-center">
-		<Datepicker>
-			<button id="test">My Custom Button</button>
+		<Datepicker bind:formattedSelected=exampleFormatted bind:dateChosen=exampleChosen>
+			<button id="test">
+				{#if exampleChosen} {exampleFormatted} {:else}  Custom Button {/if}
+			</button>
 		</Datepicker>
 	</div>
 </div>

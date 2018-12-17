@@ -175,9 +175,6 @@
         }
         return { translateX, translateY }  
       },
-      reposition() { 
-        this.set(this.getTranslate());
-      }, 
       open() { 
         this.set({open: true, ...this.getTranslate()});
         this.fire('opened');

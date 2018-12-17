@@ -79,6 +79,7 @@
     border: 1px solid #eee;
     display: block;
     text-align: center;
+    width: 300px;
     text-decoration: none;
     cursor: pointer;
     background: #fff;
@@ -230,7 +231,6 @@
           month,
           year
         });
-        this.refs.popover.reposition(); 
       },
       incrementDay(amount) { 
         let { selected, visibleMonth, firstVisibleDate, lastVisibleDate } = this.get();
@@ -239,7 +239,6 @@
         if(amount > 0 && selected > lastVisibleDate) return this.incrementMonth(1,selected.getDate()); 
         if(amount < 0 && selected < firstVisibleDate) return this.incrementMonth(-1,selected.getDate());
         this.set({selected});
-        this.refs.popover.reposition(); 
       }, 
       handleKeyPress(evt) { 
         if(keyCodesArray.indexOf(evt.keyCode) == -1) return; 
