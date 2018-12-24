@@ -41,7 +41,7 @@ const bundle = {
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
-    production && terser()
+    terser()
   ]
 };
 
@@ -81,7 +81,8 @@ const test = {
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
-    production && terser()
+    // production && terser()
+    terser()
   ]
 };
 
