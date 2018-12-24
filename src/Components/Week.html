@@ -38,6 +38,7 @@
     height: auto;
     display: flex; 
     flex-basis: 0;
+    cursor: pointer;
   }
   .day.outside-month { 
     opacity: 0.5;
@@ -54,12 +55,13 @@
     width: 100%;
     position: relative;
     border: 1px solid #fff;
-    border-radius: 50%; 
+    border-radius: 5px; 
     margin: 10%;
     padding: 0;
     align-items: center;
     background: none;
     cursor: pointer;
+    transition: all 100ms linear;
   }
   .day:hover .day--label { 
     background: #efefef;
@@ -70,7 +72,8 @@
     border-color: #f7901e;
     background: none;
   }
-  .day.is-today .day--label { 
+  .day.is-today .day--label, 
+  .day.is-today:hover .day--label { 
     color: #fff;
     opacity: 1; 
     background: #f7901e;
