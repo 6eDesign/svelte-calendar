@@ -193,6 +193,7 @@
         year: today.getFullYear(), 
         trigger: null, 
         assignmentHandler(trigger,formatted) { 
+          console.log('formatted');
           trigger.innerHTML = formatted;
         }
       }
@@ -269,9 +270,9 @@
         }
       },
       registerSelection(selected) { 
-        let { trigger, formattedSelected } = this.get(); 
         this.refs.popover.close(); 
         this.set({selected, dateChosen: true});
+        let { trigger, formattedSelected } = this.get(); 
         this.assignValueToTrigger(trigger,formattedSelected); 
       },
       assignValueToTrigger(trigger,formatted) { 
