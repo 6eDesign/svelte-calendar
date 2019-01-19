@@ -1,4 +1,27 @@
-<div class="datepicker" class:open="isOpen" class:closing="isClosing">
+<script>
+  // import Month from './Month.html';
+  // import NavBar from './NavBar.html';
+  import Popover from './Popover.html';
+</script>
+
+<Popover>
+  <div slot="trigger">
+    <a>click me</a>
+  </div>
+  <div slot="contents">
+    <ul>
+      <li>1</li>
+      <li>1</li>
+      <li>1</li>
+      <li>1</li>
+      <li>1</li>
+      <li>1</li>
+      <li>1</li>
+    </ul>
+  </div>
+</Popover>
+
+<!-- <div class="datepicker" class:open="isOpen" class:closing="isClosing">
   <Popover 
     ref:popover 
     bind:open="isOpen" 
@@ -306,4 +329,4 @@
       Popover: './Popover.html'
     }
   }
-</script>
+</script> -->

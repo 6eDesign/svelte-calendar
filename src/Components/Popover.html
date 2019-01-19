@@ -1,16 +1,111 @@
-<svelte:window bind:innerWidth="w" />
-<div class="popover" ref:popover>
-  <div class="trigger" on:click="open()" ref:triggerContainer>
+<script>
+
+  import { onMount } from 'svelte';
+
+  let isOpen = false; 
+  let shrink = false; 
+  let translateX = 0; 
+  let translateY = 0; 
+  let w; 
+
+  // refs: 
+  let popover;
+  let contentsAnimated;
+  let contentsWrapper;
+  let triggerContainer;
+
+  // props: 
+  export let trigger; 
+
+  function checkForFocusLoss(evt) { 
+    if(!open) return;
+    let el = evt.target;
+    do {
+      if(el == popover) return;
+    } while(el = el.parentNode)
+    close();
+  }; 
+
+  var once = (el,evt,cb) => { 
+    function handler() { 
+      cb.apply(this,arguments); 
+      el.removeEventListener(evt,handler);
+    }
+    el.addEventListener(evt,handler);
+  }
+
+  function close() { 
+    shrink = true; 
+    once(contentsAnimated, 'animationend', () => {
+      shrink = false; 
+      isOpen = false;
+      // this.fire('closed');
+    });
+  }
+
+  function getDistanceToEdges() { 
+    if(!isOpen) isOpen = true;
+    let width = contentsWrapper.offsetWidth; 
+    let height = contentsWrapper.offsetHeight; 
+    let rect = contentsWrapper.getBoundingClientRect(); 
+    if(!isOpen) isOpen = false;
+    return { 
+      top: rect.top + (-1*translateY), 
+      bottom: window.innerHeight - rect.bottom + translateY, 
+      left: rect.left + (-1*translateX), 
+      right: document.body.clientWidth - rect.right + translateX
+    }
+  }
+
+  function getTranslate() { 
+    let dist = getDistanceToEdges(); 
+    let translateX, translateY; 
+    if(w < 480) { 
+      translateY = dist.bottom;
+    } else if(dist.top < 0) { 
+      translateY = Math.abs(dist.top); 
+    } else if(dist.bottom < 0) { 
+      translateY = dist.bottom; 
+    } else { 
+      translateY = 0; 
+    }
+    if(dist.left < 0) { 
+      translateX = Math.abs(dist.left); 
+    } else if(dist.right < 0) { 
+      translateX = dist.right;
+    } else { 
+      translateX = 0; 
+    }
+    return { translateX, translateY }  
+  }
+
+  function open() {
+    isOpen = true;  
+    // this.fire('opened');
+  }
+
+  onMount(() => {
+    document.addEventListener('click',checkForFocusLoss.bind(this)); 
+    if(!trigger) return; 
+    triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
+  });
+
+</script>
+
+<svelte:window bind:innerWidth={w} />
+
+<div class="popover" bind:this={popover}>
+  <div class="trigger" on:click={open} bind:this={triggerContainer}>
     <slot name="trigger">
     </slot>
   </div>
   <div 
     class="contents-wrapper" 
-    class:visible="open"
-    class:shrink="shrink"
+    class:visible={isOpen}
+    class:shrink={shrink}
     style="transform: translate(-50%,-50%) translate({translateX}px, {translateY}px)" 
-    ref:contentsWrapper>
-    <div class="contents" ref:contentsAnimated>
+    bind:this={contentsWrapper}>
+    <div class="contents" bind:this={contentsAnimated}>
       <div class="contents-inner">
         <slot name="contents"></slot>
       </div>
@@ -98,97 +193,4 @@
       opacity: 1; 
     }
   }
-
 </style>
-
-<script>
-
-  function checkForFocusLoss(evt) { 
-    let { open } = this.get(); 
-    if(!open) return;
-    let el = evt.target;
-    do {
-      if(el == this.refs.popover) return;
-    } while(el = el.parentNode)
-    this.close();
-  }; 
-
-  var once = (el,evt,cb) => { 
-    function handler() { 
-      cb.apply(this,arguments); 
-      el.removeEventListener(evt,handler);
-    }
-    el.addEventListener(evt,handler);
-  }
-
-  export default { 
-    oncreate() { 
-      document.addEventListener('click',checkForFocusLoss.bind(this)); 
-      let { trigger } = this.get(); 
-      if(!trigger) return; 
-      this.refs.triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
-    }, 
-    data() { 
-      return { 
-        open: false,
-        shrink: false,
-        translateY: 0,
-        translateX: 0
-      }
-    },
-    methods: { 
-      getDistanceToEdges() { 
-        let { open } = this.get(); 
-        if(!open) this.set({open: true})
-        let { translateX, translateY } = this.get(); 
-        let { contentsWrapper } = this.refs; 
-        let width = contentsWrapper.offsetWidth; 
-        let height = contentsWrapper.offsetHeight; 
-        let rect = contentsWrapper.getBoundingClientRect(); 
-        if(!open) this.set({open: false});
-        return { 
-          top: rect.top + (-1*translateY), 
-          bottom: window.innerHeight - rect.bottom + translateY, 
-          left: rect.left + (-1*translateX), 
-          right: document.body.clientWidth - rect.right + translateX
-        }
-      }, 
-      getTranslate() { 
-        let { w } = this.get(); 
-        let dist = this.getDistanceToEdges(); 
-        let translateX, translateY; 
-        if(w < 480) { 
-          translateY = dist.bottom;
-        } else if(dist.top < 0) { 
-          translateY = Math.abs(dist.top); 
-        } else if(dist.bottom < 0) { 
-          translateY = dist.bottom; 
-        } else { 
-          translateY = 0; 
-        }
-        if(dist.left < 0) { 
-          translateX = Math.abs(dist.left); 
-        } else if(dist.right < 0) { 
-          translateX = dist.right;
-        } else { 
-          translateX = 0; 
-        }
-        return { translateX, translateY }  
-      },
-      open() { 
-        this.set({open: true, ...this.getTranslate()});
-        this.fire('opened');
-      },
-      close() { 
-        this.set({shrink:true});
-        once(this.refs.contentsAnimated, 'animationend', () => {
-          this.set({shrink: false, open: false});
-          this.fire('closed');
-        });
-      }
-    },
-    ondestroy() { 
-      document.removeEventListener('click', checkForFocusLoss);
-    }
-  }
-</script>
