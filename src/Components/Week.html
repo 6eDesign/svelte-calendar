@@ -9,7 +9,7 @@
         class="day--label" 
         class:selected="datesAreSameDay(day.date,selected)"
         on:click="fire('dateSelected',day.date)"
-        disabled="{isBefore(start, day.date) || isAfter(end, day.date)}"
+        disabled="{!isDaySelectable(day.date, start, end)}"
       >
         {day.date.getDate()}
       </button>
@@ -82,6 +82,8 @@
 </style>
 
 <script>
+  import { isDaySelectable } from './lib/helpers'
+
   export default { 
     helpers: { 
       datesAreSameDay(a,b) {
@@ -89,12 +91,7 @@
           && a.getMonth() == b.getMonth()
           && a.getFullYear() == b.getFullYear()
       },
-      isBefore (start, day) {
-        return day < start
-      },
-      isAfter (end, day) {
-        return day > end
-      },
+      isDaySelectable
     }
   }
 </script>
