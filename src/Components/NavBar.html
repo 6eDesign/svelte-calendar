@@ -15,10 +15,11 @@
     </div>
   </div>
   <div class="month-selector" class:open="monthSelectorOpen">
-    {#each monthDict as monthDefinition, index}
+    {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
         class:selected="index==month"
+        class:selectable="monthDefinition.selectable"
         on:click="monthSelected(event,index)"
       >
         <span>{monthDefinition.abbrev}</span>
@@ -65,8 +66,12 @@
     display: inline-block;
     color: #4a4a4a;
     border: 1px solid #efefef;
+    opacity: 0.2;
   }
-  .month-selector--month:hover { 
+  .month-selector--month.selectable { 
+    opacity: 1; 
+  }
+  .month-selector--month.selectable:hover { 
     cursor: pointer;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.15);
   }
@@ -125,6 +130,14 @@
       return { 
         monthDict, 
         monthSelectorOpen: false
+      }
+    }, 
+    computed: { 
+      availableMonths: ({monthDict, start, end, year}) => { 
+        return monthDict.map((month,i) => ({
+          ...month, 
+          selectable: i >= start.getMonth() && i <= end.getMonth()
+        }));
       }
     }, 
     methods: { 

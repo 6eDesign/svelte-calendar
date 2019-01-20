@@ -2,7 +2,7 @@
 <div class="container">
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 
-	<Datepicker format="{dateFormat}" start={new Date()} end={new Date()} />
+	<Datepicker format="{dateFormat}" />
 	<!-- <Datepicker ref:cal {start} {end} format="mm/dd/yyyy" /> -->
 
 	<p>This component can be used with or without the Svelte compiler.</p>
@@ -65,7 +65,7 @@ var cal = new SvelteCalendar(&#123;
 	<p>You can confine the date selection range with start and end:</p>
 
 	<div class="text-center">
-		<Datepicker format="{dateFormat}" start={new Date()} end={inOneWeek} />
+		<Datepicker format="{dateFormat}" start={threeDaysInPast} end={inThirtyDays} />
 	</div>
 </div>
 
@@ -102,16 +102,22 @@ var cal = new SvelteCalendar(&#123;
 	export default {
 	  data() {
 	    return {
+				today: new Date(), 
 	      start: new Date(),
 				dateFormat: "#{l}, #{F} #{j}, #{Y}"
 	    };
 	  },
 	  computed: {
 			end: ({ start }) => new Date(start.getTime() + 1000 * 3600 * 24 * 720),
-			inOneWeek: ({ start }) => {
-				const date = new Date(start)
-				date.setDate(date.getDate() + 7)
-				return date
+			threeDaysInPast: ({today}) => { 
+				const date = new Date(today); 
+				date.setDate(date.getDate() - 3); 
+				return date;
+			}, 
+			inThirtyDays: ({ start }) => {
+				const date = new Date(start);
+				date.setDate(date.getDate() + 30);
+				return date;
 			}
 	  },
 	  components: {

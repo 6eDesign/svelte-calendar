@@ -19,15 +19,11 @@ const getCalendarPage = (month,year,dayProps) => {
   return { month, year, weeks }
 }
 
-function isDaySelectable (day, start, end) {
-  return day >= start && day <= end;
-}
-
 const getDayPropsHandler = (start,end) => {
   let today = new Date(); 
   today.setHours(0,0,0,0);
   return date => ({
-    selectable: isDaySelectable(today, start, end),
+    selectable: date >= start && date <= end,
     isToday: date.getTime() == today.getTime()
   });
 };
@@ -47,6 +43,5 @@ function getMonths(start, end) {
 }
 
 export {
-  getMonths,
-  isDaySelectable
+  getMonths
 };

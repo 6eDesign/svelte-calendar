@@ -21,6 +21,8 @@
         <NavBar 
           {month} 
           {year}
+          {start}
+          {end}
           {canIncrementMonth}
           {canDecrementMonth}
           on:monthSelected="changeMonth(event)" 
@@ -52,7 +54,12 @@
     overflow: visible;
   }
 
-  /* .datepicker:before { 
+  /* 
+
+  A curtain/blackout div which focuses attention on the calendar 
+  and highlights the areas that can be clicked to close the calendar
+
+  .datepicker:before { 
     content: '';
     visibility: hidden;
     position: fixed;
@@ -74,7 +81,9 @@
   .datepicker.closing:before { 
     visibility: hidden;
     opacity: 0; 
-  } */
+  } 
+  
+  */
 
   .calendar-button { 
     padding: 10px 20px;
