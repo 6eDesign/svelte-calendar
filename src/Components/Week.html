@@ -4,11 +4,12 @@
       class="day" 
       class:outside-month="!day.partOfMonth"
       class:is-today="day.isToday"
-      on:click="fire('dateSelected',day.date)"
     >
       <button 
         class="day--label" 
-        class:selected="datesAreSameDay(day.date,selected) === true"
+        class:selected="datesAreSameDay(day.date,selected)"
+        on:click="fire('dateSelected',day.date)"
+        disabled="{!isDaySelectable(day.date, start, end)}"
       >
         {day.date.getDate()}
       </button>
@@ -81,13 +82,16 @@
 </style>
 
 <script>
+  import { isDaySelectable } from './lib/helpers'
+
   export default { 
     helpers: { 
       datesAreSameDay(a,b) {
         return a.getDate() == b.getDate() 
           && a.getMonth() == b.getMonth()
           && a.getFullYear() == b.getFullYear()
-      }
+      },
+      isDaySelectable
     }
   }
 </script>
