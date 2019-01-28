@@ -16,8 +16,7 @@
     "sirv-cli": "^0.2.2",
     "standard-version": "^4.4.0",
     "svelte": "^2.15.3",
-    "svelte-transitions": "^1.2.0",
-    "timeUtils": "^1.1.4"
+    "svelte-transitions": "^1.2.0"
   },
   "scripts": {
     "build": "rollup -c",
@@ -27,5 +26,7 @@
     "start:dev": "sirv public --dev",
     "release": "npm run build && standard-version && git push --follow-tags origin master"
   },
-  "dependencies": {}
+  "dependencies": {
+    "timeUtils": "^1.1.4"
+  }
 }
