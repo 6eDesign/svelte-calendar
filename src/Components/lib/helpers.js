@@ -19,22 +19,23 @@ const getCalendarPage = (month,year,dayProps) => {
   return { month, year, weeks }
 }
 
-const getDayPropsHandler = (start,end) => {
+const getDayPropsHandler = (start, end, selectableCallback) => {
   let today = new Date(); 
   today.setHours(0,0,0,0);
   return date => ({
-    selectable: date >= start && date <= end,
+    selectable: date >= start && date <= end
+     && (!selectableCallback || selectableCallback(date)),
     isToday: date.getTime() == today.getTime()
   });
 };
 
-function getMonths(start, end) { 
+function getMonths(start, end, selectableCallback=null) { 
   start.setHours(0,0,0,0);
   end.setHours(0,0,0,0);
   let endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1); 
   let months = [ ]; 
   let date = new Date(start.getFullYear(),start.getMonth(),1);
-  let dayPropsHandler = getDayPropsHandler(start,end);
+  let dayPropsHandler = getDayPropsHandler(start, end, selectableCallback);
   while(date < endDate) { 
     months.push(getCalendarPage(date.getMonth(),date.getFullYear(),dayPropsHandler)); 
     date.setMonth(date.getMonth() + 1); 

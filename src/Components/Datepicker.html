@@ -203,6 +203,7 @@
         month: today.getMonth(), 
         year: today.getFullYear(), 
         trigger: null, 
+        selectableCallback: null,
         assignmentHandler(trigger,formatted) { 
           console.log('formatted');
           trigger.innerHTML = formatted;
@@ -210,7 +211,7 @@
       }
     },
     computed: { 
-      months: ({start, end}) => getMonths(start,end),
+      months: ({start, end, selectableCallback}) => getMonths(start,end,selectableCallback),
       monthIndex:  ({month,year,months}) => { 
         for(let i = 0; i < months.length; ++i) { 
           if(months[i].month == month && months[i].year == year) return i

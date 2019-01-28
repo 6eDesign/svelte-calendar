@@ -65,8 +65,10 @@ var cal = new SvelteCalendar(&#123;
 	<p>You can confine the date selection range with start and end:</p>
 
 	<div class="text-center">
-		<Datepicker format="{dateFormat}" start={threeDaysInPast} end={inThirtyDays} />
+		<Datepicker format="{dateFormat}" start={threeDaysInPast} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
 	</div>
+
+	<p>You can also provide a `selectableCallback` prop which can be used to mark individual days between `start` and `end` as selectable.  This callback should accept a single date as an argument and return true (if selectable) or false (if unavailable).</p>
 </div>
 
 <style>
@@ -104,7 +106,10 @@ var cal = new SvelteCalendar(&#123;
 	    return {
 				today: new Date(), 
 	      start: new Date(),
-				dateFormat: "#{l}, #{F} #{j}, #{Y}"
+				dateFormat: "#{l}, #{F} #{j}, #{Y}", 
+				noWeekendsSelectableCallback: function(date) { 
+					return date.getDay() != 0 && date.getDay() != 6
+				}
 	    };
 	  },
 	  computed: {
