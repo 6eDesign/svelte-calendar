@@ -1,6 +1,15 @@
 <div class="month-container">
   {#each visibleMonth.weeks as week (week.id) }
-    <Week days={week.days} {selected} {start} {end} {highlighted} {shakeDate} on:dateSelected />
+    <Week 
+      days={week.days} 
+      {selected} 
+      {start} 
+      {end} 
+      {highlighted} 
+      {shakeDate} 
+      {direction}
+      on:dateSelected 
+    />
   {/each}
 </div>
 <style>
@@ -16,12 +25,21 @@
 <script>
   import { monthDict } from './lib/dictionaries'; 
 
+  let lastId = 0; 
+
   export default { 
     data() { 
       return { 
         monthDict
       }
     }, 
+    computed: { 
+      direction: ({id}) => { 
+        let dir = lastId < id ? 1 : -1; 
+        lastId = id; 
+        return dir;
+      }
+    },
     components: { 
       Week: './Week.html'
     }

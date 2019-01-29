@@ -40,6 +40,7 @@
           {shakeDate}
           {start}
           {end}
+          id={visibleMonthId}
           on:dateSelected="registerSelection(event)"
         />
       </div>
@@ -222,6 +223,7 @@
         return 0; 
       },
       visibleMonth: ({monthIndex, months}) => months[monthIndex],
+      visibleMonthId: ({month, year}) => year + (month/100),
       lastVisibleDate: ({visibleMonth}) => visibleMonth.weeks[visibleMonth.weeks.length-1].days[6].date,
       firstVisibleDate: ({visibleMonth}) => visibleMonth.weeks[0].days[0].date,
       canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,

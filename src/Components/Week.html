@@ -1,4 +1,8 @@
-<div class="week" in:fly="{x:50, duration: 180, delay: 140}" out:fly="{x:-50, duration: 180}">
+<div 
+  class="week" 
+  in:fly="{x:direction*50, duration: 180, delay: 140}" 
+  out:fade="{duration: 180}"
+>
   {#each days as day}
     <div 
       class="day" 
@@ -19,7 +23,6 @@
     </div>
   {/each}
 </div>
-
 <style>
   .week { 
     padding: 0;
@@ -103,11 +106,14 @@
 
 <script>
   import { areDatesEquivalent } from './lib/helpers';
-  import { fly } from 'svelte-transitions';
+  import { fly, fade } from 'svelte-transitions';
+
+  let lastMonthId = 0; 
+
   export default { 
     helpers: { 
       areDatesEquivalent
     },
-    transitions: { fly } 
+    transitions: { fly, fade } 
   }
 </script>
