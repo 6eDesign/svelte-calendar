@@ -1,6 +1,6 @@
 <div class="month-container">
   {#each visibleMonth.weeks as week}
-    <Week days={week.days} {selected} {start} {end} on:dateSelected />
+    <Week days={week.days} {selected} {start} {end} {highlighted} {shakeDate} on:dateSelected />
   {/each}
 </div>
 

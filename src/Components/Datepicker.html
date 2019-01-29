@@ -36,6 +36,8 @@
         <Month 
           {visibleMonth}
           {selected}
+          {highlighted}
+          {shakeDate}
           {start}
           {end}
           on:dateSelected="registerSelection(event)"
@@ -182,7 +184,7 @@
 
 <script>
   import { dayDict, monthDict } from './lib/dictionaries';
-  import { getMonths } from './lib/helpers';
+  import { getMonths, areDatesEquivalent } from './lib/helpers';
   import { formatDate } from 'timeUtils';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
 
@@ -199,13 +201,14 @@
         start: new Date(1987, 9, 29), 
         end: new Date(2020, 9, 29),
         selected: today, 
+        highlighted: today,
+        shakeDate: false,
         dateChosen: false,
         month: today.getMonth(), 
         year: today.getFullYear(), 
         trigger: null, 
         selectableCallback: null,
         assignmentHandler(trigger,formatted) { 
-          console.log('formatted');
           trigger.innerHTML = formatted;
         }
       }
@@ -237,36 +240,39 @@
         current.setMonth(current.getMonth() + direction); 
         month = current.getMonth(); 
         year = current.getFullYear(); 
-        let selected = new Date(year, month, date || 1);
+        let highlighted = new Date(year, month, date || 1);
         this.set({
-          selected,
+          highlighted,
           month,
           year
         });
       },
-      incrementDay(amount) { 
-        let { selected, visibleMonth, firstVisibleDate, lastVisibleDate } = this.get();
-        selected = new Date(selected); 
-        selected.setDate(selected.getDate() + amount); 
-        if(amount > 0 && selected > lastVisibleDate) return this.incrementMonth(1,selected.getDate()); 
-        if(amount < 0 && selected < firstVisibleDate) return this.incrementMonth(-1,selected.getDate());
-        this.set({selected});
+      getDefaultHighlighted() { 
+        return new Date(this.get().selected);
+      }, 
+      incrementDayHighlighted(amount) { 
+        let { highlighted, visibleMonth, firstVisibleDate, lastVisibleDate } = this.get();
+        highlighted = new Date(highlighted); 
+        highlighted.setDate(highlighted.getDate() + amount); 
+        if(amount > 0 && highlighted > lastVisibleDate) return this.incrementMonth(1,highlighted.getDate()); 
+        if(amount < 0 && highlighted < firstVisibleDate) return this.incrementMonth(-1,highlighted.getDate());
+        this.set({highlighted});
       }, 
       handleKeyPress(evt) { 
         if(keyCodesArray.indexOf(evt.keyCode) == -1) return; 
         evt.preventDefault(); 
         switch(evt.keyCode) { 
           case keyCodes.left:
-            this.incrementDay(-1);
+            this.incrementDayHighlighted(-1);
             break; 
           case keyCodes.up:
-            this.incrementDay(-7);
+            this.incrementDayHighlighted(-7);
             break; 
           case keyCodes.right:
-            this.incrementDay(1);
+            this.incrementDayHighlighted(1);
             break; 
           case keyCodes.down:
-            this.incrementDay(7);
+            this.incrementDayHighlighted(7);
             break; 
           case keyCodes.pgup:
             this.incrementMonth(-1);
@@ -275,15 +281,49 @@
             this.incrementMonth(1);
             break;
           case keyCodes.escape: 
+            this.close(); 
+            break;
           case keyCodes.enter:
-            let { selected } = this.get(); 
-            this.registerSelection(selected);
+            let { highlighted } = this.get(); 
+            this.registerSelection(highlighted);
             break;
         }
       },
-      registerSelection(selected) { 
+      close() { 
         this.refs.popover.close(); 
-        this.set({selected, dateChosen: true});
+      },
+      getDay(month,date) { 
+        for(var i=0; i < month.weeks.length; ++i) { 
+          for(var j=0; j < month.weeks[i].days.length; ++j) {
+            if(areDatesEquivalent(month.weeks[i].days[j].date, date)) {
+              return month.weeks[i].days[j];
+            }
+          }
+        }
+        return null;
+      },
+      checkIfVisibleDateIsSelectable(date) { 
+        let { visibleMonth } = this.get(); 
+        const day = this.getDay(visibleMonth,date); 
+        if(!day) return false;
+        return day.selectable;
+      },
+      shakeDate(date) { 
+        let { shakeHighlightTimeout } = this.get(); 
+        clearTimeout(shakeHighlightTimeout);
+        this.set({
+          shakeDate: date,
+          shakeHighlightTimeout: setTimeout(() => this.set({shakeDate: false}), 700)
+        });
+      },
+      registerSelection(chosen) { 
+        console.log(chosen);
+        if(!this.checkIfVisibleDateIsSelectable(chosen)) return this.shakeDate(chosen);
+        this.close(); 
+        this.set({
+          selected: chosen, 
+          dateChosen: true
+        });
         let { trigger, formattedSelected } = this.get(); 
         this.assignValueToTrigger(trigger,formattedSelected); 
       },
@@ -296,6 +336,7 @@
         let keydownListener = this.handleKeyPress.bind(this); 
         this.set({
           keydownListener, 
+          highlighted: this.getDefaultHighlighted(),
           month: selected.getMonth(), 
           year: selected.getFullYear()
         });

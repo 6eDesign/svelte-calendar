@@ -8,9 +8,11 @@
     >
       <button 
         class="day--label" 
-        class:selected="datesAreSameDay(day.date,selected)"
+        class:selected="areDatesEquivalent(day.date,selected)"
+        class:highlighted="areDatesEquivalent(day.date,highlighted)"
+        class:shake-date="shakeDate && areDatesEquivalent(day.date,shakeDate)"
+        class:disabled="!day.selectable"
         on:click="fire('dateSelected',day.date)"
-        disabled="{!day.selectable}"
       >
         {day.date.getDate()}
       </button>
@@ -65,15 +67,20 @@
     cursor: pointer;
     transition: all 100ms linear;
   }
-  .day--label[disabled] { 
+  .day--label.disabled { 
     cursor: default;
   }
-  .day--label:not([disabled]):hover { 
+  .day--label.highlighted,
+  .day--label:not(.disabled):hover { 
     background: #efefef;
     border-color: #efefef;
   }
+  .day--label.shake-date { 
+    animation: shake 0.4s 1 linear;
+  }
   .day--label.selected:hover,
-  .day--label.selected { 
+  .day--label.selected,
+  .day--label:active:not(.disabled) { 
     border-color: #f7901e;
     background: none;
   }
@@ -83,16 +90,22 @@
     opacity: 1; 
     background: #f7901e;
   }
+
+  @keyframes shake {
+    0% { transform: translate(7px); }
+    20% { transform: translate(-7px); }
+    40% { transform: translate(3px); }
+    60% { transform: translate(-3px); }
+    80% { transform: translate(1px); }
+    100% { transform: translate(0px); }
+  }
 </style>
 
 <script>
+  import { areDatesEquivalent } from './lib/helpers';
   export default { 
     helpers: { 
-      datesAreSameDay(a,b) {
-        return a.getDate() == b.getDate() 
-          && a.getMonth() == b.getMonth()
-          && a.getFullYear() == b.getFullYear()
-      }
+      areDatesEquivalent
     }
   }
 </script>

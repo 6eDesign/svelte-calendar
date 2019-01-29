@@ -29,7 +29,7 @@ const getDayPropsHandler = (start, end, selectableCallback) => {
   });
 };
 
-function getMonths(start, end, selectableCallback=null) { 
+export function getMonths(start, end, selectableCallback=null) { 
   start.setHours(0,0,0,0);
   end.setHours(0,0,0,0);
   let endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1); 
@@ -43,6 +43,7 @@ function getMonths(start, end, selectableCallback=null) {
   return months;
 }
 
-export {
-  getMonths
-};
+export const areDatesEquivalent = (a, b) => 
+  a.getDate() == b.getDate()
+  && a.getMonth() == b.getMonth()
+  && a.getFullYear() == b.getFullYear(); 
