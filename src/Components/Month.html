@@ -1,14 +1,15 @@
 <div class="month-container">
-  {#each visibleMonth.weeks as week}
+  {#each visibleMonth.weeks as week (week.id) }
     <Week days={week.days} {selected} {start} {end} {highlighted} {shakeDate} on:dateSelected />
   {/each}
 </div>
-
 <style>
   .month-container { 
     width: 100%;
     white-space: nowrap;
     display: inline-block;
+    height: 275px;
+    overflow: hidden;
   }
 </style>
 

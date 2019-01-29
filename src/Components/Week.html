@@ -1,4 +1,4 @@
-<div class="week">
+<div class="week" in:fly="{x:50, duration: 180, delay: 140}" out:fly="{x:-50, duration: 180}">
   {#each days as day}
     <div 
       class="day" 
@@ -103,9 +103,11 @@
 
 <script>
   import { areDatesEquivalent } from './lib/helpers';
+  import { fly } from 'svelte-transitions';
   export default { 
     helpers: { 
       areDatesEquivalent
-    }
+    },
+    transitions: { fly } 
   }
 </script>

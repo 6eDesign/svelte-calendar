@@ -7,7 +7,7 @@ const getCalendarPage = (month,year,dayProps) => {
   // and end on saturday
   let weeks = []; 
   while(date.getMonth() != nextMonth || date.getDay() != 0 || weeks.length != 6) { 
-    if(date.getDay() == 0) weeks.unshift({days: []});
+    if (date.getDay() == 0) weeks.unshift({ days: [], id: `${month}${year}${weeks.length}` });
     weeks[0].days.push({
       partOfMonth: date.getMonth() == month,
       date: new Date(date), 
