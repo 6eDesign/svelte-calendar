@@ -16,7 +16,7 @@
     "sirv-cli": "^0.2.2",
     "standard-version": "^4.4.0",
     "svelte": "^2.15.3",
-    "svelte-transitions": "^1.2.0",
+    "svelte-transitions": "^1.2.0"
   },
   "scripts": {
     "build": "rollup -c",
