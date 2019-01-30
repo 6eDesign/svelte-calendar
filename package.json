@@ -1,7 +1,7 @@
 {
   "name": "svelte-calendar",
   "svelte": "src/Components/Datepicker.html",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "devDependencies": {
     "@sveltejs/svelte-virtual-list": "^2.2.1",
     "es6-object-assign": "^1.1.0",
@@ -16,7 +16,7 @@
     "sirv-cli": "^0.2.2",
     "standard-version": "^4.4.0",
     "svelte": "^2.15.3",
-    "svelte-transitions": "^1.2.0",
+    "svelte-transitions": "^1.2.0"
   },
   "scripts": {
     "build": "rollup -c",
