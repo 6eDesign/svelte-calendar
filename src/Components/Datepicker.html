@@ -317,7 +317,6 @@
         });
       },
       registerSelection(chosen) { 
-        console.log(chosen);
         if(!this.checkIfVisibleDateIsSelectable(chosen)) return this.shakeDate(chosen);
         this.close(); 
         this.set({
