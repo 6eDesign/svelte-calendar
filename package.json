@@ -1,7 +1,7 @@
 {
   "name": "svelte-calendar",
   "svelte": "src/Components/Datepicker.html",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "devDependencies": {
     "@sveltejs/svelte-virtual-list": "^2.2.1",
     "es6-object-assign": "^1.1.0",
