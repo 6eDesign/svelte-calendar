@@ -125,6 +125,7 @@
 
 <script>
   import {monthDict} from './lib/dictionaries';
+
   export default { 
     data() { 
       return { 
@@ -134,10 +135,19 @@
     }, 
     computed: { 
       availableMonths: ({monthDict, start, end, year}) => { 
-        return monthDict.map((month,i) => ({
-          ...month, 
-          selectable: i >= start.getMonth() && i <= end.getMonth()
-        }));
+        let isOnLowerBoundary = start.getFullYear() == year; 
+        let isOnUpperBoundary = end.getFullYear() == year; 
+        return monthDict.map((month,i) => {
+          return {
+            ...month, 
+            selectable: 
+              (!isOnLowerBoundary && !isOnUpperBoundary) || 
+              (
+                (!isOnLowerBoundary || i >= start.getMonth()) && 
+                (!isOnUpperBoundary || i <= end.getMonth())
+              )
+          }
+        });
       }
     }, 
     methods: { 
