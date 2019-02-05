@@ -1,6 +1,6 @@
 <div 
   class="week" 
-  in:fly="{x:direction*50, duration: 180, delay: 140}" 
+  in:fly="{x:direction*50, duration: 180, delay: 90}" 
   out:fade="{duration: 180}"
 >
   {#each days as day}
@@ -34,6 +34,25 @@
     display: flex;
     -webkit-flex-flow: row;
     justify-content: space-around;
+    grid-column: 1; 
+  }
+  .week:nth-child(6n + 1) { 
+    grid-row: 1; 
+  }
+  .week:nth-child(6n + 2) { 
+    grid-row: 2; 
+  }
+  .week:nth-child(6n + 3) { 
+    grid-row: 3; 
+  }
+  .week:nth-child(6n + 4) { 
+    grid-row: 4; 
+  }
+  .week:nth-child(6n + 5) { 
+    grid-row: 5; 
+  }
+  .week:nth-child(6n + 6) { 
+    grid-row: 6; 
   }
   .day { 
     margin: 2px;
@@ -69,6 +88,7 @@
     background: none;
     cursor: pointer;
     transition: all 100ms linear;
+    font-weight: normal;
   }
   .day--label.disabled { 
     cursor: default;
@@ -84,14 +104,16 @@
   .day--label.selected:hover,
   .day--label.selected,
   .day--label:active:not(.disabled) { 
+    background-color: #f7901e;
     border-color: #f7901e;
-    background: none;
+    color: #fff;
   }
   .day.is-today .day--label, 
   .day.is-today .day--label:hover { 
-    color: #fff;
     opacity: 1; 
-    background: #f7901e;
+    background: none;
+    border-color: #f7901e;
+    color: #000;
   }
 
   @keyframes shake {

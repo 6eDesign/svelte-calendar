@@ -57,37 +57,32 @@
     overflow: visible;
   }
 
-  /* 
+  @media (max-width: 480px) { 
+    .datepicker:before { 
+      content: '';
+      visibility: hidden;
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background: rgba(0,0,0,0.3);
+      opacity: 0; 
+      transition: all 231ms linear;
+      z-index: 1;
+    }
 
-  A curtain/blackout div which focuses attention on the calendar 
-  and highlights the areas that can be clicked to close the calendar
+    .datepicker.open:before { 
+      visibility: visible;
+      opacity: 1; 
+    }
 
-  .datepicker:before { 
-    content: '';
-    visibility: hidden;
-    position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh;
-    background: rgba(0,0,0,0.3);
-    opacity: 0; 
-    transition: all 231ms linear;
-    z-index: 1;
+    .datepicker.closing:before { 
+      visibility: hidden;
+      opacity: 0; 
+    } 
   }
-
-  .datepicker.open:before { 
-    visibility: visible;
-    opacity: 1; 
-  }
-
-  .datepicker.closing:before { 
-    visibility: hidden;
-    opacity: 0; 
-  } 
   
-  */
-
   .calendar-button { 
     padding: 10px 20px;
     border: 1px solid #eee;
