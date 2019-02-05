@@ -1,19 +1,32 @@
 <div class="month-container">
-  {#each visibleMonth.weeks as week}
-    <Week days={week.days} {selected} {start} {end} {highlighted} {shakeDate} on:dateSelected />
+  {#each visibleMonth.weeks as week (week.id) }
+    <Week 
+      days={week.days} 
+      {selected} 
+      {start} 
+      {end} 
+      {highlighted} 
+      {shakeDate} 
+      {direction}
+      on:dateSelected 
+    />
   {/each}
 </div>
-
 <style>
   .month-container { 
     width: 100%;
-    white-space: nowrap;
+    /* white-space: nowrap;
     display: inline-block;
+    height: 275px;
+    overflow: hidden; */
+    display: grid;
   }
 </style>
 
 <script>
   import { monthDict } from './lib/dictionaries'; 
+
+  let lastId = 0; 
 
   export default { 
     data() { 
@@ -21,6 +34,13 @@
         monthDict
       }
     }, 
+    computed: { 
+      direction: ({id}) => { 
+        let dir = lastId < id ? 1 : -1; 
+        lastId = id; 
+        return dir;
+      }
+    },
     components: { 
       Week: './Week.html'
     }

@@ -40,6 +40,7 @@
           {shakeDate}
           {start}
           {end}
+          id={visibleMonthId}
           on:dateSelected="registerSelection(event)"
         />
       </div>
@@ -56,37 +57,32 @@
     overflow: visible;
   }
 
-  /* 
+  @media (max-width: 480px) { 
+    .datepicker:before { 
+      content: '';
+      visibility: hidden;
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background: rgba(0,0,0,0.3);
+      opacity: 0; 
+      transition: all 231ms linear;
+      z-index: 1;
+    }
 
-  A curtain/blackout div which focuses attention on the calendar 
-  and highlights the areas that can be clicked to close the calendar
+    .datepicker.open:before { 
+      visibility: visible;
+      opacity: 1; 
+    }
 
-  .datepicker:before { 
-    content: '';
-    visibility: hidden;
-    position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh;
-    background: rgba(0,0,0,0.3);
-    opacity: 0; 
-    transition: all 231ms linear;
-    z-index: 1;
+    .datepicker.closing:before { 
+      visibility: hidden;
+      opacity: 0; 
+    } 
   }
-
-  .datepicker.open:before { 
-    visibility: visible;
-    opacity: 1; 
-  }
-
-  .datepicker.closing:before { 
-    visibility: hidden;
-    opacity: 0; 
-  } 
   
-  */
-
   .calendar-button { 
     padding: 10px 20px;
     border: 1px solid #eee;
@@ -222,6 +218,7 @@
         return 0; 
       },
       visibleMonth: ({monthIndex, months}) => months[monthIndex],
+      visibleMonthId: ({month, year}) => year + (month/100),
       lastVisibleDate: ({visibleMonth}) => visibleMonth.weeks[visibleMonth.weeks.length-1].days[6].date,
       firstVisibleDate: ({visibleMonth}) => visibleMonth.weeks[0].days[0].date,
       canIncrementMonth: ({monthIndex,months}) => monthIndex < months.length -1,
@@ -291,6 +288,7 @@
       },
       close() { 
         this.refs.popover.close(); 
+        this.registerClose();
       },
       getDay(month,date) { 
         for(var i=0; i < month.weeks.length; ++i) { 
@@ -340,10 +338,12 @@
           year: selected.getFullYear()
         });
         document.addEventListener('keydown', keydownListener);
+        this.fire('open');
       }, 
       registerClose() { 
         let { keydownListener } = this.get(); 
         document.removeEventListener('keydown', keydownListener);
+        this.fire('close');
       }
     },
     oncreate() { 
