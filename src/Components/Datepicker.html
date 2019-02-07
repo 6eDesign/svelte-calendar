@@ -96,16 +96,9 @@
     box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
   }
 
-  html {
-    box-sizing: border-box;
-  }
   
   *, *:before, *:after {
     box-sizing: inherit;
-  }
-  
-  .weeks-container { 
-    height: 311px;
   }
   
   .calendar { 
@@ -138,44 +131,6 @@
     text-align: center;
   }
 
-  .flex-container {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row;
-    justify-content: space-around;
-    line-height:30px;
-  }
-  
-  .flex-item {
-    background: tomato;
-    margin: 5px;
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    font-size: 1.5em;
-    flex: 1 0 auto;
-    height:auto;
-    display: flex; 
-  }
-  
-  .flex-item:before {
-    content:'';
-    float:left;
-    padding-top:100%;
-  }
-  
-  .flex-item-inner { 
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-  }
 </style>
 
 <script>
