@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/6eDesign/svelte-calendar/compare/v0.2.10...v0.3.0) (2019-02-19)
+
+
+### Features
+
+* emit dateSelected event from <Datepicker />, [beyonk-adventures:feature/onchange-event] ([c11fc69](https://github.com/6eDesign/svelte-calendar/commit/c11fc69))
+* Merge pull request [#16](https://github.com/6eDesign/svelte-calendar/issues/16) from beyonk-adventures/feature/console-warnings ([6ba44f5](https://github.com/6eDesign/svelte-calendar/commit/6ba44f5))
+
+
+
 <a name="0.2.10"></a>
 ## [0.2.10](https://github.com/6eDesign/svelte-calendar/compare/v0.2.9...v0.2.10) (2019-02-07)
 
