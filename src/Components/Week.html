@@ -74,7 +74,7 @@
   }
   .day.outside-month, 
   .day.is-disabled { 
-    opacity: 0.5;
+    opacity: 0.35;
   }
   .day:before { 
     content: '';
@@ -100,10 +100,12 @@
   .day--label.disabled { 
     cursor: default;
   }
-  .day--label.highlighted,
-  .day--label:not(.disabled):hover { 
-    background: #efefef;
-    border-color: #efefef;
+  @media (min-width: 480px) { 
+    .day--label.highlighted,
+    .day--label:not(.disabled):hover { 
+      background: #efefef;
+      border-color: #efefef;
+    }
   }
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;

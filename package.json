@@ -3,7 +3,6 @@
   "svelte": "src/Components/Datepicker.html",
   "version": "0.3.0",
   "devDependencies": {
-    "@sveltejs/svelte-virtual-list": "^2.2.1",
     "es6-object-assign": "^1.1.0",
     "npm-run-all": "^4.1.3",
     "rollup": "^0.66.2",
