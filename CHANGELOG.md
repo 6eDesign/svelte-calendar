@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/6eDesign/svelte-calendar/compare/v0.3.0...v0.4.0) (2019-02-19)
+
+
+### Features
+
+* lighter color/opacity for disabled days ([d139457](https://github.com/6eDesign/svelte-calendar/commit/d139457))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/6eDesign/svelte-calendar/compare/v0.2.10...v0.3.0) (2019-02-19)
 
