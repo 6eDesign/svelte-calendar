@@ -18,6 +18,10 @@
     "svelte": "^2.15.3",
     "svelte-transitions": "^1.2.0"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/6eDesign/svelte-calendar.git"
+  },  
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
