@@ -159,6 +159,8 @@
         year: today.getFullYear(), 
         trigger: null, 
         selectableCallback: null,
+        isOpen: false,
+        isClosing: false,
         assignmentHandler(trigger,formatted) { 
           trigger.innerHTML = formatted;
         }
