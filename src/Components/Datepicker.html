@@ -279,7 +279,8 @@
           dateChosen: true
         });
         let { trigger, formattedSelected } = this.get(); 
-        this.assignValueToTrigger(trigger,formattedSelected); 
+        this.assignValueToTrigger(trigger,formattedSelected);
+        this.fire('dateSelected', { date: chosen })
       },
       assignValueToTrigger(trigger,formatted) { 
         if(!trigger) return; 

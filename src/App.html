@@ -73,6 +73,14 @@ var cal = new SvelteCalendar(&#123;
 	<div class="text-center">
 		<Datepicker format="{dateFormat}" start={tomorrow} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
 	</div>
+
+	<p>You can bind to the `dateSelected` event, which has a data property `date`:</p>
+	
+	<div class="text-center">
+		<Datepicker format="{dateFormat}" on:dateSelected="logChoice(event.date)" />
+	</div>
+
+
 </div>
 
 <style>
@@ -113,7 +121,11 @@ var cal = new SvelteCalendar(&#123;
 				dateFormat: "#{l}, #{F} #{j}, #{Y}", 
 				noWeekendsSelectableCallback: function(date) { 
 					return date.getDay() != 0 && date.getDay() != 6
-				}
+				},
+				formattedSelected: undefined,
+				dateChosen: false,
+				exampleFormatted: false,
+				exampleChosen: false
 	    };
 	  },
 	  computed: {
@@ -133,7 +145,12 @@ var cal = new SvelteCalendar(&#123;
 				date.setDate(date.getDate() + 30);
 				return date;
 			}
-	  },
+		},
+		methods: {
+			logChoice (e) {
+				console.log(`User chose ${e}.`);
+			}
+		},
 	  components: {
 	    Datepicker: "./Components/Datepicker.html"
 		},
