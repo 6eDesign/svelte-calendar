@@ -1,26 +1,26 @@
 <div class="title">
   <div class="heading-section">
     <div class="control" 
-      class:enabled="canDecrementMonth"
-      on:click="fire('incrementMonth', -1)">
+      class:enabled={canDecrementMonth}
+      on:click={() => dispatch('incrementMonth', -1)}>
       <i class="arrow left"></i>
     </div>
-    <div class="label" on:click="toggleMonthSelectorOpen()">
+    <div class="label" on:click={toggleMonthSelectorOpen}>
       {monthDict[month].name} {year}
     </div> 
     <div class="control"
-      class:enabled="canIncrementMonth"
-      on:click="fire('incrementMonth', 1)">
+      class:enabled={canIncrementMonth}
+      on:click={() => dispatch('incrementMonth', 1)}>
       <i class="arrow right"></i>
     </div>
   </div>
-  <div class="month-selector" class:open="monthSelectorOpen">
+  <div class="month-selector" class:open={monthSelectorOpen}>
     {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
-        class:selected="index==month"
-        class:selectable="monthDefinition.selectable"
-        on:click="monthSelected(event,index)"
+        class:selected={index==month}
+        class:selectable={monthDefinition.selectable}
+        on:click={e => monthSelected(e, index)}
       >
         <span>{monthDefinition.abbrev}</span>
       </div>
@@ -30,7 +30,7 @@
 
 <style>
   .heading-section { 
-    font-size: 20px;;
+    font-size: 20px;
     padding: 24px 15px;
     display: flex;
     justify-content: space-between;
@@ -125,43 +125,44 @@
 </style>
 
 <script>
-  import {monthDict} from './lib/dictionaries';
+  import { monthDict } from './lib/dictionaries';
+  import { createEventDispatcher } from 'svelte';
 
-  export default { 
-    data() { 
-      return { 
-        monthDict, 
-        monthSelectorOpen: false
-      }
-    }, 
-    computed: { 
-      availableMonths: ({monthDict, start, end, year}) => { 
-        let isOnLowerBoundary = start.getFullYear() == year; 
-        let isOnUpperBoundary = end.getFullYear() == year; 
-        return monthDict.map((month,i) => {
-          return {
-            ...month, 
-            selectable: 
-              (!isOnLowerBoundary && !isOnUpperBoundary) || 
-              (
-                (!isOnLowerBoundary || i >= start.getMonth()) && 
-                (!isOnUpperBoundary || i <= end.getMonth())
-              )
-          }
-        });
-      }
-    }, 
-    methods: { 
-      toggleMonthSelectorOpen() { 
-        let {monthSelectorOpen} = this.get(); 
-        monthSelectorOpen = !monthSelectorOpen;
-        this.set({monthSelectorOpen});
-      }, 
-      monthSelected(event,month) { 
-        event.stopPropagation(); 
-        this.fire('monthSelected', month);
-        this.toggleMonthSelectorOpen();
-      }
-    }
+  const dispatch = createEventDispatcher();
+
+  export let month;
+  export let start;
+  export let end;
+  export let year;
+  export let canIncrementMonth;
+  export let canDecrementMonth;
+
+  let monthSelectorOpen = false
+  let availableMonths
+
+  $: {
+      let isOnLowerBoundary = start.getFullYear() == year; 
+      let isOnUpperBoundary = end.getFullYear() == year; 
+      availableMonths = monthDict.map((month,i) => {
+        return {
+          ...month, 
+          selectable: 
+            (!isOnLowerBoundary && !isOnUpperBoundary) || 
+            (
+              (!isOnLowerBoundary || i >= start.getMonth()) && 
+              (!isOnUpperBoundary || i <= end.getMonth())
+            )
+        }
+      });
+  }
+
+  function toggleMonthSelectorOpen() { 
+    monthSelectorOpen = !monthSelectorOpen;
+  }
+
+  function monthSelected(event,month) { 
+    event.stopPropagation(); 
+    dispatch('monthSelected', month);
+    toggleMonthSelectorOpen();
   }
 </script>
