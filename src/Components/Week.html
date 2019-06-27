@@ -1,22 +1,22 @@
 <div 
   class="week" 
-  in:fly="{x:direction*50, duration: 180, delay: 90}" 
-  out:fade="{duration: 180}"
+  in:fly={{ x: direction*50, duration: 180, delay: 90 }}
+  out:fade={{ duration: 180 }}
 >
   {#each days as day}
     <div 
       class="day" 
-      class:outside-month="!day.partOfMonth"
-      class:is-today="day.isToday"
-      class:is-disabled="!day.selectable"
+      class:outside-month={!day.partOfMonth}
+      class:is-today={day.isToday}
+      class:is-disabled={!day.selectable}
     >
       <button 
         class="day--label" 
-        class:selected="areDatesEquivalent(day.date,selected)"
-        class:highlighted="areDatesEquivalent(day.date,highlighted)"
-        class:shake-date="shakeDate && areDatesEquivalent(day.date,shakeDate)"
-        class:disabled="!day.selectable"
-        on:click="fire('dateSelected',day.date)"
+        class:selected={areDatesEquivalent(day.date,selected)}
+        class:highlighted={areDatesEquivalent(day.date,highlighted)}
+        class:shake-date={shouldShakeDate && areDatesEquivalent(day.date,shouldShakeDate)}
+        class:disabled={!day.selectable}
+        on:click={() => dispatch('dateSelected',day.date)}
       >
         {day.date.getDate()}
       </button>
@@ -137,14 +137,18 @@
 
 <script>
   import { areDatesEquivalent } from './lib/helpers';
-  import { fly, fade } from 'svelte-transitions';
+  import { fly, fade } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
 
-  let lastMonthId = 0; 
+  const dispatch = createEventDispatcher()
 
-  export default { 
-    helpers: { 
-      areDatesEquivalent
-    },
-    transitions: { fly, fade } 
-  }
+  let lastMonthId = 0;
+
+  export let days;
+  export let selected;
+  export let start;
+  export let end;
+  export let highlighted;
+  export let shouldShakeDate;
+  export let direction;
 </script>

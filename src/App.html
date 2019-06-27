@@ -55,7 +55,7 @@ var cal = new SvelteCalendar(&#123;
 	</code></pre>
 
 	<div class="text-center">
-		<Datepicker bind:formattedSelected=exampleFormatted bind:dateChosen=exampleChosen>
+		<Datepicker bind:formattedSelected={exampleFormatted} bind:dateChosen={exampleChosen}>
 			<button id="test">
 				{#if exampleChosen} {exampleFormatted} {:else}  Custom Button {/if}
 			</button>
@@ -65,7 +65,7 @@ var cal = new SvelteCalendar(&#123;
 	<p>You can confine the date selection range with start and end:</p>
 
 	<div class="text-center">
-		<Datepicker format="{dateFormat}" start={threeDaysInPast} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
+		<Datepicker format={dateFormat} start={threeDaysInPast} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
 	</div>
 
 	<p class="note">Note: The calendar will only generate dates up until the end date, so it is recommended to set this value to whatever is useful for you.</p>
@@ -73,13 +73,13 @@ var cal = new SvelteCalendar(&#123;
 	<p>You can also provide a `selectableCallback` prop which can be used to mark individual days between `start` and `end` as selectable.  This callback should accept a single date as an argument and return true (if selectable) or false (if unavailable).</p>
 
 	<div class="text-center">
-		<Datepicker format="{dateFormat}" start={tomorrow} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
+		<Datepicker format={dateFormat} start={tomorrow} end={inThirtyDays} selectableCallback={noWeekendsSelectableCallback} />
 	</div>
 
 	<p>You can bind to the `dateSelected` event, which has a data property `date`:</p>
 	
 	<div class="text-center">
-		<Datepicker format="{dateFormat}" on:dateSelected="logChoice(event.date)" />
+		<Datepicker format={dateFormat} on:dateSelected={e => logChoice(e.detail.date)} />
 	</div>
 
 
@@ -118,49 +118,48 @@ var cal = new SvelteCalendar(&#123;
 </style>
 
 <script>
-	export default {
-	  data() {
-	    return {
-				today: new Date(), 
-	      start: new Date(),
-				dateFormat: "#{l}, #{F} #{j}, #{Y}", 
-				noWeekendsSelectableCallback: function(date) { 
-					return date.getDay() != 0 && date.getDay() != 6
-				},
-				formattedSelected: undefined,
-				dateChosen: false,
-				exampleFormatted: false,
-				exampleChosen: false
-	    };
-	  },
-	  computed: {
-			end: ({ start }) => new Date(start.getTime() + 1000 * 3600 * 24 * 720),
-			threeDaysInPast: ({today}) => { 
-				const date = new Date(today); 
-				date.setDate(date.getDate() - 3); 
-				return date;
-			}, 
-			tomorrow: ({today}) => { 
-				const date = new Date(today); 
-				date.setDate(date.getDate() + 1); 
-				return date;
-			}, 
-			inThirtyDays: ({ start }) => {
-				const date = new Date(start);
-				date.setDate(date.getDate() + 30);
-				return date;
-			}
-		},
-		methods: {
-			logChoice (e) {
-				console.log(`User chose ${e}.`);
-			}
-		},
-	  components: {
-	    Datepicker: "./Components/Datepicker.html"
-		},
-		oncreate() { 
-			hljs.initHighlightingOnLoad();
-		}
-	};
+	import Datepicker from "./Components/Datepicker.html"
+	import { onMount } from 'svelte'
+
+	const today = new Date()
+	let start = new Date()
+	let dateFormat = "#{l}, #{F} #{j}, #{Y}"
+	let noWeekendsSelectableCallback = function (date) { 
+		return date.getDay() != 0 && date.getDay() != 6
+	}
+	let formattedSelected = undefined
+	let dateChosen = false
+	let exampleFormatted = false
+	let exampleChosen = false
+	
+	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720)
+	
+	let threeDaysInPast
+	$: { 
+		const date = new Date(today); 
+		date.setDate(date.getDate() - 3); 
+		threeDaysInPast = date;
+	}
+
+	let tomorrow
+	$: {
+		const date = new Date(today); 
+		date.setDate(date.getDate() + 1); 
+		tomorrow = date;
+	}
+
+	let inThirtyDays
+	$: {
+		const date = new Date(start);
+		date.setDate(date.getDate() + 30);
+		inThirtyDays = date;
+	}
+
+	function logChoice (date) {
+		console.log(`User chose ${date}.`);
+	}
+
+	onMount(() => {
+		hljs.initHighlightingOnLoad();
+	})
 </script>

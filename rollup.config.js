@@ -17,10 +17,6 @@ const bundle = {
   },
   plugins: [
     svelte({
-      // opt in to v3 behaviour today
-      skipIntroByDefault: true,
-      nestedTransitions: true,
-
       // enable run-time checks when not in production
       dev: !production,
       // we'll extract any component CSS out into
@@ -55,10 +51,6 @@ const test = {
   },
   plugins: [
     svelte({
-      // opt in to v3 behaviour today
-      skipIntroByDefault: true,
-      nestedTransitions: true,
-
       // enable run-time checks when not in production
       dev: !production,
       // we'll extract any component CSS out into

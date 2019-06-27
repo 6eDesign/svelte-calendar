@@ -6,7 +6,7 @@
       {start} 
       {end} 
       {highlighted} 
-      {shakeDate} 
+      {shouldShakeDate} 
       {direction}
       on:dateSelected 
     />
@@ -23,25 +23,17 @@
 </style>
 
 <script>
+  import Week from './Week.html'
   import { monthDict } from './lib/dictionaries'; 
 
-  let lastId = 0; 
+  export let id
+  export let visibleMonth
+  export let selected
+  export let start
+  export let end
+  export let highlighted
+  export let shouldShakeDate
 
-  export default { 
-    data() { 
-      return { 
-        monthDict
-      }
-    }, 
-    computed: { 
-      direction: ({id}) => { 
-        let dir = lastId < id ? 1 : -1; 
-        lastId = id; 
-        return dir;
-      }
-    },
-    components: { 
-      Week: './Week.html'
-    }
-  }
+  $: direction = lastId < id ? 1 : -1
+  $: lastId = id
 </script>
