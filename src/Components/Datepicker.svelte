@@ -108,9 +108,9 @@
 </style>
 
 <script>
-  import Month from './Month.html'
-  import NavBar from './NavBar.html'
-  import Popover from './Popover.html'
+  import Month from './Month.svelte'
+  import NavBar from './NavBar.svelte'
+  import Popover from './Popover.svelte'
   import { dayDict, monthDict } from './lib/dictionaries';
   import { getMonths, areDatesEquivalent } from './lib/helpers';
   import { formatDate } from 'timeUtils';

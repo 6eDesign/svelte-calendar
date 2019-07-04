@@ -118,7 +118,7 @@ var cal = new SvelteCalendar(&#123;
 </style>
 
 <script>
-	import Datepicker from "./Components/Datepicker.html"
+	import Datepicker from "./Components/Datepicker.svelte"
 	import { onMount } from 'svelte'
 
 	const today = new Date()
