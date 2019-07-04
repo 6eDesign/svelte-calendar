@@ -23,7 +23,7 @@
 </style>
 
 <script>
-  import Week from './Week.html'
+  import Week from './Week.svelte'
   import { monthDict } from './lib/dictionaries'; 
 
   export let id
