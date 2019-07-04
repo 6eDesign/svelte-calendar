@@ -34,6 +34,11 @@
   export let highlighted
   export let shouldShakeDate
 
-  $: direction = lastId < id ? 1 : -1
-  $: lastId = id
+  let lastId = id
+  let direction
+
+  $: {
+    direction = lastId < id ? 1 : -1
+    lastId = id
+  }
 </script>
