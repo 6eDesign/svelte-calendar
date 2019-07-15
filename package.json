@@ -29,6 +29,6 @@
     "release": "npm run build && standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
-    "timeUtils": "^1.1.4"
+    "timeUtils": "^1.1.5"
   }
 }
