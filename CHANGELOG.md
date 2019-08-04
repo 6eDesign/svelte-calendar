@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/6eDesign/svelte-calendar/compare/v1.0.4...v1.0.5) (2019-08-04)
+
+
+### Bug Fixes
+
+* remove .bind(this) in Popover component which is no longer needed in svelte v3 ([29341ea](https://github.com/6eDesign/svelte-calendar/commit/29341ea))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/6eDesign/svelte-calendar/compare/v1.0.3...v1.0.4) (2019-08-04)
 
