@@ -1,3 +1,24 @@
+<script>
+  import Week from './Week.svelte';
+  import { monthDict } from './lib/dictionaries'; 
+
+  export let id;
+  export let visibleMonth;
+  export let selected;
+  export let start;
+  export let end;
+  export let highlighted;
+  export let shouldShakeDate;
+
+  let lastId = id;
+  let direction;
+
+  $: {
+    direction = lastId < id ? 1 : -1;
+    lastId = id;
+  }
+</script>
+
 <div class="month-container">
   {#each visibleMonth.weeks as week (week.id) }
     <Week 
@@ -12,6 +33,7 @@
     />
   {/each}
 </div>
+
 <style>
   .month-container { 
     width: 100%;
@@ -21,24 +43,3 @@
     -ms-grid-rows: 1fr;
   }
 </style>
-
-<script>
-  import Week from './Week.svelte'
-  import { monthDict } from './lib/dictionaries'; 
-
-  export let id
-  export let visibleMonth
-  export let selected
-  export let start
-  export let end
-  export let highlighted
-  export let shouldShakeDate
-
-  let lastId = id
-  let direction
-
-  $: {
-    direction = lastId < id ? 1 : -1
-    lastId = id
-  }
-</script>

@@ -1,3 +1,50 @@
+<script>
+	import Datepicker from "./Components/Datepicker.svelte"
+	import { onMount } from 'svelte'
+
+	const today = new Date()
+	let start = new Date()
+	let dateFormat = "#{l}, #{F} #{j}, #{Y}"
+	let noWeekendsSelectableCallback = function (date) { 
+		return date.getDay() != 0 && date.getDay() != 6
+	}
+	let formattedSelected = undefined
+	let dateChosen = false
+	let exampleFormatted = false
+	let exampleChosen = false
+	
+	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720)
+	
+	let threeDaysInPast
+	$: { 
+		const date = new Date(today); 
+		date.setDate(date.getDate() - 3); 
+		threeDaysInPast = date;
+	}
+
+	let tomorrow
+	$: {
+		const date = new Date(today); 
+		date.setDate(date.getDate() + 1); 
+		tomorrow = date;
+	}
+
+	let inThirtyDays
+	$: {
+		const date = new Date(start);
+		date.setDate(date.getDate() + 30);
+		inThirtyDays = date;
+	}
+
+	function logChoice (date) {
+		console.log(`User chose ${date}.`);
+	}
+
+	onMount(() => {
+		hljs.initHighlightingOnLoad();
+	})
+</script>
+
 <h1>SvelteCalendar</h1>
 <div class="container">
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
@@ -81,8 +128,6 @@ var cal = new SvelteCalendar(&#123;
 	<div class="text-center">
 		<Datepicker format={dateFormat} on:dateSelected={e => logChoice(e.detail.date)} />
 	</div>
-
-
 </div>
 
 <style>
@@ -116,50 +161,3 @@ var cal = new SvelteCalendar(&#123;
 		color: tomato;
 	}
 </style>
-
-<script>
-	import Datepicker from "./Components/Datepicker.svelte"
-	import { onMount } from 'svelte'
-
-	const today = new Date()
-	let start = new Date()
-	let dateFormat = "#{l}, #{F} #{j}, #{Y}"
-	let noWeekendsSelectableCallback = function (date) { 
-		return date.getDay() != 0 && date.getDay() != 6
-	}
-	let formattedSelected = undefined
-	let dateChosen = false
-	let exampleFormatted = false
-	let exampleChosen = false
-	
-	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720)
-	
-	let threeDaysInPast
-	$: { 
-		const date = new Date(today); 
-		date.setDate(date.getDate() - 3); 
-		threeDaysInPast = date;
-	}
-
-	let tomorrow
-	$: {
-		const date = new Date(today); 
-		date.setDate(date.getDate() + 1); 
-		tomorrow = date;
-	}
-
-	let inThirtyDays
-	$: {
-		const date = new Date(start);
-		date.setDate(date.getDate() + 30);
-		inThirtyDays = date;
-	}
-
-	function logChoice (date) {
-		console.log(`User chose ${date}.`);
-	}
-
-	onMount(() => {
-		hljs.initHighlightingOnLoad();
-	})
-</script>

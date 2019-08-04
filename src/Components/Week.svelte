@@ -1,3 +1,21 @@
+<script>
+  import { areDatesEquivalent } from './lib/helpers';
+  import { fly, fade } from 'svelte/transition';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
+
+  let lastMonthId = 0;
+
+  export let days;
+  export let selected;
+  export let start;
+  export let end;
+  export let highlighted;
+  export let shouldShakeDate;
+  export let direction;
+</script>
+
 <div 
   class="week" 
   in:fly={{ x: direction*50, duration: 180, delay: 90 }}
@@ -23,6 +41,7 @@
     </div>
   {/each}
 </div>
+
 <style>
   .week { 
     padding: 0;
@@ -134,21 +153,3 @@
     100% { transform: translate(0px); }
   }
 </style>
-
-<script>
-  import { areDatesEquivalent } from './lib/helpers';
-  import { fly, fade } from 'svelte/transition';
-  import { createEventDispatcher } from 'svelte';
-
-  const dispatch = createEventDispatcher()
-
-  let lastMonthId = 0;
-
-  export let days;
-  export let selected;
-  export let start;
-  export let end;
-  export let highlighted;
-  export let shouldShakeDate;
-  export let direction;
-</script>

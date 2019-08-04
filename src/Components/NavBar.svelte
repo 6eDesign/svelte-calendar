@@ -1,3 +1,46 @@
+<script>
+  import { monthDict } from './lib/dictionaries';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
+
+  export let month;
+  export let start;
+  export let end;
+  export let year;
+  export let canIncrementMonth;
+  export let canDecrementMonth;
+
+  let monthSelectorOpen = false;
+  let availableMonths;
+
+  $: {
+    let isOnLowerBoundary = start.getFullYear() == year; 
+    let isOnUpperBoundary = end.getFullYear() == year; 
+    availableMonths = monthDict.map((month,i) => {
+      return {
+        ...month, 
+        selectable: 
+          (!isOnLowerBoundary && !isOnUpperBoundary) || 
+          (
+            (!isOnLowerBoundary || i >= start.getMonth()) && 
+            (!isOnUpperBoundary || i <= end.getMonth())
+          )
+      }
+    });
+  }
+
+  function toggleMonthSelectorOpen() { 
+    monthSelectorOpen = !monthSelectorOpen;
+  }
+
+  function monthSelected(event,month) { 
+    event.stopPropagation(); 
+    dispatch('monthSelected', month);
+    toggleMonthSelectorOpen();
+  }
+</script>
+
 <div class="title">
   <div class="heading-section">
     <div class="control" 
@@ -123,46 +166,3 @@
   }
 
 </style>
-
-<script>
-  import { monthDict } from './lib/dictionaries';
-  import { createEventDispatcher } from 'svelte';
-
-  const dispatch = createEventDispatcher();
-
-  export let month;
-  export let start;
-  export let end;
-  export let year;
-  export let canIncrementMonth;
-  export let canDecrementMonth;
-
-  let monthSelectorOpen = false
-  let availableMonths
-
-  $: {
-      let isOnLowerBoundary = start.getFullYear() == year; 
-      let isOnUpperBoundary = end.getFullYear() == year; 
-      availableMonths = monthDict.map((month,i) => {
-        return {
-          ...month, 
-          selectable: 
-            (!isOnLowerBoundary && !isOnUpperBoundary) || 
-            (
-              (!isOnLowerBoundary || i >= start.getMonth()) && 
-              (!isOnUpperBoundary || i <= end.getMonth())
-            )
-        }
-      });
-  }
-
-  function toggleMonthSelectorOpen() { 
-    monthSelectorOpen = !monthSelectorOpen;
-  }
-
-  function monthSelected(event,month) { 
-    event.stopPropagation(); 
-    dispatch('monthSelected', month);
-    toggleMonthSelectorOpen();
-  }
-</script>

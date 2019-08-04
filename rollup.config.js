@@ -33,7 +33,10 @@ const bundle = {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve(),
     commonjs(),
-    buble({ objectAssign: true }),
+    buble({ 
+      objectAssign: true, 
+      transforms: { asyncAwait: false }
+    }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
@@ -67,7 +70,7 @@ const test = {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve(),
     commonjs(),
-    buble({ objectAssign: true }),
+    buble({ objectAssign: true, transforms: { asyncAwait: false } }),
 
     !production && browsersync({ server: "docs" }),
 

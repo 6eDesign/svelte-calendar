@@ -1,116 +1,7 @@
-<div class="datepicker" class:open={isOpen} class:closing={isClosing}>
-  <Popover 
-    bind:this={popover}
-    bind:open={isOpen} 
-    bind:shrink={isClosing}
-    {trigger}
-    on:opened={registerOpen}
-    on:closed={registerClose}
-  >
-    <div slot="trigger">
-      <slot>
-        {#if !trigger}
-          <button class="calendar-button">
-            {formattedSelected}
-          </button>
-        {/if}
-      </slot>
-    </div>
-    <div slot="contents">
-      <div class="calendar">
-        <NavBar 
-          {month} 
-          {year}
-          {start}
-          {end}
-          {canIncrementMonth}
-          {canDecrementMonth}
-          on:monthSelected={e => changeMonth(e.detail)} 
-          on:incrementMonth={e => incrementMonth(e.detail)}
-        />
-        <div class="legend">
-          {#each dayDict as day}
-            <span>{day.abbrev}</span>
-          {/each}
-        </div>
-        <Month 
-          {visibleMonth}
-          {selected}
-          {highlighted}
-          {shouldShakeDate}
-          {start}
-          {end}
-          id={visibleMonthId}
-          on:dateSelected={e => registerSelection(e.detail)}
-        />
-      </div>
-    </div>
-  </Popover>
-</div>
-
-<style>
-
-  .datepicker { 
-    display: inline-block;
-    margin: 0 auto;
-    text-align: center;
-    overflow: visible;
-  }
-  
-  .calendar-button { 
-    padding: 10px 20px;
-    border: 1px solid #eee;
-    display: block;
-    text-align: center;
-    width: 300px;
-    text-decoration: none;
-    cursor: pointer;
-    background: #fff;
-    border-radius: 7px;
-    box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
-  }
-
-  
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
-  
-  .calendar { 
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-    width: 100vw;
-    padding: 10px;
-    padding-top: 0; 
-  }
-  
-  @media (min-width: 480px) { 
-    .calendar { 
-      height: auto; 
-      width: 340px;
-      max-width: 100%;
-    }
-  }
-  
-  .legend { 
-    color: #4a4a4a;
-    padding: 10px 0;
-    margin-bottom: 5px;
-  }
-  
-  .legend span { 
-    width: 14.285714%;
-    display: inline-block;
-    text-align: center;
-  }
-
-</style>
-
 <script>
-  import Month from './Month.svelte'
-  import NavBar from './NavBar.svelte'
-  import Popover from './Popover.svelte'
+  import Month from './Month.svelte';
+  import NavBar from './NavBar.svelte';
+  import Popover from './Popover.svelte';
   import { dayDict, monthDict } from './lib/dictionaries';
   import { getMonths, areDatesEquivalent } from './lib/helpers';
   import { formatDate } from 'timeUtils';
@@ -120,7 +11,7 @@
   const dispatch = createEventDispatcher()
   const today = new Date();
 
-  let popover
+  let popover;
 
   export let format = '#{m}/#{d}/#{Y}'
   export let start = new Date(1987, 9, 29) 
@@ -285,3 +176,109 @@
     dispatch('close')
   }
 </script>
+
+<div class="datepicker" class:open={isOpen} class:closing={isClosing}>
+  <Popover 
+    bind:this={popover}
+    bind:open={isOpen} 
+    bind:shrink={isClosing}
+    {trigger}
+    on:opened={registerOpen}
+    on:closed={registerClose}
+  >
+    <div slot="trigger">
+      <slot>
+        {#if !trigger}
+          <button class="calendar-button">
+            {formattedSelected}
+          </button>
+        {/if}
+      </slot>
+    </div>
+    <div slot="contents">
+      <div class="calendar">
+        <NavBar 
+          {month} 
+          {year}
+          {start}
+          {end}
+          {canIncrementMonth}
+          {canDecrementMonth}
+          on:monthSelected={e => changeMonth(e.detail)} 
+          on:incrementMonth={e => incrementMonth(e.detail)}
+        />
+        <div class="legend">
+          {#each dayDict as day}
+            <span>{day.abbrev}</span>
+          {/each}
+        </div>
+        <Month 
+          {visibleMonth}
+          {selected}
+          {highlighted}
+          {shouldShakeDate}
+          {start}
+          {end}
+          id={visibleMonthId}
+          on:dateSelected={e => registerSelection(e.detail)}
+        />
+      </div>
+    </div>
+  </Popover>
+</div>
+
+<style>
+  .datepicker { 
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    overflow: visible;
+  }
+  
+  .calendar-button { 
+    padding: 10px 20px;
+    border: 1px solid #eee;
+    display: block;
+    text-align: center;
+    width: 300px;
+    text-decoration: none;
+    cursor: pointer;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  .calendar { 
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    width: 100vw;
+    padding: 10px;
+    padding-top: 0; 
+  }
+  
+  @media (min-width: 480px) { 
+    .calendar { 
+      height: auto; 
+      width: 340px;
+      max-width: 100%;
+    }
+  }
+  
+  .legend { 
+    color: #4a4a4a;
+    padding: 10px 0;
+    margin-bottom: 5px;
+  }
+  
+  .legend span { 
+    width: 14.285714%;
+    display: inline-block;
+    text-align: center;
+  }
+</style>
