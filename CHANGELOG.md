@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/6eDesign/svelte-calendar/compare/v1.0.3...v1.0.4) (2019-08-04)
+
+
+### Bug Fixes
+
+* Fix Popover.svelte bug introduced by svelte 3 migration.  Note, this introduces async/await which is not transpiled by buble.  Also, code style modifications. ([aa03bbd](https://github.com/6eDesign/svelte-calendar/commit/aa03bbd))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/6eDesign/svelte-calendar/compare/v1.0.2...v1.0.3) (2019-07-15)
 
