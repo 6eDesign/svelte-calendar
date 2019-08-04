@@ -33,7 +33,7 @@
   }
 
   onMount(() => {
-    document.addEventListener('click',checkForFocusLoss.bind(this)); 
+    document.addEventListener('click', checkForFocusLoss); 
     if(!trigger) return; 
     triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
 
