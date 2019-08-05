@@ -95,7 +95,7 @@ var trigger = document.getElementById('test');
 var cal = new SvelteCalendar(&#123; 
   target: document.querySelector('.button-container'),
   anchor: trigger, 
-  data: &#123;
+  props: &#123;
     trigger: trigger
   }
 });

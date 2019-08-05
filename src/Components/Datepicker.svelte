@@ -26,7 +26,7 @@
   let shakeHighlightTimeout;
   let month = today.getMonth();
   let year = today.getFullYear();
-  
+
   let isOpen = false;
   let isClosing = false;
 
@@ -50,7 +50,7 @@
   }
   $: visibleMonth = months[monthIndex];
 
-  $: visibleMonthId = year + (month / 100);
+  $: visibleMonthId = year + month / 100;
   $: lastVisibleDate = visibleMonth.weeks[visibleMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex < months.length - 1;
@@ -65,7 +65,7 @@
     month = selected.getMonth();
     year = selected.getYear();
   });
-  
+
   function changeMonth(selectedMonth) {
     month = selectedMonth;
   }
@@ -120,7 +120,7 @@
       shouldShakeDate = false;
     }, 700);
   }
-  
+
   function assignValueToTrigger(formatted) {
     assignmentHandler(formatted);
   }
@@ -188,65 +188,50 @@
   }
 </script>
 
-<div class="datepicker" class:open={isOpen} class:closing={isClosing}>
-  <Popover 
-    bind:this={popover}
-    bind:open={isOpen} 
-    bind:shrink={isClosing}
+<div class="datepicker" class:open="{isOpen}" class:closing="{isClosing}">
+  <Popover
+    bind:this="{popover}"
+    bind:open="{isOpen}"
+    bind:shrink="{isClosing}"
     {trigger}
-    on:opened={registerOpen}
-    on:closed={registerClose}
+    on:opened="{registerOpen}"
+    on:closed="{registerClose}"
   >
     <div slot="trigger">
       <slot>
         {#if !trigger}
-          <button class="calendar-button">
-            {formattedSelected}
-          </button>
+        <button class="calendar-button">
+          {formattedSelected}
+        </button>
         {/if}
       </slot>
     </div>
     <div slot="contents">
       <div class="calendar">
-        <NavBar 
-          {month} 
-          {year}
-          {start}
-          {end}
-          {canIncrementMonth}
-          {canDecrementMonth}
-          on:monthSelected={e => changeMonth(e.detail)} 
-          on:incrementMonth={e => incrementMonth(e.detail)}
-        />
+        <NavBar {month} {year} {start} {end} {canIncrementMonth}
+        {canDecrementMonth} on:monthSelected={e => changeMonth(e.detail)}
+        on:incrementMonth={e => incrementMonth(e.detail)} />
         <div class="legend">
           {#each dayDict as day}
-            <span>{day.abbrev}</span>
+          <span>{day.abbrev}</span>
           {/each}
         </div>
-        <Month 
-          {visibleMonth}
-          {selected}
-          {highlighted}
-          {shouldShakeDate}
-          {start}
-          {end}
-          id={visibleMonthId}
-          on:dateSelected={e => registerSelection(e.detail)}
-        />
+        <Month {visibleMonth} {selected} {highlighted} {shouldShakeDate} {start}
+        {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
       </div>
     </div>
   </Popover>
 </div>
 
 <style>
-  .datepicker { 
+  .datepicker {
     display: inline-block;
     margin: 0 auto;
     text-align: center;
     overflow: visible;
   }
-  
-  .calendar-button { 
+
+  .calendar-button {
     padding: 10px 20px;
     border: 1px solid #eee;
     display: block;
@@ -256,38 +241,40 @@
     cursor: pointer;
     background: #fff;
     border-radius: 7px;
-    box-shadow: 0px 0px 3px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
   }
 
-  *, *:before, *:after {
+  *,
+  *:before,
+  *:after {
     box-sizing: inherit;
   }
-  
-  .calendar { 
+
+  .calendar {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
     user-select: none;
     width: 100vw;
     padding: 10px;
-    padding-top: 0; 
+    padding-top: 0;
   }
-  
-  @media (min-width: 480px) { 
-    .calendar { 
-      height: auto; 
+
+  @media (min-width: 480px) {
+    .calendar {
+      height: auto;
       width: 340px;
       max-width: 100%;
     }
   }
-  
-  .legend { 
+
+  .legend {
     color: #4a4a4a;
     padding: 10px 0;
     margin-bottom: 5px;
   }
-  
-  .legend span { 
+
+  .legend span {
     width: 14.285714%;
     display: inline-block;
     text-align: center;
