@@ -15,28 +15,28 @@
   let availableMonths;
 
   $: {
-    let isOnLowerBoundary = start.getFullYear() == year; 
-    let isOnUpperBoundary = end.getFullYear() == year; 
-    availableMonths = monthDict.map((month,i) => {
+    let isOnLowerBoundary = start.getFullYear() === year;
+    let isOnUpperBoundary = end.getFullYear() === year;
+    availableMonths = monthDict.map((m, i) => {
       return {
-        ...month, 
-        selectable: 
-          (!isOnLowerBoundary && !isOnUpperBoundary) || 
-          (
-            (!isOnLowerBoundary || i >= start.getMonth()) && 
-            (!isOnUpperBoundary || i <= end.getMonth())
-          )
-      }
+        ...m,
+        selectable:
+          (!isOnLowerBoundary && !isOnUpperBoundary)
+        || (
+          (!isOnLowerBoundary || i >= start.getMonth())
+          && (!isOnUpperBoundary || i <= end.getMonth())
+        )
+      };
     });
   }
 
-  function toggleMonthSelectorOpen() { 
+  function toggleMonthSelectorOpen() {
     monthSelectorOpen = !monthSelectorOpen;
   }
 
-  function monthSelected(event,month) { 
-    event.stopPropagation(); 
-    dispatch('monthSelected', month);
+  function monthSelected(event, m) {
+    event.stopPropagation();
+    dispatch('monthSelected', m);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -61,7 +61,7 @@
     {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
-        class:selected={index==month}
+        class:selected={index === month}
         class:selectable={monthDefinition.selectable}
         on:click={e => monthSelected(e, index)}
       >

@@ -5,8 +5,6 @@
 
   const dispatch = createEventDispatcher();
 
-  let lastMonthId = 0;
-
   export let days;
   export let selected;
   export let start;
@@ -18,7 +16,7 @@
 
 <div 
   class="week" 
-  in:fly={{ x: direction*50, duration: 180, delay: 90 }}
+  in:fly={{ x: direction * 50, duration: 180, delay: 90 }}
   out:fade={{ duration: 180 }}
 >
   {#each days as day}
@@ -30,11 +28,11 @@
     >
       <button 
         class="day--label" 
-        class:selected={areDatesEquivalent(day.date,selected)}
-        class:highlighted={areDatesEquivalent(day.date,highlighted)}
-        class:shake-date={shouldShakeDate && areDatesEquivalent(day.date,shouldShakeDate)}
+        class:selected={areDatesEquivalent(day.date, selected)}
+        class:highlighted={areDatesEquivalent(day.date, highlighted)}
+        class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
         class:disabled={!day.selectable}
-        on:click={() => dispatch('dateSelected',day.date)}
+        on:click={() => dispatch('dateSelected', day.date)}
       >
         {day.date.getDate()}
       </button>

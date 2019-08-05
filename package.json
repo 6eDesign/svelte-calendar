@@ -4,6 +4,12 @@
   "version": "1.0.5",
   "devDependencies": {
     "es6-object-assign": "^1.1.0",
+    "eslint": "^6.0.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.2",
+    "eslint-plugin-svelte3": "^2.7.3",
     "npm-run-all": "^4.1.3",
     "rollup": "^1.16.2",
     "rollup-plugin-browsersync": "^1.0.0",
@@ -21,12 +27,14 @@
     "url": "https://github.com/6eDesign/svelte-calendar.git"
   },
   "scripts": {
-    "build": "rollup -c",
     "autobuild": "rollup -c -w",
+    "build": "rollup -c",
     "dev": "run-p start:dev autobuild",
+    "lint": "eslint src/**/*.svelte src/**/*.js",
+    "release": "npm test && npm run build && standard-version && git push --follow-tags origin master",
     "start": "sirv public",
     "start:dev": "sirv public --dev",
-    "release": "npm run build && standard-version && git push --follow-tags origin master"
+    "test": "npm run lint"
   },
   "dependencies": {
     "timeUtils": "^1.1.5"

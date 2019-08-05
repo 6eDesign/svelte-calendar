@@ -1,6 +1,5 @@
 <script>
   import Week from './Week.svelte';
-  import { monthDict } from './lib/dictionaries'; 
 
   export let id;
   export let visibleMonth;

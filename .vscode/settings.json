@@ -1,0 +1,15 @@
+{
+  "eslint.autoFixOnSave": true,
+  "files.eol": "\n",
+  "files.associations": {
+    "*.svelte": "html"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "html",
+      "autoFix": true
+    }
+  ]
+}

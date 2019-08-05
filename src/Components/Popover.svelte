@@ -3,9 +3,13 @@
 
   const dispatch = createEventDispatcher();
 
-  export let open = false;
-  export let shrink;
-  export let trigger;
+  let once = (el, evt, cb) => {
+    function handler() {
+      cb.apply(this, arguments);
+      el.removeEventListener(evt, handler);
+    }
+    el.addEventListener(evt, handler);
+  };
 
   let popover;
   let w;
@@ -15,87 +19,83 @@
   let translateY = 0;
   let translateX = 0;
 
-  function checkForFocusLoss(evt) { 
-    if(!open) return;
-    let el = evt.target;
-    do {
-      if(el == popover) return;
-    } while(el = el.parentNode);
-    close();
-  }; 
+  export let open = false;
+  export let shrink;
+  export let trigger;
+  export const close = () => {
+    shrink = true;
+    once(contentsAnimated, 'animationend', () => {
+      shrink = false;
+      open = false;
+      dispatch('closed');
+    });
+  };
 
-  let once = (el, evt, cb) => { 
-    function handler() { 
-      cb.apply(this,arguments); 
-      el.removeEventListener(evt,handler);
-    }
-    el.addEventListener(evt,handler);
+  function checkForFocusLoss(evt) {
+    if (!open) return;
+    let el = evt.target;
+    // eslint-disable-next-line
+    do {
+      if (el === popover) return;
+    } while (el = el.parentNode);
+    close();
   }
 
   onMount(() => {
-    document.addEventListener('click', checkForFocusLoss); 
-    if(!trigger) return; 
+    document.addEventListener('click', checkForFocusLoss);
+    if (!trigger) return;
     triggerContainer.appendChild(trigger.parentNode.removeChild(trigger));
 
+    // eslint-disable-next-line
     return () => {
       document.removeEventListener('click', checkForFocusLoss);
-    }
-  })
+    };
+  });
 
-  const getDistanceToEdges = async () => { 
-    if(!open) { open = true }
+  const getDistanceToEdges = async () => {
+    if (!open) { open = true; }
     await tick();
-    let width = contentsWrapper.offsetWidth; 
-    let height = contentsWrapper.offsetHeight; 
-    let rect = contentsWrapper.getBoundingClientRect(); 
-    return { 
-      top: rect.top + (-1*translateY), 
-      bottom: window.innerHeight - rect.bottom + translateY, 
-      left: rect.left + (-1*translateX), 
+    let rect = contentsWrapper.getBoundingClientRect();
+    return {
+      top: rect.top + (-1 * translateY),
+      bottom: window.innerHeight - rect.bottom + translateY,
+      left: rect.left + (-1 * translateX),
       right: document.body.clientWidth - rect.right + translateX
-    }
-  }
+    };
+  };
 
-  const getTranslate = async () => { 
-    let dist = await getDistanceToEdges(); 
-    let x, y; 
-    if(w < 480) { 
+  const getTranslate = async () => {
+    let dist = await getDistanceToEdges();
+    let x; let
+      y;
+    if (w < 480) {
       y = dist.bottom;
-    } else if(dist.top < 0) { 
-      y = Math.abs(dist.top); 
-    } else if(dist.bottom < 0) { 
-      y = dist.bottom; 
-    } else { 
-      y = 0; 
+    } else if (dist.top < 0) {
+      y = Math.abs(dist.top);
+    } else if (dist.bottom < 0) {
+      y = dist.bottom;
+    } else {
+      y = 0;
     }
-    if(dist.left < 0) { 
-      x = Math.abs(dist.left); 
-    } else if(dist.right < 0) { 
+    if (dist.left < 0) {
+      x = Math.abs(dist.left);
+    } else if (dist.right < 0) {
       x = dist.right;
-    } else { 
-      x = 0; 
+    } else {
+      x = 0;
     }
-    return { x, y }  
-  }
+    return { x, y };
+  };
 
-  const doOpen = async () => { 
-    const { x, y } = await getTranslate()
+  const doOpen = async () => {
+    const { x, y } = await getTranslate();
 
-    translateX = x
-    translateY = y
-    open = true
+    translateX = x;
+    translateY = y;
+    open = true;
 
     dispatch('opened');
-  }
-
-  export const close = () => { 
-    shrink = true
-    once(contentsAnimated, 'animationend', () => {
-      shrink = false
-      open = false
-      dispatch('closed')
-    });
-  }
+  };
 </script>
 
 <svelte:window bind:innerWidth={w} />
