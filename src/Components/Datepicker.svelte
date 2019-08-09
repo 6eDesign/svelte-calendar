@@ -200,7 +200,7 @@
     <div slot="trigger">
       <slot>
         {#if !trigger}
-        <button class="calendar-button">
+        <button class="calendar-button" type="button">
           {formattedSelected}
         </button>
         {/if}
