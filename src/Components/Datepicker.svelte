@@ -63,7 +63,7 @@
 
   onMount(() => {
     month = selected.getMonth();
-    year = selected.getYear();
+    year = selected.getFullYear();
   });
 
   function changeMonth(selectedMonth) {
