@@ -32,6 +32,7 @@
         class:highlighted={areDatesEquivalent(day.date, highlighted)}
         class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
         class:disabled={!day.selectable}
+        type="button"
         on:click={() => dispatch('dateSelected', day.date)}
       >
         {day.date.getDate()}
