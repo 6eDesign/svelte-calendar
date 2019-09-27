@@ -10,9 +10,8 @@ const getCalendarPage = (month, year, dayProps) => {
     const updated = Object.assign({
       partOfMonth: date.getMonth() === month,
       date: new Date(date)
-    }, dayProps(date))
-    weeks[0].days.push(updated
-    );
+    }, dayProps(date));
+    weeks[0].days.push(updated);
     date.setDate(date.getDate() + 1);
   }
   weeks.reverse();
