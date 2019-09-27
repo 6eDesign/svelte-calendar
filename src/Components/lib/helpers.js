@@ -7,11 +7,12 @@ const getCalendarPage = (month, year, dayProps) => {
   let weeks = [];
   while (date.getMonth() !== nextMonth || date.getDay() !== 0 || weeks.length !== 6) {
     if (date.getDay() === 0) weeks.unshift({ days: [], id: `${year}${month}${year}${weeks.length}` });
-    weeks[0].days.push({
+    const updated = Object.assign({
       partOfMonth: date.getMonth() === month,
-      date: new Date(date),
-      ...dayProps(date)
-    });
+      date: new Date(date)
+    }, dayProps(date))
+    weeks[0].days.push(updated
+    );
     date.setDate(date.getDate() + 1);
   }
   weeks.reverse();
