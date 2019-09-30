@@ -99,7 +99,7 @@
 </script>
 
 <svelte:window bind:innerWidth={w} />
-<div class="popover" bind:this={popover}>
+<div class="sc-popover" bind:this={popover}>
   <div class="trigger" on:click={doOpen} bind:this={triggerContainer}>
     <slot name="trigger">
     </slot>
@@ -119,7 +119,7 @@
 </div>
 
 <style>
-  .popover { 
+  .sc-popover { 
     position: relative;
   }
 
