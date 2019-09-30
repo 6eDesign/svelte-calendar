@@ -18,15 +18,14 @@
     let isOnLowerBoundary = start.getFullYear() === year;
     let isOnUpperBoundary = end.getFullYear() === year;
     availableMonths = monthDict.map((m, i) => {
-      return {
-        ...m,
+      return Object.assign({}, m, {
         selectable:
           (!isOnLowerBoundary && !isOnUpperBoundary)
         || (
           (!isOnLowerBoundary || i >= start.getMonth())
           && (!isOnUpperBoundary || i <= end.getMonth())
         )
-      };
+      });
     });
   }
 
