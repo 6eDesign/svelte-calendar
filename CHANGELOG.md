@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.9"></a>
+## [1.0.9](https://github.com/6eDesign/svelte-calendar/compare/v1.0.8...v1.0.9) (2019-09-30)
+
+
+### Bug Fixes
+
+* linting issues ([a24aa7c](https://github.com/6eDesign/svelte-calendar/commit/a24aa7c))
+* Update .popover class to .sc-popover to prevent conflict with bootstrap, fixes issue 41 ([#42](https://github.com/6eDesign/svelte-calendar/issues/42)) ([1ccdb62](https://github.com/6eDesign/svelte-calendar/commit/1ccdb62))
+
+
+
 <a name="1.0.8"></a>
 ## [1.0.8](https://github.com/6eDesign/svelte-calendar/compare/v1.0.7...v1.0.8) (2019-08-09)
 
