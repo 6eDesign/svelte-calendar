@@ -35,12 +35,10 @@
 	}
 
 	function logChoice(date) {
-	  // eslint-disable-next-line
 	  console.log(`User chose ${date}.`);
 	}
 
 	onMount(() => {
-	  // eslint-disable-next-line
 	  hljs.initHighlightingOnLoad();
 	});
 </script>

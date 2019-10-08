@@ -50,6 +50,7 @@
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    flex-flow: row;
     -webkit-flex-flow: row;
     justify-content: space-around;
     -ms-grid-column: 1;
