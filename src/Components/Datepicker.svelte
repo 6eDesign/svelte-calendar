@@ -58,7 +58,9 @@
 
   export let formattedSelected;
   $: {
-    formattedSelected = formatDate(selected, format);
+    formattedSelected = typeof format === 'function'
+      ? format(selected)
+      : formatDate(selected, format);
   }
 
   onMount(() => {
