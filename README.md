@@ -5,41 +5,48 @@ A small date picker built with Svelte 3. Demo available here: [demo page].
 ## Basic usage
 
 ```html
-<Datepicker />
+<Datepicker start={minDate} end={maxDate} />
 ```
 
-## With custom settings
+## Props
 
+prop name            | type                   | default
+---------------------|------------------------|-------------------------
+`start`              | `date`                 | `new Date(1987, 9, 29)`
+`end`                | `date`                 | `new Date(2020, 9, 29)`
+`selected`           | `date`                 | `today`
+`formattedSelected`  | `string`               | `today`
+`dateChosen`         | `boolean`              | `false`
+`selectableCallback` | `function`             | `null`
+`format`             | `string` \| `function` | `'#{m}/#{d}/#{Y}'`
+
+### `start` and `end`
+These properties set the minimum and maximum dates that will be rendered by this calendar.  It is **highly** recommended that you do not leave these as their defaults and supply values which suit your application's needs.
+
+### `selected` and `formattedSelected`
+Bind to these properties to observe the selected date as either a date or a string.  Use `selected` to set the day which is selected by default.
+
+### `dateChosen`
+Bind to this property to observe whether a user has selected a day.
+
+### `selectableCallback`
+Provide a function which accepts a date and returns a boolean determining whether a day between `start` and `end` is selectable.  For example, use this to prevent weekend days from being selected.
+
+### `format`
+Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).  If you would like to use a different formatting library, supply a function which accepts a date and returns a string. 
+
+### Kitchen Sink Example:
 ```html
 <Datepicker
-  format={dateFormat}
+  bind:formattedSelected={selectedDateFormatted}
+  bind:selected={selectedDate}
+  bind:dateChosen={userHasChosenDate}
   start={threeDaysInPast}
   end={inThirtyDays}
-  selectableCallback={noWeekendsSelectableCallback}
+  selectableCallback={filterWeekends}
+  format={date => dayjs(date).format('DD/MM/YYYY')}
 />
 ```
-
-`start` and `end` are [`Date`] objects.
-
-`format` Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).
-
-`selectableCallback` should be a function that accepts a single date as an argument and returns true (if selectable) or false (if unavailable).
-
-More examples can be found on the [demo page].
-
-## Binding data
-
-```html
-<Datepicker
-  bind:selected
-  bind:formattedSelected
-  bind:dateChosen
-/>
-```
-
-`selected` is a [`Date`] object. `formattedSelected` is a string - it's the `Date` object formatted using [`timeUtils`].
-
-`dateChosen` is a boolean, false by default, true after user selection.
 
 ## Developing/Modifying Svelte-Calendar Guide
 
