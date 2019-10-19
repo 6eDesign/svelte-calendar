@@ -188,9 +188,33 @@
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
+
+  // theming variables:
+  export let buttonBackgroundColor = '#fff';
+  export let buttonBorderColor = '#eee';
+  export let buttonTextColor = '#333';
+  export let highlightColor = '#f7901e';
+  export let dayBackgroundColor = 'none';
+  export let dayTextColor = '#4a4a4a';
+  export let dayHighlightedBackgroundColor = '#efefef';
+  export let dayHighlightedTextColor = '#4a4a4a';
 </script>
 
-<div class="datepicker" class:open="{isOpen}" class:closing="{isClosing}">
+<div 
+  class="datepicker" 
+  class:open="{isOpen}" 
+  class:closing="{isClosing}"
+  style='
+    --button-background-color: {buttonBackgroundColor};
+    --button-border-color: {buttonBorderColor};
+    --button-text-color: {buttonTextColor};
+    --highlight-color: {highlightColor};
+    --day-background-color: {dayBackgroundColor};
+    --day-text-color: {dayTextColor};
+    --day-highlighted-background-color: {dayHighlightedBackgroundColor};
+    --day-highlighted-text-color: {dayHighlightedTextColor};
+  '
+>
   <Popover
     bind:this="{popover}"
     bind:open="{isOpen}"
@@ -235,13 +259,14 @@
 
   .calendar-button {
     padding: 10px 20px;
-    border: 1px solid #eee;
+    border: 1px solid var(--button-border-color);
     display: block;
     text-align: center;
     width: 300px;
     text-decoration: none;
     cursor: pointer;
-    background: #fff;
+    background: var(--button-background-color);
+    color: var(--button-text-color);
     border-radius: 7px;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
   }

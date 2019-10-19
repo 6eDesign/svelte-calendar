@@ -118,7 +118,7 @@
     box-shadow: 0px 0px 3px rgba(0,0,0,0.15);
   }
   .month-selector--month.selected { 
-    background: #f7901e;
+    background: var(--highlight-color);
     color: #fff;
   }
   .month-selector--month:before { 

@@ -82,7 +82,7 @@
   }
   .day { 
     margin: 2px;
-    color: #4a4a4a;
+    color: var(--day-text-color);
     font-weight: bold;
     text-align: center;
     font-size: 16px;
@@ -101,6 +101,7 @@
     padding-top: 100%;
   }
   .day--label { 
+    color: var(--day-text-color);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -111,7 +112,7 @@
     margin: 10%;
     padding: 0;
     align-items: center;
-    background: none;
+    background: var(--day-background-color);
     cursor: pointer;
     transition: all 100ms linear;
     font-weight: normal;
@@ -122,8 +123,9 @@
   @media (min-width: 480px) { 
     .day--label.highlighted,
     .day--label:not(.disabled):hover { 
-      background: #efefef;
-      border-color: #efefef;
+      background: var(--day-highlighted-background-color);
+      border-color: var(--day-highlighted-background-color);
+      color: var(--day-highlighted-text-color);
     }
   }
   .day--label.shake-date { 
@@ -132,15 +134,15 @@
   .day--label.selected:hover,
   .day--label.selected,
   .day--label:active:not(.disabled) { 
-    background-color: #f7901e;
-    border-color: #f7901e;
+    background-color: var(--highlight-color);
+    border-color: var(--highlight-color);
     color: #fff;
   }
   .day.is-today .day--label, 
   .day.is-today .day--label:hover { 
     opacity: 1; 
     background: none;
-    border-color: #f7901e;
+    border-color: var(--highlight-color);
     color: #000;
   }
 

@@ -128,6 +128,32 @@ var cal = new SvelteCalendar(&#123;
 	<div class='text-center'>
 		<Datepicker format={dateFormat} on:dateSelected={e => logChoice(e.detail.date)} />
 	</div>
+
+	<p>You can theme the datepicker:</p>
+	<div>
+		<Datepicker 
+			format={dateFormat} 
+			buttonBackgroundColor='#e20074'
+			buttonTextColor='white'
+			highlightColor='#e20074'
+			dayBackgroundColor='#efefef'
+			dayTextColor='#333'
+			dayHighlightedBackgroundColor='#e20074'
+			dayHighlightedTextColor='#fff'
+		/>
+	</div>
+	<pre><code class="html">
+&lt;Datepicker 
+  format={dateFormat} 
+  buttonBackgroundColor='#e20074'
+  buttonTextColor='white'
+  highlightColor='#e20074'
+  dayBackgroundColor='#efefef'
+  dayTextColor='#333'
+  dayHighlightedBackgroundColor='#e20074'
+  dayHighlightedTextColor='#fff'
+/&gt;
+	</code></pre>
 </div>
 
 <style>
