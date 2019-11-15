@@ -38,7 +38,7 @@ Provide a function which accepts a date and returns a boolean determining whethe
 Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).  If you would like to use a different formatting library, supply a function which accepts a date and returns a string. 
 
 ### `daysOfWeek` and `monthsOfYear`
-These two properties are used to internationalize the calendar.  The default values are: 
+These two props are used to internationalize the calendar.  The default values are: 
 
 ```javascript
 export let daysOfWeek = [
@@ -68,6 +68,32 @@ export let monthsOfYear = [
 
 ### Kitchen Sink Example:
 ```html
+<script>
+  const daysOfWeek = [
+    [ 'Domingo', 'Dom' ],
+    [ 'Lunes', 'Lun' ],
+    [ 'Martes', 'Mar' ],
+    [ 'Miércoles', 'Mié' ],
+    [ 'Jueves', 'Jue' ],
+    [ 'Viernes', 'Vie' ],
+    [ 'Sábado', 'Sáb' ],
+  ];
+  const monthsOfYear = [
+    [ 'Enero', 'Ene' ],
+    [ 'Febrero', 'Feb' ],
+    [ 'Marzo', 'Mar' ],
+    [ 'Abril', 'Abr' ],
+    [ 'Mayo', 'May' ],
+    [ 'Junio', 'Jun' ],
+    [ 'Julio', 'Jul' ],
+    [ 'Agosto', 'Ago' ],
+    [ 'Septiembre', 'Sep' ],
+    [ 'Octubre', 'Oct' ],
+    [ 'Noviembre', 'Nov' ],
+    [ 'Diciembre', 'Dic' ],
+  ];
+</script>
+
 <Datepicker
   bind:formattedSelected={selectedDateFormatted}
   bind:selected={selectedDate}
@@ -75,6 +101,8 @@ export let monthsOfYear = [
   start={threeDaysInPast}
   end={inThirtyDays}
   selectableCallback={filterWeekends}
+  daysOfWeek={daysOfWeek}
+  monthsOfYear={monthsOfYear}
   format={date => dayjs(date).format('DD/MM/YYYY')}
 />
 ```
