@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/6eDesign/svelte-calendar/compare/v1.1.0...v1.2.0) (2019-11-15)
+
+
+### Features
+
+* Internationalization (add daysOfWeek and monthsOfYear props) ([a290701](https://github.com/6eDesign/svelte-calendar/commit/a290701))
+* Internationalization (add daysOfWeek and monthsOfYear props) ([20c6d5a](https://github.com/6eDesign/svelte-calendar/commit/20c6d5a))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/6eDesign/svelte-calendar/compare/v1.0.11...v1.1.0) (2019-10-19)
 
