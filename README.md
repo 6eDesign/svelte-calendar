@@ -19,6 +19,8 @@ prop name            | type                   | default
 `dateChosen`         | `boolean`              | `false`
 `selectableCallback` | `function`             | `null`
 `format`             | `string` \| `function` | `'#{m}/#{d}/#{Y}'`
+`daysOfWeek`         | `array`                | En-US Locale (see below)
+`monthsOfYear`       | `array`                | En-US Locale (see below)
 
 ### `start` and `end`
 These properties set the minimum and maximum dates that will be rendered by this calendar.  It is **highly** recommended that you do not leave these as their defaults and supply values which suit your application's needs.
@@ -34,6 +36,35 @@ Provide a function which accepts a date and returns a boolean determining whethe
 
 ### `format`
 Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).  If you would like to use a different formatting library, supply a function which accepts a date and returns a string. 
+
+### `daysOfWeek` and `monthsOfYear`
+These two properties are used to internationalize the calendar.  The default values are: 
+
+```javascript
+export let daysOfWeek = [
+  ['Sunday', 'Sun'],
+  ['Monday', 'Mon'],
+  ['Tuesday', 'Tue'],
+  ['Wednesday', 'Wed'],
+  ['Thursday', 'Thu'],
+  ['Friday', 'Fri'],
+  ['Saturday', 'Sat']
+];
+export let monthsOfYear = [
+  ['January', 'Jan'],
+  ['February', 'Feb'],
+  ['March', 'Mar'],
+  ['April', 'Apr'],
+  ['May', 'May'],
+  ['June', 'Jun'],
+  ['July', 'Jul'],
+  ['August', 'Aug'],
+  ['September', 'Sep'],
+  ['October', 'Oct'],
+  ['November', 'Nov'],
+  ['December', 'Dec']
+];
+```
 
 ### Kitchen Sink Example:
 ```html

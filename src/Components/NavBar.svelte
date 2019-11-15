@@ -1,5 +1,4 @@
 <script>
-  import { monthDict } from './lib/dictionaries';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -10,6 +9,7 @@
   export let year;
   export let canIncrementMonth;
   export let canDecrementMonth;
+  export let monthsOfYear;
 
   let monthSelectorOpen = false;
   let availableMonths;
@@ -17,14 +17,17 @@
   $: {
     let isOnLowerBoundary = start.getFullYear() === year;
     let isOnUpperBoundary = end.getFullYear() === year;
-    availableMonths = monthDict.map((m, i) => {
-      return Object.assign({}, m, {
+    availableMonths = monthsOfYear.map((m, i) => {
+      return Object.assign({}, {
+        name: m[0],
+        abbrev: m[1]
+      }, {
         selectable:
           (!isOnLowerBoundary && !isOnUpperBoundary)
-        || (
-          (!isOnLowerBoundary || i >= start.getMonth())
-          && (!isOnUpperBoundary || i <= end.getMonth())
-        )
+          || (
+            (!isOnLowerBoundary || i >= start.getMonth())
+            && (!isOnUpperBoundary || i <= end.getMonth())
+          )
       });
     });
   }
@@ -48,7 +51,7 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      {monthDict[month].name} {year}
+      {monthsOfYear[month][0]} {year}
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}

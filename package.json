@@ -38,6 +38,6 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "timeUtils": "^1.1.5"
+    "timeUtils": "2.0.0"
   }
 }

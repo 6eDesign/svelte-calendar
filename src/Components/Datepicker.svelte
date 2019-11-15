@@ -2,9 +2,8 @@
   import Month from './Month.svelte';
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
-  import { dayDict } from './lib/dictionaries';
   import { getMonths, areDatesEquivalent } from './lib/helpers';
-  import { formatDate } from 'timeUtils';
+  import { formatDate, internationalize } from 'timeUtils';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -20,6 +19,32 @@
   export let dateChosen = false;
   export let trigger = null;
   export let selectableCallback = null;
+  export let daysOfWeek = [
+    ['Sunday', 'Sun'],
+    ['Monday', 'Mon'],
+    ['Tuesday', 'Tue'],
+    ['Wednesday', 'Wed'],
+    ['Thursday', 'Thu'],
+    ['Friday', 'Fri'],
+    ['Saturday', 'Sat']
+  ];
+  export let monthsOfYear = [
+    ['January', 'Jan'],
+    ['February', 'Feb'],
+    ['March', 'Mar'],
+    ['April', 'Apr'],
+    ['May', 'May'],
+    ['June', 'Jun'],
+    ['July', 'Jul'],
+    ['August', 'Aug'],
+    ['September', 'Sep'],
+    ['October', 'Oct'],
+    ['November', 'Nov'],
+    ['December', 'Dec']
+  ];
+
+  internationalize({ daysOfWeek, monthsOfYear });
+
 
   let highlighted = today;
   let shouldShakeDate = false;
@@ -234,12 +259,20 @@
     </div>
     <div slot="contents">
       <div class="calendar">
-        <NavBar {month} {year} {start} {end} {canIncrementMonth}
-        {canDecrementMonth} on:monthSelected={e => changeMonth(e.detail)}
-        on:incrementMonth={e => incrementMonth(e.detail)} />
+        <NavBar 
+          {month}
+          {year}
+          {start}
+          {end}
+          {canIncrementMonth}
+          {canDecrementMonth}
+          {monthsOfYear}
+          on:monthSelected={e => changeMonth(e.detail)}
+          on:incrementMonth={e => incrementMonth(e.detail)} 
+        />
         <div class="legend">
-          {#each dayDict as day}
-          <span>{day.abbrev}</span>
+          {#each daysOfWeek as day}
+          <span>{day[1]}</span>
           {/each}
         </div>
         <Month {visibleMonth} {selected} {highlighted} {shouldShakeDate} {start}
