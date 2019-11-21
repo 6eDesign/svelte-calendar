@@ -19,6 +19,7 @@
   export let dateChosen = false;
   export let trigger = null;
   export let selectableCallback = null;
+  export let weekStart = 0;
   export let daysOfWeek = [
     ['Sunday', 'Sun'],
     ['Monday', 'Mon'],
@@ -44,7 +45,11 @@
   ];
 
   internationalize({ daysOfWeek, monthsOfYear });
-
+  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
+    let dow = daysOfWeek.slice();
+    dow.push(dow.shift());
+    return dow;
+  })();
 
   let highlighted = today;
   let shouldShakeDate = false;
@@ -62,7 +67,7 @@
     trigger.innerHTML = formatted;
   }
 
-  $: months = getMonths(start, end, selectableCallback);
+  $: months = getMonths(start, end, selectableCallback, weekStart);
 
   let monthIndex = 0;
   $: {
@@ -271,7 +276,7 @@
           on:incrementMonth={e => incrementMonth(e.detail)} 
         />
         <div class="legend">
-          {#each daysOfWeek as day}
+          {#each sortedDaysOfWeek as day}
           <span>{day[1]}</span>
           {/each}
         </div>
