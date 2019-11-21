@@ -45,7 +45,11 @@
   ];
 
   internationalize({ daysOfWeek, monthsOfYear });
-  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => { let dow = daysOfWeek.slice(); dow.push(dow.shift());return dow;})();
+  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
+    let dow = daysOfWeek.slice();
+    dow.push(dow.shift());
+    return dow;
+  })();
 
   let highlighted = today;
   let shouldShakeDate = false;
