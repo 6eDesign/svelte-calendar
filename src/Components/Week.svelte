@@ -7,8 +7,6 @@
 
   export let days;
   export let selected;
-  export let start;
-  export let end;
   export let highlighted;
   export let shouldShakeDate;
   export let direction;
