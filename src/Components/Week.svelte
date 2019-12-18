@@ -1,5 +1,5 @@
 <script>
-  import { areDatesEquivalent } from './lib/helpers';
+  import { areDatesEquivalent, isDateBetweenSelected } from './lib/helpers';
   import { fly, fade } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
@@ -29,6 +29,7 @@
         class="day--label" 
         class:selectedStart={areDatesEquivalent(day.date, selectedStart)}
         class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
+        class:betweenSelected={isDateBetweenSelected(selectedStart, selectedEnd, day.date)}
         class:highlighted={areDatesEquivalent(day.date, highlighted)}
         class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
         class:disabled={!day.selectable}
@@ -138,6 +139,11 @@
   .day--label:active:not(.disabled) { 
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
+    color: #fff;
+  }
+  .day--label.betweenSelected {
+    background-color: var(--passive-highlight-color);
+    border-color: var(--passive-highlight-color);
     color: #fff;
   }
   .day.is-today .day--label, 

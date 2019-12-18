@@ -168,10 +168,13 @@
 
   function registerSelection(chosen) {
     clickCounter++;
+
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     if (clickCounter === 1) {
+      if (dateChosenStart === true) selectedEnd = chosen;
       if (chosen <= selectedEnd || dateChosenStart === false) {
         selectedStart = chosen;
+        selectedEnd = selectedStart;
         dateChosenStart = true;
         assignValueToTrigger(formattedSelectedStart);
         if (!dateRange) {
@@ -232,6 +235,7 @@
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
+    formattedCombined = formattedSelectedStart + " - " + formattedSelectedEnd;
   }
 
   function close() {
@@ -241,8 +245,8 @@
 
   function registerOpen() {
     highlighted = getDefaultHighlighted();
-    month = selected.getMonth();
-    year = selected.getFullYear();
+    month = selectedStart.getMonth();
+    year = selectedStart.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
@@ -252,6 +256,7 @@
   export let buttonBorderColor = '#eee';
   export let buttonTextColor = '#333';
   export let highlightColor = '#f7901e';
+  export let passiveHighlightColor = '#f7921eb0';
   export let dayBackgroundColor = 'none';
   export let dayTextColor = '#4a4a4a';
   export let dayHighlightedBackgroundColor = '#efefef';
@@ -267,6 +272,7 @@
     --button-border-color: {buttonBorderColor};
     --button-text-color: {buttonTextColor};
     --highlight-color: {highlightColor};
+    --passive-highlight-color: {passiveHighlightColor};
     --day-background-color: {dayBackgroundColor};
     --day-text-color: {dayTextColor};
     --day-highlighted-background-color: {dayHighlightedBackgroundColor};

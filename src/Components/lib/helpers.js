@@ -45,3 +45,7 @@ export function getMonths(start, end, selectableCallback = null, weekStart = 0) 
 export const areDatesEquivalent = (a, b) => a.getDate() === b.getDate()
   && a.getMonth() === b.getMonth()
   && a.getFullYear() === b.getFullYear();
+
+export const isDateBetweenSelected = (a, b, c) => (c.getDate() > a.getDate() && c.getDate() < b.getDate())
+  && a.getMonth() === c.getMonth()
+  && a.getFullYear() === c.getFullYear();
