@@ -11,12 +11,16 @@
   const today = new Date();
 
   let popover;
+  let clickCounter = 0;
 
   export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(1987, 9, 29);
   export let end = new Date(2020, 9, 29);
-  export let selected = today;
-  export let dateChosen = false;
+  export let selectedStart = today;
+  export let selectedEnd = today;
+  export let dateChosenStart = false;
+  export let dateChosenEnd = false;
+  export let dateRange = false;
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
@@ -62,11 +66,6 @@
 
   today.setHours(0, 0, 0, 0);
 
-  function assignmentHandler(formatted) {
-    if (!trigger) return;
-    trigger.innerHTML = formatted;
-  }
-
   $: months = getMonths(start, end, selectableCallback, weekStart);
 
   let monthIndex = 0;
@@ -86,16 +85,25 @@
   $: canIncrementMonth = monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
 
-  export let formattedSelected;
+  export let formattedSelectedStart;
   $: {
-    formattedSelected = typeof format === 'function'
-      ? format(selected)
-      : formatDate(selected, format);
+    formattedSelectedStart = typeof format === 'function'
+      ? format(selectedStart)
+      : formatDate(selectedStart, format);
   }
 
+  export let formattedSelectedEnd;
+  $: {
+    formattedSelectedEnd = typeof format === 'function'
+      ? format(selectedEnd)
+      : formatDate(selectedEnd, format);
+  }
+
+  export let formattedCombined = "";
+
   onMount(() => {
-    month = selected.getMonth();
-    year = selected.getFullYear();
+    month = selectedStart.getMonth();
+    year = selectedStart.getFullYear();
   });
 
   function changeMonth(selectedMonth) {
@@ -113,7 +121,7 @@
   }
 
   function getDefaultHighlighted() {
-    return new Date(selected);
+    return new Date(selectedStart);
   }
 
   function incrementDayHighlighted(amount) {
@@ -154,17 +162,37 @@
   }
 
   function assignValueToTrigger(formatted) {
-    assignmentHandler(formatted);
+    if (!trigger) return;
+    trigger.innerHTML = formatted;
   }
 
   function registerSelection(chosen) {
+    clickCounter++;
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
-    // eslint-disable-next-line
-    close();
-    selected = chosen;
-    dateChosen = true;
-    assignValueToTrigger(formattedSelected);
-    return dispatch('dateSelected', { date: chosen });
+    if (clickCounter === 1) {
+      if (chosen <= selectedEnd) {
+        selectedStart = chosen;
+        dateChosenStart = true;
+        assignValueToTrigger(formattedSelectedStart);
+        if (!dateRange) {
+          close();
+          clickCounter--;
+          return dispatch('dateSelected', { date: chosen });
+        } 
+      } else {
+        clickCounter--;
+      }
+    } else if (clickCounter === 2) {
+      if (chosen >= selectedStart) {
+        selectedEnd = chosen;
+        dateChosenEnd = true;
+        clickCounter = 0;
+        assignValueToTrigger(formattedSelectedEnd);
+        return dispatch('dateSelected', { date: chosen });
+      } else {
+        clickCounter--;
+      }
+    }
   }
 
   function handleKeyPress(evt) {
@@ -257,7 +285,7 @@
       <slot>
         {#if !trigger}
         <button class="calendar-button" type="button">
-          {formattedSelected}
+          {formattedCombined}
         </button>
         {/if}
       </slot>
@@ -280,8 +308,8 @@
           <span>{day[1]}</span>
           {/each}
         </div>
-        <Month {visibleMonth} {selected} {highlighted} {shouldShakeDate} {start}
-        {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
+        <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate} 
+        {start} {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
       </div>
     </div>
   </Popover>
