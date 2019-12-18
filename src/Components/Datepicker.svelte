@@ -19,6 +19,7 @@
   export let dateChosen = false;
   export let trigger = null;
   export let selectableCallback = null;
+  export let selectableBindValue = null;
   export let weekStart = 0;
   export let daysOfWeek = [
     ['Sunday', 'Sun'],
@@ -67,7 +68,7 @@
     trigger.innerHTML = formatted;
   }
 
-  $: months = getMonths(start, end, selectableCallback, weekStart);
+  $: months = getMonths(start, end, selectableCallback, weekStart, selectableBindValue);
 
   let monthIndex = 0;
   $: {
