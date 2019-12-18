@@ -170,7 +170,7 @@
     clickCounter++;
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     if (clickCounter === 1) {
-      if (chosen <= selectedEnd) {
+      if (chosen <= selectedEnd || dateChosenStart === false) {
         selectedStart = chosen;
         dateChosenStart = true;
         assignValueToTrigger(formattedSelectedStart);
