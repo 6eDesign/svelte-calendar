@@ -3,7 +3,8 @@
 
   export let id;
   export let visibleMonth;
-  export let selected;
+  export let selectedStart;
+  export let selectedEnd;
   export let start;
   export let end;
   export let highlighted;
@@ -22,7 +23,8 @@
   {#each visibleMonth.weeks as week (week.id) }
     <Week 
       days={week.days} 
-      {selected} 
+      {selectedStart} 
+      {selectedEnd}
       {start} 
       {end} 
       {highlighted} 
