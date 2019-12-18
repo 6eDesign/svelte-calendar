@@ -6,7 +6,8 @@
   const dispatch = createEventDispatcher();
 
   export let days;
-  export let selected;
+  export let selectedStart;
+  export let selectedEnd;
   export let highlighted;
   export let shouldShakeDate;
   export let direction;
@@ -26,7 +27,8 @@
     >
       <button 
         class="day--label" 
-        class:selected={areDatesEquivalent(day.date, selected)}
+        class:selectedStart={areDatesEquivalent(day.date, selectedStart)}
+        class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
         class:highlighted={areDatesEquivalent(day.date, highlighted)}
         class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
         class:disabled={!day.selectable}
@@ -129,8 +131,10 @@
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;
   }
-  .day--label.selected:hover,
-  .day--label.selected,
+  .day--label.selectedStart:hover,
+  .day--label.selectedStart,
+  .day--label.selectedEnd:hover,
+  .day--label.selectedEnd,
   .day--label:active:not(.disabled) { 
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
