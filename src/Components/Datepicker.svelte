@@ -99,7 +99,7 @@
       : formatDate(selectedEnd, format);
   }
 
-  export let formattedCombined = "";
+  export let formattedCombined = '';
 
   onMount(() => {
     month = selectedStart.getMonth();
@@ -167,7 +167,7 @@
   }
 
   function registerSelection(chosen) {
-    clickCounter++;
+    clickCounter += 1;
 
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     if (clickCounter === 1) {
@@ -176,26 +176,26 @@
         selectedStart = chosen;
         selectedEnd = selectedStart;
         dateChosenStart = true;
-        assignValueToTrigger(formattedSelectedStart);
         if (!dateRange) {
           close();
-          clickCounter--;
-          return dispatch('dateSelected', { date: chosen });
-        } 
+          clickCounter -= 1;
+        }
       } else {
-        clickCounter--;
+        clickCounter -= 1;
       }
     } else if (clickCounter === 2) {
       if (chosen >= selectedStart) {
         selectedEnd = chosen;
-        dateChosenEnd = true;
-        clickCounter = 0;
-        assignValueToTrigger(formattedSelectedEnd);
-        return dispatch('dateSelected', { date: chosen });
       } else {
-        clickCounter--;
+        selectedEnd = selectedStart;
+        selectedStart = chosen;
       }
+      clickCounter = 0;
+      dateChosenEnd = true;
     }
+    assignValueToTrigger(formattedSelectedStart);
+    assignValueToTrigger(formattedSelectedEnd);
+    return dispatch('dateSelected', { date: chosen });
   }
 
   function handleKeyPress(evt) {
@@ -235,7 +235,7 @@
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
-    formattedCombined = formattedSelectedStart + " - " + formattedSelectedEnd;
+    formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
   }
 
   function close() {
@@ -291,7 +291,7 @@
       <slot>
         {#if !trigger}
         <button class="calendar-button" type="button">
-          {formattedCombined}
+          {formattedCombined || formattedSelectedStart}
         </button>
         {/if}
       </slot>
@@ -315,7 +315,7 @@
           {/each}
         </div>
         <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate} 
-        {start} {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
+        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
       </div>
     </div>
   </Popover>
