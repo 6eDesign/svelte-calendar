@@ -235,7 +235,9 @@
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
-    formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
+    if (formattedSelectedStart != formattedSelectedEnd) {
+      formattedCombined = formattedSelectedStart + " - " + formattedSelectedEnd;
+    }
   }
 
   function close() {
