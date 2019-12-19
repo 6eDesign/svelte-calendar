@@ -177,6 +177,7 @@
         selectedEnd = selectedStart;
         dateChosenStart = true;
         if (!dateRange) {
+          // eslint-disable-next-line
           close();
           clickCounter -= 1;
         }
@@ -235,8 +236,8 @@
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
-    if (formattedSelectedStart != formattedSelectedEnd) {
-      formattedCombined = formattedSelectedStart + " - " + formattedSelectedEnd;
+    if (formattedSelectedStart !== formattedSelectedEnd) {
+      formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
     }
   }
 
