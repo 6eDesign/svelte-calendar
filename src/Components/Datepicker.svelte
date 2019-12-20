@@ -179,7 +179,7 @@
           // eslint-disable-next-line
           close();
         }
-      } 
+      }
     } else {
       if (chosen >= selectedStart) {
         selectedEnd = chosen;
@@ -314,7 +314,7 @@
           {/each}
         </div>
         <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate} 
-        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => firstDate = !firstDate}/>
+        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => { firstDate = !firstDate; }}/>
       </div>
     </div>
   </Popover>
