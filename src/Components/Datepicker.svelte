@@ -11,7 +11,7 @@
   const today = new Date();
 
   let popover;
-  let clickCounter = 0;
+  let firstDate = true;
 
   export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(1987, 9, 29);
@@ -167,36 +167,29 @@
   }
 
   function registerSelection(chosen) {
-    clickCounter += 1;
-
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
-    if (clickCounter === 1) {
+    if (firstDate) {
       if (dateChosenStart) {
         selectedEnd = chosen;
       }
-
       if (chosen <= selectedEnd || !dateChosenStart) {
         selectedStart = chosen;
         selectedEnd = selectedStart;
-        dateChosenStart = true;
         if (!dateRange) {
           // eslint-disable-next-line
           close();
-          clickCounter -= 1;
         }
-      } else {
-        clickCounter -= 1;
-      }
-    } else if (clickCounter === 2) {
+      } 
+    } else {
       if (chosen >= selectedStart) {
         selectedEnd = chosen;
       } else {
         selectedEnd = selectedStart;
         selectedStart = chosen;
       }
-      clickCounter = 0;
       dateChosenEnd = true;
     }
+    dateChosenStart = true;
     assignValueToTrigger(formattedSelectedStart);
     assignValueToTrigger(formattedSelectedEnd);
     return dispatch('dateSelected', { date: chosen });
@@ -240,7 +233,7 @@
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
     if (formattedSelectedStart !== formattedSelectedEnd) {
-      formattedCombined = `${formattedSelectedStart} - ${formattedSelectedEnd};
+      formattedCombined = `${formattedSelectedStart} - ${formattedSelectedEnd}`;
     }
   }
 
@@ -321,7 +314,7 @@
           {/each}
         </div>
         <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate} 
-        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
+        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => firstDate = !firstDate}/>
       </div>
     </div>
   </Popover>
