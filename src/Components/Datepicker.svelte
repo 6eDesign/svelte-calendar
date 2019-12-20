@@ -171,8 +171,11 @@
 
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     if (clickCounter === 1) {
-      if (dateChosenStart === true) selectedEnd = chosen;
-      if (chosen <= selectedEnd || dateChosenStart === false) {
+      if (dateChosenStart) {
+        selectedEnd = chosen;
+      }
+
+      if (chosen <= selectedEnd || !dateChosenStart) {
         selectedStart = chosen;
         selectedEnd = selectedStart;
         dateChosenStart = true;
@@ -237,7 +240,7 @@
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
     if (formattedSelectedStart !== formattedSelectedEnd) {
-      formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
+      formattedCombined = `${formattedSelectedStart} - ${formattedSelectedEnd};
     }
   }
 
