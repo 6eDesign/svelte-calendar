@@ -22,7 +22,7 @@
     <div 
       class="day" 
       class:outside-month={!day.partOfMonth}
-      class:is-today={day.isToday}
+      class:is-today={day.isToday && !isDateBetweenSelected(selectedStart, selectedEnd, day.date)}
       class:is-disabled={!day.selectable}
     >
       <button 
