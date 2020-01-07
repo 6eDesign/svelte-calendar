@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.2"></a>
+## [1.2.2](https://github.com/6eDesign/svelte-calendar/compare/v1.2.1...v1.2.2) (2019-12-19)
+
+
+### Bug Fixes
+
+* linting issues ([8816456](https://github.com/6eDesign/svelte-calendar/commit/8816456))
+
+
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/6eDesign/svelte-calendar/compare/v1.2.0...v1.2.1) (2019-11-23)
 
