@@ -117,6 +117,7 @@
     cursor: pointer;
     transition: all 100ms linear;
     font-weight: normal;
+    z-index: 5;
   }
   .day--label.disabled { 
     cursor: default;
@@ -140,11 +141,55 @@
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
     color: #fff;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+  }
+  .day--label.betweenSelected:before, 
+  .day--label.selectedStart:after, 
+  .day--label.selectedEnd:after {
+    content: "";
+    background-color: var(--passive-highlight-color);
+    position: absolute;
+    height: 105%;
+    width: 116%;
+  }
+  .day--label.selectedStart:after, 
+  .day--label.selectedEnd:after {
+    width: 75%;
+    transform: translateZ(-1px);    
+  }
+  .day--label.betweenSelected:before {
+    z-index: -1;
+  }
+  .day--label.selectedStart:after {
+    left: 15px;
+  }
+  .day--label.selectedEnd:after {
+    right: 15px;
   }
   .day--label.betweenSelected {
-    background-color: var(--passive-highlight-color);
+    transition: none;
+    border-radius: 0;
+    margin: 10% 0;
+    width: 116%;
+    color: #fff;
+  }
+  .day--label.betweenSelected:hover {
+    background: var(--passive-highlight-color);
     border-color: var(--passive-highlight-color);
     color: #fff;
+    margin: 10% -5%;
+  }
+  .day--label.betweenSelected:hover:before {
+    border-radius: 50%;
+    background-color: var(--highlight-color);
+    border-color: var(--highlight-color);
+    width: 75%;
+    z-index: -1;
+  }
+  .day--label.selectedStart.selectedEnd.highlighted:after,
+  .day--label.selectedStart.selectedEnd:after {
+    background-color: transparent;
   }
   .day.is-today .day--label, 
   .day.is-today .day--label:hover { 
@@ -153,7 +198,6 @@
     border-color: var(--highlight-color);
     color: #000;
   }
-
   @keyframes shake {
     0% { transform: translate(7px); }
     20% { transform: translate(-7px); }
