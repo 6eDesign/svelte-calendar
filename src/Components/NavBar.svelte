@@ -96,7 +96,7 @@
     transform: scale(1.2); 
     opacity: 0; 
     visibility: hidden;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
   }
   .month-selector.open { 

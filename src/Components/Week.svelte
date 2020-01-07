@@ -117,7 +117,7 @@
     cursor: pointer;
     transition: all 100ms linear;
     font-weight: normal;
-    z-index: 5;
+    z-index: 1;
   }
   .day--label.disabled { 
     cursor: default;
