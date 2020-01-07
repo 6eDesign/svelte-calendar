@@ -168,7 +168,7 @@
 
   function registerSelection(chosen) {
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
-    if (firstDate) {
+    if (firstDate || !dateRange) {
       if (dateChosenStart) {
         selectedEnd = chosen;
       }
