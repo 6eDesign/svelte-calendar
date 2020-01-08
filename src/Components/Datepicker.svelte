@@ -85,7 +85,7 @@
   $: lastVisibleDate = visibleNextMonth.weeks[visibleNextMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex + 1 < months.length - 1;
-  $: canDecrementMonth = monthIndex - 1 > 0;
+  $: canDecrementMonth = monthIndex > 0;
 
   export let formattedSelectedStart;
   $: {
