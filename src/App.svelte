@@ -10,6 +10,12 @@
 	let dateChosen = false;
 	let exampleFormatted = false;
 	let exampleChosen = false;
+
+	// Daterange options
+	let dateChosenEnd = false;
+	let dateRange = true;
+	let combinedDates;
+	let end = new Date(today.getFullYear() + 1, today.getMonth(), today.getDay());
 	
 	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720);
 	
@@ -47,6 +53,13 @@
 
 <h1>SvelteCalendar</h1>
 <div class='container'>
+
+
+	<!-- daterange test -->
+	<Datepicker bind:dateChosenStart={dateChosen} bind:dateChosenEnd
+  bind:formattedSelected bind:formattedCombined={combinedDates} {start}
+  {end} {dateRange} {dateFormat} weekStart={1} />
+
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 
 	<Datepicker format='{dateFormat}' />
