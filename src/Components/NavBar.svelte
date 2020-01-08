@@ -38,7 +38,11 @@
 
   function monthSelected(event, m) {
     event.stopPropagation();
-    dispatch('monthSelected', m);
+    if (availableMonths[m + 1].selectable === false) {
+      dispatch('monthSelected', m-1);
+    } else {
+      dispatch('monthSelected', m);
+    }
     toggleMonthSelectorOpen();
   }
 </script>
@@ -53,7 +57,13 @@
     <div class="label" on:click={toggleMonthSelectorOpen}>
       <span class="display-month">{monthsOfYear[month][0]} {year}</span>
       <span class="display-month">-</span>
-      <span class="display-month">{monthsOfYear[month + 1][0]} {year}</span>
+      <span class="display-month">
+        {#if month === 11}
+          {monthsOfYear[0][0]} {year + 1}
+        {:else}
+          {monthsOfYear[month+1][0]} {year}
+        {/if}
+      </span>
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -65,7 +75,7 @@
     {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
-        class:selected={index === month}
+        class:selected={index === month || index === month + 1}
         class:selectable={monthDefinition.selectable}
         on:click={e => monthSelected(e, index)}
       >
