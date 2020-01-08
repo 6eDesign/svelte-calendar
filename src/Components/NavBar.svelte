@@ -39,7 +39,7 @@
   function monthSelected(event, m) {
     event.stopPropagation();
     if (availableMonths[m + 1].selectable === false) {
-      dispatch('monthSelected', m-1);
+      dispatch('monthSelected', m - 1);
     } else {
       dispatch('monthSelected', m);
     }
@@ -61,7 +61,7 @@
         {#if month === 11}
           {monthsOfYear[0][0]} {year + 1}
         {:else}
-          {monthsOfYear[month+1][0]} {year}
+          {monthsOfYear[month + 1][0]} {year}
         {/if}
       </span>
     </div> 
