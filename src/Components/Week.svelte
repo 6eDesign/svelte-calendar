@@ -133,6 +133,9 @@
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;
   }
+  .day.is-today .day--label.selectedStart,
+  .day.is-today .day--label.selectedEnd:hover,
+  .day--label.selectedStart.selectedEnd,
   .day--label.selectedStart:hover,
   .day--label.selectedStart,
   .day--label.selectedEnd:hover,
@@ -143,6 +146,12 @@
     color: #fff;
     border-radius: 50%;
     transform-style: preserve-3d;
+    outline: none;
+  }
+  .day.is-today .day--label.selectedEnd,
+  .day--label.selectedEnd {
+    background-color: white;
+    color: var(--day-text-color);
   }
   .day--label.betweenSelected:before, 
   .day--label.selectedStart:after, 
@@ -170,12 +179,24 @@
   .day--label.betweenSelected {
     transition: none;
     border-radius: 0;
-    margin: 10% 0;
+    margin: 10% -4%;
     width: 116%;
     color: #fff;
   }
+  .day.outside-month .day--label.betweenSelected {
+    color: var(--day-text-color);
+  }
+  .day.outside-month .day--label.betweenSelected:before,
+  .day.outside-month .day--label.betweenSelected:hover,
+  .day.outside-month .day--label.selectedEnd:after,
+  .day.outside-month .day--label.selectedStart:after {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--day-text-color);
+  }
+  
   .day--label.betweenSelected:hover {
-    background: var(--passive-highlight-color);
+    background-color: var(--passive-highlight-color);
     border-color: var(--passive-highlight-color);
     color: #fff;
     margin: 10% -5%;

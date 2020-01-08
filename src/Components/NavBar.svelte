@@ -51,7 +51,9 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      {monthsOfYear[month][0]} {year}
+      <span class="display-month">{monthsOfYear[month][0]} {year}</span>
+      <span class="display-month">-</span>
+      <span class="display-month">{monthsOfYear[month + 1][0]} {year}</span>
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -84,6 +86,14 @@
   }
   .label { 
     cursor: pointer;
+    display: flex;
+    width: 100%;
+  }
+  .display-month {
+    flex: 1;
+  }
+  .display-month:nth-child(2) {
+    max-width:15%;
   }
   .month-selector { 
     position: absolute;
@@ -107,7 +117,7 @@
   .month-selector--month { 
     width: 31.333%; 
     margin: .5%; 
-    height: 23%;
+    height: 21.5%;
     display: inline-block;
     color: #4a4a4a;
     border: 1px solid #efefef;

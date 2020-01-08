@@ -78,12 +78,14 @@
     }
   }
   $: visibleMonth = months[monthIndex];
+  $: visibleNextMonth = months[monthIndex + 1];
 
   $: visibleMonthId = year + month / 100;
-  $: lastVisibleDate = visibleMonth.weeks[visibleMonth.weeks.length - 1].days[6].date;
+  $: visibleNextMonthId = year + (month + 1) / 100;
+  $: lastVisibleDate = visibleNextMonth.weeks[visibleNextMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
-  $: canIncrementMonth = monthIndex < months.length - 1;
-  $: canDecrementMonth = monthIndex > 0;
+  $: canIncrementMonth = monthIndex + 1 < months.length - 1;
+  $: canDecrementMonth = monthIndex - 1 > 0;
 
   export let formattedSelectedStart;
   $: {
@@ -148,9 +150,14 @@
   }
 
   function checkIfVisibleDateIsSelectable(date) {
-    const day = getDay(visibleMonth, date);
-    if (!day) return false;
-    return day.selectable;
+    const dayThisMonth = getDay(visibleMonth, date);
+    const dayNextMonth = getDay(visibleNextMonth, date);
+    if (!dayThisMonth && !dayNextMonth) {
+      return false;
+    } if (!dayThisMonth && dayNextMonth) {
+      return dayNextMonth.selectable;
+    }
+    return dayThisMonth.selectable;
   }
 
   function shakeDate(date) {
@@ -162,7 +169,9 @@
   }
 
   function assignValueToTrigger(formatted) {
-    if (!trigger) return;
+    if (!trigger) {
+      return;
+    }
     trigger.innerHTML = formatted;
   }
 
@@ -233,7 +242,7 @@
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
     if (formattedSelectedStart !== formattedSelectedEnd) {
-      formattedCombined = `${formattedSelectedStart} - ${formattedSelectedEnd}`;
+      formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
     }
   }
 
@@ -255,7 +264,7 @@
   export let buttonBorderColor = '#eee';
   export let buttonTextColor = '#333';
   export let highlightColor = '#f7901e';
-  export let passiveHighlightColor = '#f7921eb0';
+  export let passiveHighlightColor = '#FCD9B1';
   export let dayBackgroundColor = 'none';
   export let dayTextColor = '#4a4a4a';
   export let dayHighlightedBackgroundColor = '#efefef';
@@ -308,13 +317,28 @@
           on:monthSelected={e => changeMonth(e.detail)}
           on:incrementMonth={e => incrementMonth(e.detail)} 
         />
-        <div class="legend">
-          {#each sortedDaysOfWeek as day}
-          <span>{day[1]}</span>
-          {/each}
+        <div class="months">
+          <div class="first-month">
+            <div class="legend">
+              {#each sortedDaysOfWeek as day}
+              <span>{day[1]}</span>
+              {/each}
+            </div>
+            <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate}
+            id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => { firstDate = !firstDate; }}
+            />
+          </div>
+          <div class="second-month">
+            <div class="legend">
+              {#each sortedDaysOfWeek as day}
+              <span>{day[1]}</span>
+              {/each}
+            </div>
+            <Month visibleMonth={visibleNextMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate}
+            id={visibleNextMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => { firstDate = !firstDate; }}
+            />
+          </div>
         </div>
-        <Month {visibleMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate} 
-        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => { firstDate = !firstDate; }}/>
       </div>
     </div>
   </Popover>
@@ -358,10 +382,27 @@
     padding-top: 0;
   }
 
+  .months {
+    display: flex;
+  }
+
+  .first-month {
+    flex: 1;
+    min-width: 47.5%;
+    margin-right: 2.5%;
+  }
+
+  .second-month {
+    flex: 2;
+    min-width: 47.5%;
+    margin-left: 2.5%;
+
+  }
+
   @media (min-width: 480px) {
     .calendar {
       height: auto;
-      width: 340px;
+      width: 680px;
       max-width: 100%;
     }
   }
