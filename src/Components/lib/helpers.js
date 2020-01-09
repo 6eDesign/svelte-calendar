@@ -1,5 +1,5 @@
-const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
-  let date = new Date(year, month, 1);
+const getCalendarPage = (month, year, dayProps, weekStart = 1) => {
+  let date = new Date(year, month, 0);
   date.setDate(date.getDate() - date.getDay() + weekStart);
   let nextMonth = month === 11 ? 0 : month + 1;
   // ensure days starts on Sunday
@@ -7,8 +7,14 @@ const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
   let weeks = [];
   while (date.getMonth() !== nextMonth || date.getDay() !== weekStart || weeks.length !== 6) {
     if (date.getDay() === weekStart) weeks.unshift({ days: [], id: `${year}${month}${year}${weeks.length}` });
+    let checkStartDate = new Date(date.getTime());
+    let checkEndDate = new Date(date.getTime());
+    checkStartDate.setDate(checkStartDate.getDate() - 1);
+    checkEndDate.setDate(checkEndDate.getDate() + 1);
     const updated = Object.assign({
       partOfMonth: date.getMonth() === month,
+      firstOfMonth: checkStartDate.getMonth() !== date.getMonth(),
+      lastOfMonth: checkEndDate.getMonth() !== date.getMonth(),
       date: new Date(date)
     }, dayProps(date));
     weeks[0].days.push(updated);
