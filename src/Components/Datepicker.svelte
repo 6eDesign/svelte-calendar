@@ -242,7 +242,7 @@
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
     if (formattedSelectedStart !== formattedSelectedEnd) {
-      formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
+      formattedCombined = `${formattedSelectedStart} - ${formattedSelectedEnd}`;
     }
   }
 
