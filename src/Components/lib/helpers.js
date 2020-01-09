@@ -1,5 +1,5 @@
-const getCalendarPage = (month, year, dayProps, weekStart = 1) => {
-  let date = new Date(year, month, 0);
+const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
+  let date = new Date(year, month, 1);
   date.setDate(date.getDate() - date.getDay() + weekStart);
   let nextMonth = month === 11 ? 0 : month + 1;
   // ensure days starts on Sunday
