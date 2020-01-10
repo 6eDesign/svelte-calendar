@@ -1,13 +1,12 @@
 <script>
-  import { areDatesEquivalent, isDateBetweenSelected } from './lib/helpers';
+  import { areDatesEquivalent } from './lib/helpers';
   import { fly, fade } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
   export let days;
-  export let selectedStart;
-  export let selectedEnd;
+  export let selected;
   export let highlighted;
   export let shouldShakeDate;
   export let direction;
@@ -22,16 +21,12 @@
     <div 
       class="day" 
       class:outside-month={!day.partOfMonth}
-      class:first-of-month={day.firstOfMonth}
-      class:last-of-month={day.lastOfMonth}
-      class:is-today={day.isToday && !isDateBetweenSelected(selectedStart, selectedEnd, day.date)}
+      class:is-today={day.isToday}
       class:is-disabled={!day.selectable}
     >
       <button 
         class="day--label" 
-        class:selectedStart={areDatesEquivalent(day.date, selectedStart)}
-        class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
-        class:betweenSelected={isDateBetweenSelected(selectedStart, selectedEnd, day.date)}
+        class:selected={areDatesEquivalent(day.date, selected)}
         class:highlighted={areDatesEquivalent(day.date, highlighted)}
         class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
         class:disabled={!day.selectable}
@@ -119,7 +114,6 @@
     cursor: pointer;
     transition: all 100ms linear;
     font-weight: normal;
-    z-index: 1;
   }
   .day--label.disabled { 
     cursor: default;
@@ -135,95 +129,12 @@
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;
   }
-  .day.is-today .day--label.selectedStart,
-  .day.is-today .day--label.selectedEnd:hover,
-  .day--label.selectedStart.selectedEnd,
-  .day--label.selectedStart:hover,
-  .day--label.selectedStart,
-  .day--label.selectedEnd:hover,
-  .day--label.selectedEnd,
+  .day--label.selected:hover,
+  .day--label.selected,
   .day--label:active:not(.disabled) { 
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
     color: #fff;
-    border-radius: 50%;
-    transform-style: preserve-3d;
-    outline: none;
-  }
-  .day.is-today .day--label.selectedEnd,
-  .day--label.selectedEnd {
-    background-color: white;
-    color: var(--day-text-color);
-  }
-  .day--label.betweenSelected:before, 
-  .day--label.selectedStart:after, 
-  .day--label.selectedEnd:after {
-    content: "";
-    background-color: var(--passive-highlight-color);
-    position: absolute;
-    height: 105%;
-    width: 116%;
-  }
-  .day--label.selectedStart:after, 
-  .day--label.selectedEnd:after {
-    width: 75%;
-    transform: translateZ(-1px);    
-  }
-  .day--label.betweenSelected:before {
-    z-index: -1;
-  }
-  .day--label.selectedStart:after {
-    left: 15px;
-  }
-  .day--label.selectedEnd:after {
-    right: 15px;
-  }
-  .day--label.betweenSelected {
-    transition: none;
-    border-radius: 0;
-    margin: 10% -5%;
-    width: 116%;
-    color: #fff;
-  }
-  .day.outside-month .day--label.betweenSelected:before,
-  .day.outside-month .day--label.betweenSelected:hover,
-  .day.outside-month .day--label.betweenSelected,
-  .day.outside-month .day--label.selectedEnd:after,
-  .day.outside-month .day--label.selectedStart:after,
-  .day.outside-month .day--label.selectedEnd,
-  .day.outside-month .day--label.selectedStart {
-    background-color: transparent;
-    border-color: transparent;
-    color: var(--day-text-color);
-  }
-  
-  .day--label.betweenSelected:hover {
-    background-color: var(--passive-highlight-color);
-    border-color: var(--passive-highlight-color);
-    color: #fff;
-  }
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
-  .day--label.betweenSelected:hover:before {
-    border-radius: 50%;
-    background-color: var(--highlight-color);
-    width: 32.6px;
-    height: 32.6px;
-    z-index: -1;
-  }
-  .day--label.selectedStart.selectedEnd.highlighted:after,
-  .day--label.selectedStart.selectedEnd:after,
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:before,
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:before {
-    background-color: transparent;
-  }
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected {
-    background: linear-gradient(to left, var(--passive-highlight-color) 70%, white);
-    border: none;
-  }
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected {
-    background: linear-gradient(to right, var(--passive-highlight-color) 70%, white);
-    border: none;
   }
   .day.is-today .day--label, 
   .day.is-today .day--label:hover { 
@@ -232,6 +143,7 @@
     border-color: var(--highlight-color);
     color: #000;
   }
+
   @keyframes shake {
     0% { transform: translate(7px); }
     20% { transform: translate(-7px); }

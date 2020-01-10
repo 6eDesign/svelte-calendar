@@ -3,10 +3,7 @@
 
   export let id;
   export let visibleMonth;
-  export let selectedStart;
-  export let selectedEnd;
-  export let start;
-  export let end;
+  export let selected;
   export let highlighted;
   export let shouldShakeDate;
 
@@ -23,14 +20,11 @@
   {#each visibleMonth.weeks as week (week.id) }
     <Week 
       days={week.days} 
-      {selectedStart} 
-      {selectedEnd}
-      {start} 
-      {end} 
+      {selected}  
       {highlighted} 
       {shouldShakeDate} 
       {direction}
-      on:dateSelected 
+      on:dateSelected
     />
   {/each}
 </div>

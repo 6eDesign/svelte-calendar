@@ -38,11 +38,7 @@
 
   function monthSelected(event, m) {
     event.stopPropagation();
-    if (availableMonths[m + 1].selectable === false) {
-      dispatch('monthSelected', m - 1);
-    } else {
-      dispatch('monthSelected', m);
-    }
+    dispatch('monthSelected', m);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -55,15 +51,7 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      <span class="display-month">{monthsOfYear[month][0]} {year}</span>
-      <span class="display-month">-</span>
-      <span class="display-month">
-        {#if month === 11}
-          {monthsOfYear[0][0]} {year + 1}
-        {:else}
-          {monthsOfYear[month + 1][0]} {year}
-        {/if}
-      </span>
+      {monthsOfYear[month][0]} {year}
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -75,7 +63,7 @@
     {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
-        class:selected={index === month || index === month + 1}
+        class:selected={index === month}
         class:selectable={monthDefinition.selectable}
         on:click={e => monthSelected(e, index)}
       >
@@ -96,14 +84,6 @@
   }
   .label { 
     cursor: pointer;
-    display: flex;
-    width: 100%;
-  }
-  .display-month {
-    flex: 1;
-  }
-  .display-month:nth-child(2) {
-    max-width:15%;
   }
   .month-selector { 
     position: absolute;
@@ -116,7 +96,7 @@
     transform: scale(1.2); 
     opacity: 0; 
     visibility: hidden;
-    z-index: 2;
+    z-index: 1;
     text-align: center;
   }
   .month-selector.open { 
@@ -127,7 +107,7 @@
   .month-selector--month { 
     width: 31.333%; 
     margin: .5%; 
-    height: 21.5%;
+    height: 23%;
     display: inline-block;
     color: #4a4a4a;
     border: 1px solid #efefef;
