@@ -22,9 +22,9 @@
   {#each visibleMonth.weeks as week (week.id) }
     <Week 
       days={week.days} 
-      {selected}  
-      {start}
-      {end}
+      {selected} 
+      {start} 
+      {end} 
       {highlighted} 
       {shouldShakeDate} 
       {direction}
