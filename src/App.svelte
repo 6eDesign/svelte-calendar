@@ -1,5 +1,7 @@
 <script>
 	import Datepicker from './Components/Datepicker.svelte';
+	import Daterange from './Components/daterange/Daterangepicker.svelte';
+
 	import { onMount } from 'svelte';
 
 	const today = new Date();
@@ -56,7 +58,7 @@
 
 
 	<!-- daterange test -->
-	<Datepicker bind:dateChosenStart={dateChosen} bind:dateChosenEnd
+	<Daterange bind:dateChosenStart={dateChosen} bind:dateChosenEnd
   bind:formattedSelected bind:formattedCombined={combinedDates} {start}
   {end} {dateRange} {dateFormat} />
 
