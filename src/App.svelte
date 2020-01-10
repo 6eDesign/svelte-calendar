@@ -60,7 +60,7 @@
 	<!-- daterange test -->
 	<Daterange bind:dateChosenStart={dateChosen} bind:dateChosenEnd
   bind:formattedSelected bind:formattedCombined={combinedDates} {start}
-  {end} {dateRange} {dateFormat} />
+  {end} {dateRange} />
 
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 

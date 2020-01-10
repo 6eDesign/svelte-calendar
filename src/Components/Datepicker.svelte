@@ -6,9 +6,12 @@
   import { formatDate, internationalize } from 'timeUtils';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
+
   const dispatch = createEventDispatcher();
   const today = new Date();
+
   let popover;
+
   export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(1987, 9, 29);
   export let end = new Date(2020, 9, 29);
@@ -40,25 +43,32 @@
     ['November', 'Nov'],
     ['December', 'Dec']
   ];
+
   internationalize({ daysOfWeek, monthsOfYear });
   let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
     let dow = daysOfWeek.slice();
     dow.push(dow.shift());
     return dow;
   })();
+
   let highlighted = today;
   let shouldShakeDate = false;
   let shakeHighlightTimeout;
   let month = today.getMonth();
   let year = today.getFullYear();
+
   let isOpen = false;
   let isClosing = false;
+
   today.setHours(0, 0, 0, 0);
+
   function assignmentHandler(formatted) {
     if (!trigger) return;
     trigger.innerHTML = formatted;
   }
+
   $: months = getMonths(start, end, selectableCallback, weekStart);
+
   let monthIndex = 0;
   $: {
     monthIndex = 0;
@@ -69,24 +79,29 @@
     }
   }
   $: visibleMonth = months[monthIndex];
+
   $: visibleMonthId = year + month / 100;
   $: lastVisibleDate = visibleMonth.weeks[visibleMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
+
   export let formattedSelected;
   $: {
     formattedSelected = typeof format === 'function'
       ? format(selected)
       : formatDate(selected, format);
   }
+
   onMount(() => {
     month = selected.getMonth();
     year = selected.getFullYear();
   });
+
   function changeMonth(selectedMonth) {
     month = selectedMonth;
   }
+
   function incrementMonth(direction, date) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
@@ -96,9 +111,11 @@
     year = current.getFullYear();
     highlighted = new Date(year, month, date || 1);
   }
+
   function getDefaultHighlighted() {
     return new Date(selected);
   }
+
   function incrementDayHighlighted(amount) {
     highlighted = new Date(highlighted);
     highlighted.setDate(highlighted.getDate() + amount);
@@ -110,6 +127,7 @@
     }
     return highlighted;
   }
+
   function getDay(m, date) {
     for (let i = 0; i < m.weeks.length; i += 1) {
       for (let j = 0; j < m.weeks[i].days.length; j += 1) {
@@ -120,11 +138,13 @@
     }
     return null;
   }
+
   function checkIfVisibleDateIsSelectable(date) {
     const day = getDay(visibleMonth, date);
     if (!day) return false;
     return day.selectable;
   }
+
   function shakeDate(date) {
     clearTimeout(shakeHighlightTimeout);
     shouldShakeDate = date;
@@ -132,9 +152,11 @@
       shouldShakeDate = false;
     }, 700);
   }
+
   function assignValueToTrigger(formatted) {
     assignmentHandler(formatted);
   }
+
   function registerSelection(chosen) {
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     // eslint-disable-next-line
@@ -144,6 +166,7 @@
     assignValueToTrigger(formattedSelected);
     return dispatch('dateSelected', { date: chosen });
   }
+
   function handleKeyPress(evt) {
     if (keyCodesArray.indexOf(evt.keyCode) === -1) return;
     evt.preventDefault();
@@ -177,14 +200,17 @@
         break;
     }
   }
+
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
   }
+
   function close() {
     popover.close();
     registerClose();
   }
+
   function registerOpen() {
     highlighted = getDefaultHighlighted();
     month = selected.getMonth();
@@ -192,6 +218,7 @@
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
+
   // theming variables:
   export let buttonBackgroundColor = '#fff';
   export let buttonBorderColor = '#eee';
@@ -267,6 +294,7 @@
     text-align: center;
     overflow: visible;
   }
+
   .calendar-button {
     padding: 10px 20px;
     border: 1px solid var(--button-border-color);
@@ -280,11 +308,13 @@
     border-radius: 7px;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
   }
+
   *,
   *:before,
   *:after {
     box-sizing: inherit;
   }
+
   .calendar {
     box-sizing: border-box;
     position: relative;
@@ -294,6 +324,7 @@
     padding: 10px;
     padding-top: 0;
   }
+
   @media (min-width: 480px) {
     .calendar {
       height: auto;
@@ -301,11 +332,13 @@
       max-width: 100%;
     }
   }
+
   .legend {
     color: #4a4a4a;
     padding: 10px 0;
     margin-bottom: 5px;
   }
+
   .legend span {
     width: 14.285714%;
     display: inline-block;
