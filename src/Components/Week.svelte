@@ -207,7 +207,6 @@
   .day--label.betweenSelected:hover:before {
     border-radius: 50%;
     background-color: var(--highlight-color);
-    margin: 10% -5%;
     width: 32.6px;
     height: 32.6px;
     z-index: -1;
