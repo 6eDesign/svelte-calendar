@@ -228,6 +228,9 @@
   export let dayTextColor = '#4a4a4a';
   export let dayHighlightedBackgroundColor = '#efefef';
   export let dayHighlightedTextColor = '#4a4a4a';
+  export let displayStyle = 'inline-block';
+  export let widthStyle = '300px';
+  export let textAlign = 'center';
 </script>
 
 <div 
@@ -243,6 +246,9 @@
     --day-text-color: {dayTextColor};
     --day-highlighted-background-color: {dayHighlightedBackgroundColor};
     --day-highlighted-text-color: {dayHighlightedTextColor};
+    --button-display-style: {displayStyle};
+    --button-width: {widthStyle};
+    --text-align: {textAlign};
   '
 >
   <Popover
@@ -289,7 +295,7 @@
 
 <style>
   .datepicker {
-    display: inline-block;
+    display: var(--button-display-style);
     margin: 0 auto;
     text-align: center;
     overflow: visible;
@@ -299,8 +305,8 @@
     padding: 10px 20px;
     border: 1px solid var(--button-border-color);
     display: block;
-    text-align: center;
-    width: 300px;
+    text-align: var(--text-align);
+    width: var(--button-width);
     text-decoration: none;
     cursor: pointer;
     background: var(--button-background-color);
