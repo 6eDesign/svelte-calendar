@@ -21,7 +21,6 @@
   export let selectedEnd = today;
   export let dateChosenStart = false;
   export let dateChosenEnd = false;
-  export let dateRange = false;
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
@@ -178,17 +177,13 @@
 
   function registerSelection(chosen) {
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
-    if (firstDate || !dateRange) {
+    if (firstDate) {
       if (dateChosenStart) {
         selectedEnd = chosen;
       }
       if (chosen <= selectedEnd || !dateChosenStart) {
         selectedStart = chosen;
         selectedEnd = selectedStart;
-        if (!dateRange) {
-          // eslint-disable-next-line
-          close();
-        }
       } 
     } else {
       if (chosen >= selectedStart) {
@@ -319,19 +314,6 @@
             on:incrementMonth={e => incrementMonth(e.detail)} 
           />
         </div>
-        <div class="mobile">
-          <NavBarMobile
-            {month}
-            {year}
-            {start}
-            {end}
-            {canIncrementMonth}
-            {canDecrementMonth}
-            {monthsOfYear}
-            on:monthSelected={e => changeMonth(e.detail)}
-            on:incrementMonth={e => incrementMonth(e.detail)} 
-          />
-        </div>
         <div class="legend">
           <div class="first-month-week">
             {#each sortedDaysOfWeek as day}
@@ -390,8 +372,7 @@
     padding-top: 0;
   }
 
-  .second-month-week,
-  .non-mobile {
+  .second-month-week {
     display: none;
   }
 
@@ -414,12 +395,6 @@
     }
     .legend {
       display: flex;
-    }
-    .mobile {
-      display: none;
-    }
-    .non-mobile {
-      display: initial;
     }
   }
 

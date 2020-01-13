@@ -36,13 +36,23 @@
     monthSelectorOpen = !monthSelectorOpen;
   }
 
-  function monthSelected(event, m) {
+  function twoMonthsSelected(event, m) {
     event.stopPropagation();
-    if (availableMonths[m + 1].selectable === false) {
+    // not yet fixed bug.
+    if (!(m+1)) {
+    // if (availableMonths[m + 1].selectable === false) {
+      dispatch('incrementMonth', -1);
       dispatch('monthSelected', m-1);
+      // }
     } else {
       dispatch('monthSelected', m);
     }
+    toggleMonthSelectorOpen();
+  }
+
+  function monthSelected(event, m) {
+    event.stopPropagation();
+    dispatch('monthSelected', m);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -74,8 +84,18 @@
   <div class="month-selector" class:open={monthSelectorOpen}>
     {#each availableMonths as monthDefinition, index}
       <div 
-        class="month-selector--month" 
+        class="month-selector--months" 
         class:selected={index === month || index === month + 1}
+        class:selectable={monthDefinition.selectable}
+        on:click={e => twoMonthsSelected(e, index)}
+      >
+        <span>{monthDefinition.abbrev}</span>
+      </div>
+    {/each}
+    {#each availableMonths as monthDefinition, index}
+      <div 
+        class="month-selector--month" 
+        class:selected={index === month}
         class:selectable={monthDefinition.selectable}
         on:click={e => monthSelected(e, index)}
       >
@@ -103,7 +123,11 @@
     flex: 1;
   }
   .display-month:nth-child(2) {
+    display: none;
     max-width:15%;
+  }
+  .display-month:nth-child(3) {
+    display: none; 
   }
   .month-selector { 
     position: absolute;
@@ -124,7 +148,11 @@
     visibility: visible;
     opacity: 1;
   }
-  .month-selector--month { 
+  .month-selector--months {
+    display: none;
+  }
+  .month-selector--month,
+  .month-selector--months { 
     width: 31.333%; 
     margin: .5%; 
     height: 21.5%;
@@ -133,26 +161,62 @@
     border: 1px solid #efefef;
     opacity: 0.2;
   }
-  .month-selector--month.selectable { 
+  .month-selector--month.selectable,
+  .month-selector--months.selectable { 
     opacity: 1; 
   }
-  .month-selector--month.selectable:hover { 
+  .month-selector--month.selectable:hover,
+  .month-selector--months.selectable:hover { 
     cursor: pointer;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.15);
   }
-  .month-selector--month.selected { 
+  .month-selector--month.selected,
+  .month-selector--months.selected { 
     background: var(--highlight-color);
     color: #fff;
   }
-  .month-selector--month:before { 
+  .month-selector--month:before,
+  .month-selector--months:before { 
     content: ' ';
     display: inline-block;
     height: 100%;
     vertical-align: middle;
   }
-  .month-selector--month span { 
+  .month-selector--month span,
+  .month-selector--months span { 
     vertical-align: middle; 
     display: inline-block;
+  }
+  .month-selector--months,
+  .month-selector--months.selectable,
+  .month-selector--months.selectable:hover,
+  .month-selector--months.selected,
+  .month-selector--months:before,
+  .month-selector--months span {
+    display: none;  
+  }
+  @media (min-width: 480px) {
+    .display-month:nth-child(2),
+    .display-month:nth-child(3) { 
+      display: initial;
+    }
+    .month-selector--months,
+    .month-selector--months.selectable,
+    .month-selector--months.selectable:hover,
+    .month-selector--months.selected,
+    .month-selector--months:before,
+    .month-selector--months span {
+      display: inline-block;
+    }
+    .month-selector--month,
+    .month-selector--month.selectable,
+    .month-selector--month.selectable:hover,
+    .month-selector--month.selected,
+    .month-selector--month:before,
+    .month-selector--month span {
+      display: none;
+    }
+
   }
 
   .control { 
