@@ -38,12 +38,8 @@
 
   function twoMonthsSelected(event, m) {
     event.stopPropagation();
-    // not yet fixed bug.
-    if (!(m+1)) {
-    // if (availableMonths[m + 1].selectable === false) {
-      dispatch('incrementMonth', -1);
+    if (end.getMonth() === m) {
       dispatch('monthSelected', m-1);
-      // }
     } else {
       dispatch('monthSelected', m);
     }
