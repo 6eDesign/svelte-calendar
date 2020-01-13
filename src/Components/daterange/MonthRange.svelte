@@ -69,4 +69,9 @@
     -ms-grid-columns: 1fr;
     -ms-grid-rows: 1fr;
   }
+  @media (max-width: 480px) {
+    .second-month-container {
+      display: none;
+    }
+  }
 </style>

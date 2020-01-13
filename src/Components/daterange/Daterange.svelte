@@ -1,6 +1,7 @@
 <script>
   import Months from './MonthRange.svelte';
   import NavBar from './NavBarRange.svelte';
+  import NavBarMobile from '../NavBar.svelte';
   import Popover from '../Popover.svelte';
   import { getMonths, areDatesEquivalent } from '../lib/helpers';
   import { formatDate, internationalize } from 'timeUtils';
@@ -305,17 +306,32 @@
     </div>
     <div slot="contents">
       <div class="calendar">
-        <NavBar 
-          {month}
-          {year}
-          {start}
-          {end}
-          {canIncrementMonth}
-          {canDecrementMonth}
-          {monthsOfYear}
-          on:monthSelected={e => changeMonth(e.detail)}
-          on:incrementMonth={e => incrementMonth(e.detail)} 
-        />
+        <div class="non-mobile">
+          <NavBar 
+            {month}
+            {year}
+            {start}
+            {end}
+            {canIncrementMonth}
+            {canDecrementMonth}
+            {monthsOfYear}
+            on:monthSelected={e => changeMonth(e.detail)}
+            on:incrementMonth={e => incrementMonth(e.detail)} 
+          />
+        </div>
+        <div class="mobile">
+          <NavBarMobile
+            {month}
+            {year}
+            {start}
+            {end}
+            {canIncrementMonth}
+            {canDecrementMonth}
+            {monthsOfYear}
+            on:monthSelected={e => changeMonth(e.detail)}
+            on:incrementMonth={e => incrementMonth(e.detail)} 
+          />
+        </div>
         <div class="legend">
           <div class="first-month-week">
             {#each sortedDaysOfWeek as day}
@@ -374,16 +390,40 @@
     padding-top: 0;
   }
 
+  .second-month-week,
+  .non-mobile {
+    display: none;
+  }
+
   @media (min-width: 480px) {
     .calendar {
       height: auto;
       width: 680px;
       max-width: 100%;
     }
+    .first-month-week {
+      flex: 1;
+      min-width: 47.5%;
+      margin-right: 2.5%;
+    }
+    .second-month-week {
+      display: initial;
+      flex: 2;
+      min-width: 47.5%;
+      margin-left: 2.5%;
+    }
+    .legend {
+      display: flex;
+    }
+    .mobile {
+      display: none;
+    }
+    .non-mobile {
+      display: initial;
+    }
   }
 
   .legend {
-    display: flex;
     color: #4a4a4a;
     padding: 10px 0;
     margin-bottom: 5px;
@@ -393,16 +433,5 @@
     width: 14.285714%;
     display: inline-block;
     text-align: center;
-  }
-
-  .first-month-week {
-    flex: 1;
-    min-width: 47.5%;
-    margin-right: 2.5%;
-  }
-  .second-month-week {
-    flex: 2;
-    min-width: 47.5%;
-    margin-left: 2.5%;
   }
 </style>

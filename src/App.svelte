@@ -1,6 +1,6 @@
 <script>
 	import Datepicker from './Components/Datepicker.svelte';
-	import Daterange from './Components/daterange/Daterangepicker.svelte';
+	import Daterange from './Components/daterange/Daterange.svelte';
 
 	import { onMount } from 'svelte';
 
