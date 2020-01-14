@@ -99,7 +99,7 @@
     }
   }
 
-  export let formattedCombined = "";
+  export let formattedCombined = '';
 
   onMount(() => {
     month = selected.getMonth();
@@ -152,9 +152,9 @@
     const dayNextMonth = getDay(visibleNextMonth, date);
     if (!dayThisMonth && !dayNextMonth) {
       return false;
-    } else if (!dayThisMonth && dayNextMonth) {
+    } if (!dayThisMonth && dayNextMonth) {
       return dayNextMonth.selectable;
-    } 
+    }
     return dayThisMonth.selectable;
   }
 
@@ -167,7 +167,7 @@
   }
 
   function assignValueToTrigger(formatted) {
-    if (!trigger) { 
+    if (!trigger) {
       return;
     }
     trigger.innerHTML = formatted;
@@ -176,7 +176,7 @@
   function registerSelection(chosen) {
     if (!checkIfVisibleDateIsSelectable(chosen)) {
       return shakeDate(chosen);
-    } 
+    }
     if (firstDate) {
       if (dateChosenStart) {
         selectedEnd = chosen;
@@ -184,7 +184,7 @@
       if (chosen <= selectedEnd || !dateChosenStart) {
         selected = chosen;
         selectedEnd = selected;
-      } 
+      }
     } else {
       if (chosen >= selected) {
         selectedEnd = chosen;
@@ -206,21 +206,30 @@
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
-        return incrementDayHighlighted(-1);
+        incrementDayHighlighted(-1);
+        break;
       case keyCodes.up:
-        return incrementDayHighlighted(-7);
+        incrementDayHighlighted(-7);
+        break;
       case keyCodes.right:
-        return incrementDayHighlighted(1);
+        incrementDayHighlighted(1);
+        break;
       case keyCodes.down:
-        return incrementDayHighlighted(7);
+        incrementDayHighlighted(7);
+        break;
       case keyCodes.pgup:
-        return incrementMonth(-1);
+        incrementMonth(-1);
+        break;
       case keyCodes.pgdown:
-        return incrementMonth(1);
+        incrementMonth(1);
+        break;
       case keyCodes.escape:
-        return close();
+        // eslint-disable-next-line
+        close();
+        break;
       case keyCodes.enter:
-        return registerSelection(highlighted);
+        registerSelection(highlighted);
+        break;
       default:
         break;
     }

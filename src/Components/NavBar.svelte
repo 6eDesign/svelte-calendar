@@ -40,7 +40,7 @@
   function twoMonthsSelected(event, m) {
     event.stopPropagation();
     if (end.getMonth() === m) {
-      dispatch('monthSelected', m-1);
+      dispatch('monthSelected', m - 1);
     } else {
       dispatch('monthSelected', m);
     }
@@ -69,7 +69,7 @@
           {#if month === 11}
             {monthsOfYear[0][0]} {year + 1}
           {:else}
-            {monthsOfYear[month+1][0]} {year}
+            {monthsOfYear[month + 1][0]} {year}
           {/if}
         </span>
       {/if}
@@ -189,6 +189,9 @@
   .month-selector--two-months span { 
     vertical-align: middle; 
     display: inline-block;
+  }
+  .display-months {
+    width: 100%;
   }
   .display-months:nth-child(2) {
     display: none;
