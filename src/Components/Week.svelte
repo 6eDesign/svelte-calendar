@@ -1,5 +1,5 @@
 <script>
-  import { areDatesEquivalent } from './lib/helpers';
+  import { areDatesEquivalent, isDateBetweenSelected } from './lib/helpers';
   import { fly, fade } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
@@ -7,6 +7,7 @@
 
   export let days;
   export let selected;
+  export let selectedEnd;
   export let highlighted;
   export let shouldShakeDate;
   export let direction;
@@ -18,24 +19,49 @@
   out:fade={{ duration: 180 }}
 >
   {#each days as day}
-    <div 
-      class="day" 
-      class:outside-month={!day.partOfMonth}
-      class:is-today={day.isToday}
-      class:is-disabled={!day.selectable}
-    >
-      <button 
-        class="day--label" 
-        class:selected={areDatesEquivalent(day.date, selected)}
-        class:highlighted={areDatesEquivalent(day.date, highlighted)}
-        class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
-        class:disabled={!day.selectable}
-        type="button"
-        on:click={() => dispatch('dateSelected', day.date)}
+    {#if selectedEnd}
+      <div 
+        class="day" 
+        class:outside-month={!day.partOfMonth}
+        class:first-of-month={day.firstOfMonth}
+        class:last-of-month={day.lastOfMonth}
+        class:is-today={day.isToday && !isDateBetweenSelected(selected, selectedEnd, day.date)}
+        class:is-disabled={!day.selectable}
       >
-        {day.date.getDate()}
-      </button>
-    </div>
+        <button 
+          class="day--label" 
+          class:selected={areDatesEquivalent(day.date, selected)}
+          class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
+          class:betweenSelected={isDateBetweenSelected(selected, selectedEnd, day.date)}
+          class:highlighted={areDatesEquivalent(day.date, highlighted)}
+          class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
+          class:disabled={!day.selectable}
+          type="button"
+          on:click={() => dispatch('dateSelected', day.date)}
+        >
+          {day.date.getDate()}
+        </button>
+      </div>
+    {:else}
+      <div 
+        class="day" 
+        class:outside-month={!day.partOfMonth}
+        class:is-today={day.isToday}
+        class:is-disabled={!day.selectable}
+      >
+        <button 
+          class="day--label" 
+          class:selected={areDatesEquivalent(day.date, selected)}
+          class:highlighted={areDatesEquivalent(day.date, highlighted)}
+          class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
+          class:disabled={!day.selectable}
+          type="button"
+          on:click={() => dispatch('dateSelected', day.date)}
+        >
+          {day.date.getDate()}
+        </button>
+      </div>
+    {/if}
   {/each}
 </div>
 
@@ -114,6 +140,7 @@
     cursor: pointer;
     transition: all 100ms linear;
     font-weight: normal;
+    z-index: 1;
   }
   .day--label.disabled { 
     cursor: default;
@@ -129,21 +156,101 @@
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;
   }
+  .day.is-today .day--label.selected,
+  .day.is-today .day--label.selectedEnd:hover,
+  .day--label.selected.selectedEnd,
   .day--label.selected:hover,
   .day--label.selected,
+  .day--label.selectedEnd:hover,
+  .day--label.selectedEnd,
   .day--label:active:not(.disabled) { 
     background-color: var(--highlight-color);
     border-color: var(--highlight-color);
     color: #fff;
+    border-radius: 50%;
+    transform-style: preserve-3d;
+    outline: none;
   }
-  .day.is-today .day--label, 
-  .day.is-today .day--label:hover { 
+  .day.is-today .day--label.selectedEnd,
+  .day--label.selectedEnd {
+    background-color: white;
+    color: var(--day-text-color);
+  }
+  .day--label.betweenSelected:before, 
+  .day--label.selected:after, 
+  .day--label.selectedEnd:after {
+    content: "";
+    background-color: var(--passive-highlight-color);
+    position: absolute;
+    height: 105%;
+    width: 116%;
+  }
+  .day--label.selected:after, 
+  .day--label.selectedEnd:after {
+    width: 75%;
+    transform: translateZ(-1px);    
+  }
+  .day--label.betweenSelected:before {
+    z-index: -1;
+  }
+  .day--label.selected:after {
+    left: 15px;
+  }
+  .day--label.selectedEnd:after {
+    right: 15px;
+  }
+  .day--label.betweenSelected {
+    transition: none;
+    border-radius: 0;
+    margin: 10% -5%;
+    width: 116%;
+    color: #fff;
+  }
+  .day.outside-month .day--label.betweenSelected:before,
+  .day.outside-month .day--label.betweenSelected:hover,
+  .day.outside-month .day--label.betweenSelected,
+  .day.outside-month .day--label.selectedEnd:after,
+  .day.outside-month .day--label.selected:after,
+  .day.outside-month .day--label.selectedEnd,
+  .day.outside-month .day--label.selected {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--day-text-color);
+  }
+  .day--label.betweenSelected:hover {
+    background-color: var(--passive-highlight-color);
+    border-color: var(--passive-highlight-color);
+    color: #fff;
+  }
+  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
+  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
+  .day--label.betweenSelected:hover:before {
+    border-radius: 50%;
+    background-color: var(--highlight-color);
+    width: 2.4em;
+    height: 2.4em;
+    z-index: -1;
+  }
+  .day--label.selected.selectedEnd.highlighted:after,
+  .day--label.selected.selectedEnd:after,
+  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:before,
+  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:before {
+    background-color: transparent;
+  }
+  .day.first-of-month:not(.outside-month) .day--label.betweenSelected {
+    background: linear-gradient(to left, var(--passive-highlight-color) 70%, white);
+    border: none;
+  }
+  .day.last-of-month:not(.outside-month) .day--label.betweenSelected {
+    background: linear-gradient(to right, var(--passive-highlight-color) 70%, white);
+    border: none;
+  }
+  .day.is-today .day--label { 
     opacity: 1; 
     background: none;
     border-color: var(--highlight-color);
     color: #000;
   }
-
   @keyframes shake {
     0% { transform: translate(7px); }
     20% { transform: translate(-7px); }

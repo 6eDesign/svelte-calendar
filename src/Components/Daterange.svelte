@@ -1,11 +1,10 @@
 <script>
-  import Months from './MonthRange.svelte';
-  import NavBar from './NavBarRange.svelte';
-  import NavBarMobile from '../NavBar.svelte';
-  import Popover from '../Popover.svelte';
-  import { getMonths, areDatesEquivalent } from '../lib/helpers';
+  import Months from './Month.svelte';
+  import NavBar from './NavBar.svelte';
+  import Popover from './Popover.svelte';
+  import { getMonths, areDatesEquivalent } from './lib/helpers';
   import { formatDate, internationalize } from 'timeUtils';
-  import { keyCodes, keyCodesArray } from '../lib/keyCodes';
+  import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -13,11 +12,12 @@
 
   let popover;
   let firstDate = true;
+  let range = true;
 
-  export let format = '#{m} / #{d} / #{Y}';
+  export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(1987, 9, 29);
   export let end = new Date(2020, 9, 29);
-  export let selectedStart = today;
+  export let selected = today;
   export let selectedEnd = today;
   export let dateChosenStart = false;
   export let dateChosenEnd = false;
@@ -87,25 +87,23 @@
   $: canIncrementMonth = monthIndex + 1 < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
 
-  export let formattedSelectedStart;
-  $: {
-    formattedSelectedStart = typeof format === 'function'
-      ? format(selectedStart)
-      : formatDate(selectedStart, format);
-  }
-
+  export let formattedSelected;
   export let formattedSelectedEnd;
   $: {
-    formattedSelectedEnd = typeof format === 'function'
-      ? format(selectedEnd)
-      : formatDate(selectedEnd, format);
+    if (typeof format === 'function') {
+      formattedSelected = format(selected);
+      formattedSelectedEnd = format(selectedEnd);
+    } else {
+      formattedSelected = formatDate(selected, format);
+      formattedSelectedEnd = formatDate(selectedEnd, format);
+    }
   }
 
   export let formattedCombined = "";
 
   onMount(() => {
-    month = selectedStart.getMonth();
-    year = selectedStart.getFullYear();
+    month = selected.getMonth();
+    year = selected.getFullYear();
   });
 
   function changeMonth(selectedMonth) {
@@ -123,7 +121,7 @@
   }
 
   function getDefaultHighlighted() {
-    return new Date(selectedStart);
+    return new Date(selected);
   }
 
   function incrementDayHighlighted(amount) {
@@ -176,26 +174,29 @@
   }
 
   function registerSelection(chosen) {
-    if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
+    if (!checkIfVisibleDateIsSelectable(chosen)) {
+      return shakeDate(chosen);
+    } 
     if (firstDate) {
       if (dateChosenStart) {
         selectedEnd = chosen;
       }
       if (chosen <= selectedEnd || !dateChosenStart) {
-        selectedStart = chosen;
-        selectedEnd = selectedStart;
+        selected = chosen;
+        selectedEnd = selected;
       } 
     } else {
-      if (chosen >= selectedStart) {
+      if (chosen >= selected) {
         selectedEnd = chosen;
       } else {
-        selectedEnd = selectedStart;
-        selectedStart = chosen;
+        selectedEnd = selected;
+        selected = chosen;
       }
       dateChosenEnd = true;
     }
     dateChosenStart = true;
-    assignValueToTrigger(formattedSelectedStart);
+    firstDate = !firstDate;
+    assignValueToTrigger(formattedSelected);
     assignValueToTrigger(formattedSelectedEnd);
     return dispatch('dateSelected', { date: chosen });
   }
@@ -205,29 +206,21 @@
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
-        incrementDayHighlighted(-1);
-        break;
+        return incrementDayHighlighted(-1);
       case keyCodes.up:
-        incrementDayHighlighted(-7);
-        break;
+        return incrementDayHighlighted(-7);
       case keyCodes.right:
-        incrementDayHighlighted(1);
-        break;
+        return incrementDayHighlighted(1);
       case keyCodes.down:
-        incrementDayHighlighted(7);
-        break;
+        return incrementDayHighlighted(7);
       case keyCodes.pgup:
-        incrementMonth(-1);
-        break;
+        return incrementMonth(-1);
       case keyCodes.pgdown:
-        incrementMonth(1);
-        break;
+        return incrementMonth(1);
       case keyCodes.escape:
-        close();
-        break;
+        return close();
       case keyCodes.enter:
-        registerSelection(highlighted);
-        break;
+        return registerSelection(highlighted);
       default:
         break;
     }
@@ -236,8 +229,8 @@
   function registerClose() {
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
-    if (formattedSelectedStart !== formattedSelectedEnd) {
-      formattedCombined = formattedSelectedStart + ' - ' + formattedSelectedEnd;
+    if (formattedSelected !== formattedSelectedEnd) {
+      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
     }
   }
 
@@ -248,8 +241,8 @@
 
   function registerOpen() {
     highlighted = getDefaultHighlighted();
-    month = selectedStart.getMonth();
-    year = selectedStart.getFullYear();
+    month = selected.getMonth();
+    year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
@@ -294,7 +287,7 @@
       <slot>
         {#if !trigger}
         <button class="calendar-button" type="button">
-          {formattedCombined || formattedSelectedStart}
+          {formattedCombined || formattedSelected}
         </button>
         {/if}
       </slot>
@@ -310,6 +303,7 @@
             {canIncrementMonth}
             {canDecrementMonth}
             {monthsOfYear}
+            {range}
             on:monthSelected={e => changeMonth(e.detail)}
             on:incrementMonth={e => incrementMonth(e.detail)} 
           />
@@ -326,8 +320,15 @@
             {/each}
           </div>
         </div>
-        <Months {visibleMonth} {visibleNextMonth} {selectedStart} {selectedEnd} {highlighted} {shouldShakeDate}
-        id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} on:dateSelected={() => { firstDate = !firstDate; }}
+        <Months 
+          {visibleMonth} 
+          {visibleNextMonth} 
+          {selected} 
+          {selectedEnd} 
+          {highlighted} 
+          {shouldShakeDate}
+          id={visibleMonthId} 
+          on:dateSelected={e => registerSelection(e.detail)} 
         />
       </div>
     </div>

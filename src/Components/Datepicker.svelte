@@ -11,6 +11,7 @@
   const today = new Date();
 
   let popover;
+  let range = false;
 
   export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(1987, 9, 29);
@@ -272,6 +273,7 @@
           {canIncrementMonth}
           {canDecrementMonth}
           {monthsOfYear}
+          {range}
           on:monthSelected={e => changeMonth(e.detail)}
           on:incrementMonth={e => incrementMonth(e.detail)} 
         />
@@ -280,8 +282,16 @@
           <span>{day[1]}</span>
           {/each}
         </div>
-        <Month {visibleMonth} {selected} {highlighted} {shouldShakeDate} {start}
-        {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
+        <Month 
+          {visibleMonth} 
+          {selected} 
+          {highlighted} 
+          {shouldShakeDate} 
+          {start}
+          {end} 
+          id={visibleMonthId} 
+          on:dateSelected={e => registerSelection(e.detail)} 
+        />
       </div>
     </div>
   </Popover>

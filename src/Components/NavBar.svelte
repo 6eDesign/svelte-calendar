@@ -10,6 +10,7 @@
   export let canIncrementMonth;
   export let canDecrementMonth;
   export let monthsOfYear;
+  export let range;
 
   let monthSelectorOpen = false;
   let availableMonths;
@@ -36,6 +37,16 @@
     monthSelectorOpen = !monthSelectorOpen;
   }
 
+  function twoMonthsSelected(event, m) {
+    event.stopPropagation();
+    if (end.getMonth() === m) {
+      dispatch('monthSelected', m-1);
+    } else {
+      dispatch('monthSelected', m);
+    }
+    toggleMonthSelectorOpen();
+  }
+
   function monthSelected(event, m) {
     event.stopPropagation();
     dispatch('monthSelected', m);
@@ -51,7 +62,17 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      {monthsOfYear[month][0]} {year}
+      <span class="display-month">{monthsOfYear[month][0]} {year}</span>
+      {#if range}
+        <span class="display-month">-</span>
+        <span class="display-month">
+          {#if month === 11}
+            {monthsOfYear[0][0]} {year + 1}
+          {:else}
+            {monthsOfYear[month+1][0]} {year}
+          {/if}
+        </span>
+      {/if}
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -60,16 +81,32 @@
     </div>
   </div>
   <div class="month-selector" class:open={monthSelectorOpen}>
-    {#each availableMonths as monthDefinition, index}
-      <div 
-        class="month-selector--month" 
-        class:selected={index === month}
-        class:selectable={monthDefinition.selectable}
-        on:click={e => monthSelected(e, index)}
-      >
-        <span>{monthDefinition.abbrev}</span>
+    {#if range}
+      <div class="display-months">
+        {#each availableMonths as monthDefinition, index}
+          <div 
+            class="month-selector--two-months" 
+            class:selected={index === month || index === month + 1}
+            class:selectable={monthDefinition.selectable}
+            on:click={e => twoMonthsSelected(e, index)}
+          >
+            <span>{monthDefinition.abbrev}</span>
+          </div>
+        {/each}
       </div>
-    {/each}
+    {/if}
+    <div class="display-months">
+      {#each availableMonths as monthDefinition, index}
+        <div 
+          class="month-selector--month" 
+          class:selected={index === month}
+          class:selectable={monthDefinition.selectable}
+          on:click={e => monthSelected(e, index)}
+        >
+          <span>{monthDefinition.abbrev}</span>
+        </div>
+      {/each}
+    </div>
   </div>
 </div>
 
@@ -84,6 +121,18 @@
   }
   .label { 
     cursor: pointer;
+    display: flex;
+    width: 100%;
+  }
+  .display-month {
+    flex: 1;
+  }
+  .display-month:nth-child(2) {
+    max-width: 15%;
+    display: none;
+  }
+  .display-month:nth-child(3) {
+    display: none;
   }
   .month-selector { 
     position: absolute;
@@ -96,7 +145,7 @@
     transform: scale(1.2); 
     opacity: 0; 
     visibility: hidden;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
   }
   .month-selector.open { 
@@ -104,37 +153,52 @@
     visibility: visible;
     opacity: 1;
   }
-  .month-selector--month { 
+  .month-selector--month,
+  .month-selector--two-months { 
     width: 31.333%; 
     margin: .5%; 
-    height: 23%;
+    height: 21.5%;
     display: inline-block;
     color: #4a4a4a;
     border: 1px solid #efefef;
     opacity: 0.2;
   }
-  .month-selector--month.selectable { 
+  .month-selector--month.selectable,
+  .month-selector--two-months.selectable { 
     opacity: 1; 
   }
-  .month-selector--month.selectable:hover { 
+  .month-selector--month.selectable:hover,
+  .month-selector--two-months.selectable:hover { 
     cursor: pointer;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.15);
   }
-  .month-selector--month.selected { 
+  .month-selector--month.selected,
+  .month-selector--two-months.selected { 
     background: var(--highlight-color);
     color: #fff;
   }
-  .month-selector--month:before { 
+  .display-months,
+  .month-selector--month:before,
+  .month-selector--two-months:before { 
     content: ' ';
     display: inline-block;
     height: 100%;
     vertical-align: middle;
   }
-  .month-selector--month span { 
+  .month-selector--month span,
+  .month-selector--two-months span { 
     vertical-align: middle; 
     display: inline-block;
   }
-
+  .display-months:nth-child(2) {
+    display: none;
+  }
+  @media (min-width: 480px) {
+    .display-month:nth-child(2),
+    .display-month:nth-child(3) { 
+      display: initial;
+    }
+  }
   .control { 
     padding: 0 8px;
     opacity: 0.2;

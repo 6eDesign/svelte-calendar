@@ -3,9 +3,9 @@
 
   export let id;
   export let visibleMonth;
+  export let visibleNextMonth;
   export let selected;
-  export let start;
-  export let end;
+  export let selectedEnd;
   export let highlighted;
   export let shouldShakeDate;
 
@@ -19,26 +19,61 @@
 </script>
 
 <div class="month-container">
-  {#each visibleMonth.weeks as week (week.id) }
-    <Week 
-      days={week.days} 
-      {selected} 
-      {start} 
-      {end} 
-      {highlighted} 
-      {shouldShakeDate} 
-      {direction}
-      on:dateSelected 
-    />
-  {/each}
+  <div class="first-month-container">
+    {#each visibleMonth.weeks as week (week.id) }
+      <Week 
+        days={week.days} 
+        {selected}  
+        {selectedEnd}  
+        {highlighted} 
+        {shouldShakeDate} 
+        {direction}
+        on:dateSelected
+      />
+    {/each}
+  </div>
+  {#if visibleNextMonth}
+    <div class="second-month-container">
+      {#each visibleNextMonth.weeks as week (week.id) }
+        <Week 
+          days={week.days} 
+          {selected} 
+          {selectedEnd}  
+          {highlighted} 
+          {shouldShakeDate} 
+          {direction}
+          on:dateSelected
+        />
+      {/each}
+    </div>
+  {/if}
 </div>
 
 <style>
-  .month-container { 
+  .month-container {
+    display: flex;
+  }
+  .first-month-container {
+    flex: 1;
+    min-width: 47.5%;
+    margin-right: 2.5%;
+  }
+  .second-month-container {
+    flex: 2;
+    min-width: 47.5%;
+    margin-left: 2.5%;
+  }
+  .first-month-container,
+  .second-month-container { 
     width: 100%;
     display: -ms-grid;
     display: grid;
     -ms-grid-columns: 1fr;
     -ms-grid-rows: 1fr;
+  }
+  @media (max-width: 480px) {
+    .second-month-container {
+      display: none;
+    }
   }
 </style>
