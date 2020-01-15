@@ -129,10 +129,6 @@
   }
   .display-month:nth-child(2) {
     max-width: 15%;
-    display: none;
-  }
-  .display-month:nth-child(3) {
-    display: none;
   }
   .month-selector { 
     position: absolute;
@@ -193,12 +189,16 @@
   .display-months {
     width: 100%;
   }
-  .display-months:nth-child(2) {
+  .display-months:nth-last-child(1) {
     display: none;
   }
-  @media (min-width: 480px) {
+  @media (max-width: 480px) {
     .display-month:nth-child(2),
-    .display-month:nth-child(3) { 
+    .display-month:nth-child(3),
+    .display-months:nth-last-child(2) {
+      display: none;
+    }
+    .display-months:nth-last-child(1) {
       display: initial;
     }
   }

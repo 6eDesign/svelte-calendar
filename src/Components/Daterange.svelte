@@ -48,6 +48,19 @@
     ['December', 'Dec']
   ];
 
+  export let style = '';
+
+  // theming variables:
+  export let buttonBackgroundColor = '#fff';
+  export let buttonBorderColor = '#eee';
+  export let buttonTextColor = '#333';
+  export let highlightColor = '#f7901e';
+  export let passiveHighlightColor = '#FCD9B1';
+  export let dayBackgroundColor = 'none';
+  export let dayTextColor = '#4a4a4a';
+  export let dayHighlightedBackgroundColor = '#efefef';
+  export let dayHighlightedTextColor = '#4a4a4a';
+
   internationalize({ daysOfWeek, monthsOfYear });
   let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
     let dow = daysOfWeek.slice();
@@ -86,6 +99,18 @@
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex + 1 < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
+  $: wrapperStyle = `
+  --button-background-color: ${buttonBackgroundColor};
+  --button-border-color: ${buttonBorderColor};
+  --button-text-color: ${buttonTextColor};
+  --highlight-color: ${highlightColor};
+  --passive-highlight-color: ${passiveHighlightColor};
+  --day-background-color: ${dayBackgroundColor};
+  --day-text-color: ${dayTextColor};
+  --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
+  --day-highlighted-text-color: ${dayHighlightedTextColor};
+  ${style}
+`;
 
   export let formattedSelected;
   export let formattedSelectedEnd;
@@ -259,33 +284,13 @@
     dispatch('open');
   }
 
-  // theming variables:
-  export let buttonBackgroundColor = '#fff';
-  export let buttonBorderColor = '#eee';
-  export let buttonTextColor = '#333';
-  export let highlightColor = '#f7901e';
-  export let passiveHighlightColor = '#FCD9B1';
-  export let dayBackgroundColor = 'none';
-  export let dayTextColor = '#4a4a4a';
-  export let dayHighlightedBackgroundColor = '#efefef';
-  export let dayHighlightedTextColor = '#4a4a4a';
 </script>
 
 <div 
   class="daterangepicker" 
   class:open="{isOpen}" 
   class:closing="{isClosing}"
-  style='
-    --button-background-color: {buttonBackgroundColor};
-    --button-border-color: {buttonBorderColor};
-    --button-text-color: {buttonTextColor};
-    --highlight-color: {highlightColor};
-    --passive-highlight-color: {passiveHighlightColor};
-    --day-background-color: {dayBackgroundColor};
-    --day-text-color: {dayTextColor};
-    --day-highlighted-background-color: {dayHighlightedBackgroundColor};
-    --day-highlighted-text-color: {dayHighlightedTextColor};
-  '
+  style={wrapperStyle}
 >
   <Popover
     bind:this="{popover}"

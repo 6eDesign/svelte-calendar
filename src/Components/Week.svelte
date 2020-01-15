@@ -145,12 +145,20 @@
   .day--label.disabled { 
     cursor: default;
   }
+  .week:nth-child(6n + 5) .day--label.selected,
+  .week:nth-child(6n + 5) .day--label.selectedEnd {
+    margin-top: 9%;
+  }
   @media (min-width: 480px) { 
     .day--label.highlighted,
     .day--label:not(.disabled):hover { 
       background: var(--day-highlighted-background-color);
       border-color: var(--day-highlighted-background-color);
       color: var(--day-highlighted-text-color);
+    }
+    .week:nth-child(6n + 5) .day--label.selected,
+    .week:nth-child(6n + 5) .day--label.selectedEnd {
+      margin-top: 11%;
     }
   }
   .day--label.shake-date { 
@@ -250,10 +258,10 @@
   }
   .week:nth-child(6n + 4) .day--label.betweenSelected:hover,
   .week:nth-child(6n + 5) .day--label.betweenSelected:hover,
+  .week:nth-child(6n + 3) .day--label.selected,
+  .week:nth-child(6n + 3) .day--label.selectedEnd,
   .week:nth-child(6n + 4) .day--label.selected,
-  .week:nth-child(6n + 4) .day--label.selectedEnd,
-  .week:nth-child(6n + 5) .day--label.selected,
-  .week:nth-child(6n + 5) .day--label.selectedEnd {
+  .week:nth-child(6n + 4) .day--label.selectedEnd {
     margin-top: 11%;
   }
   .day.first-of-month:not(.outside-month) .day--label.betweenSelected {
