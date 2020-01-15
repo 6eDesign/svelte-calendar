@@ -222,6 +222,9 @@
     border-color: var(--passive-highlight-color);
     color: #fff;
   }
+  .day--label.betweenSelected:active {
+    border-radius: 0;
+  }
   .day.first-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
   .day.last-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
   .day--label.betweenSelected:hover:before {
@@ -241,13 +244,12 @@
     height: 80%;
   }
   .week:nth-child(6n + 1) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 2) .day--label.betweenSelected:hover {
+  .week:nth-child(6n + 2) .day--label.betweenSelected:hover,
+  .week:nth-child(6n + 3) .day--label.betweenSelected:active {
     height: 78%;
   }
   .week:nth-child(6n + 4) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 5) .day--label.betweenSelected:hover {
-    margin-top: 11%;
-  }
+  .week:nth-child(6n + 5) .day--label.betweenSelected:hover,
   .week:nth-child(6n + 4) .day--label.selected,
   .week:nth-child(6n + 4) .day--label.selectedEnd,
   .week:nth-child(6n + 5) .day--label.selected,
