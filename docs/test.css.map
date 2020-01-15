@@ -6,6 +6,7 @@
     "..\\src\\Components\\Datepicker.svelte",
     "..\\src\\Components\\Daterange.svelte",
     "..\\src\\Components\\Month.svelte",
+    "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Popover.svelte",
     "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Week.svelte"

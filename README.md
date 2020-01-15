@@ -21,6 +21,7 @@ prop name            | type                   | default
 `format`             | `string` \| `function` | `'#{m}/#{d}/#{Y}'`
 `daysOfWeek`         | `array`                | En-US Locale (see below)
 `monthsOfYear`       | `array`                | En-US Locale (see below)
+`style`              | `string`               | ""
 
 ### `start` and `end`
 These properties set the minimum and maximum dates that will be rendered by this calendar.  It is **highly** recommended that you do not leave these as their defaults and supply values which suit your application's needs.
@@ -65,6 +66,9 @@ export let monthsOfYear = [
   ['December', 'Dec']
 ];
 ```
+
+### `style`
+This prop allows you to style the div which wraps the Datepicker component.  This can be useful, for instance, if you'd like to do something like make the component full-width or `display: block;` (by default the element is `inline-block`).  If you would like to style the button that triggers the opening of the datepicker we recommend you pass a custom element (button/link/etc) to the component via its default slot.
 
 ### Kitchen Sink Example:
 ```html
