@@ -37,6 +37,7 @@
     // eslint-disable-next-line
     do {
       if (el === popover) return;
+    // eslint-disable-next-line
     } while (el = el.parentNode);
     close();
   }
