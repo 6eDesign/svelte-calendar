@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.1"></a>
+## [1.3.1](https://github.com/6eDesign/svelte-calendar/compare/v1.3.0...v1.3.1) (2020-01-15)
+
+
+### Bug Fixes
+
+* ignore line for eslint (error suddenly popped up but only in travis [odd]) ([17c4be1](https://github.com/6eDesign/svelte-calendar/commit/17c4be1))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/6eDesign/svelte-calendar/compare/v1.2.2...v1.3.0) (2020-01-15)
 
