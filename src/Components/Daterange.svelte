@@ -238,6 +238,14 @@
     }
   }
 
+  function registerClose() {
+    document.removeEventListener('keydown', handleKeyPress);
+    dispatch('close');
+    if (formattedSelected !== formattedSelectedEnd) {
+      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
+    }
+  }
+
   function close() {
     popover.close();
     registerClose();
@@ -249,14 +257,6 @@
     year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
-  }
-
-  function registerClose() {
-    document.removeEventListener('keydown', handleKeyPress);
-    dispatch('close');
-    if (formattedSelected !== formattedSelectedEnd) {
-      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
-    }
   }
 
   // theming variables:
