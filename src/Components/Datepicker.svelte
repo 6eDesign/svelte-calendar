@@ -44,6 +44,8 @@
     ['December', 'Dec']
   ];
 
+  export let style = '';
+
   internationalize({ daysOfWeek, monthsOfYear });
   let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
     let dow = daysOfWeek.slice();
@@ -85,6 +87,17 @@
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
+  $: wrapperStyle = `
+    --button-background-color: ${buttonBackgroundColor};
+    --button-border-color: ${buttonBorderColor};
+    --button-text-color: ${buttonTextColor};
+    --highlight-color: ${highlightColor};
+    --day-background-color: ${dayBackgroundColor};
+    --day-text-color: ${dayTextColor};
+    --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
+    --day-highlighted-text-color: ${dayHighlightedTextColor};
+    ${style}
+  `;
 
   export let formattedSelected;
   $: {
@@ -234,16 +247,7 @@
   class="datepicker" 
   class:open="{isOpen}" 
   class:closing="{isClosing}"
-  style='
-    --button-background-color: {buttonBackgroundColor};
-    --button-border-color: {buttonBorderColor};
-    --button-text-color: {buttonTextColor};
-    --highlight-color: {highlightColor};
-    --day-background-color: {dayBackgroundColor};
-    --day-text-color: {dayTextColor};
-    --day-highlighted-background-color: {dayHighlightedBackgroundColor};
-    --day-highlighted-text-color: {dayHighlightedTextColor};
-  '
+  style={wrapperStyle}
 >
   <Popover
     bind:this="{popover}"
