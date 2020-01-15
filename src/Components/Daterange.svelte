@@ -113,6 +113,7 @@
   function incrementMonth(direction, date) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
+
     let current = new Date(year, month, 1);
     current.setMonth(current.getMonth() + direction);
     month = current.getMonth();
@@ -127,6 +128,7 @@
   function incrementDayHighlighted(amount) {
     highlighted = new Date(highlighted);
     highlighted.setDate(highlighted.getDate() + amount);
+  
     if (amount > 0 && highlighted > lastVisibleDate) {
       return incrementMonth(1, highlighted.getDate());
     }
@@ -150,6 +152,7 @@
   function checkIfVisibleDateIsSelectable(date) {
     const dayThisMonth = getDay(visibleMonth, date);
     const dayNextMonth = getDay(visibleNextMonth, date);
+
     if (!dayThisMonth && !dayNextMonth) {
       return false;
     } if (!dayThisMonth && dayNextMonth) {
@@ -235,14 +238,6 @@
     }
   }
 
-  function registerClose() {
-    document.removeEventListener('keydown', handleKeyPress);
-    dispatch('close');
-    if (formattedSelected !== formattedSelectedEnd) {
-      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
-    }
-  }
-
   function close() {
     popover.close();
     registerClose();
@@ -254,6 +249,14 @@
     year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
+  }
+
+  function registerClose() {
+    document.removeEventListener('keydown', handleKeyPress);
+    dispatch('close');
+    if (formattedSelected !== formattedSelectedEnd) {
+      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
+    }
   }
 
   // theming variables:

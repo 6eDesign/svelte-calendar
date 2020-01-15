@@ -202,7 +202,7 @@
   .day--label.betweenSelected {
     transition: none;
     border-radius: 0;
-    margin: 10% -5%;
+    margin: 10% -6%;
     width: 116%;
     color: #fff;
   }
@@ -227,8 +227,8 @@
   .day--label.betweenSelected:hover:before {
     border-radius: 50%;
     background-color: var(--highlight-color);
-    width: 2.4em;
-    height: 2.4em;
+    width: 32.6px;
+    height: 32.6px;
     z-index: -1;
   }
   .day--label.selected.selectedEnd.highlighted:after,
@@ -237,13 +237,33 @@
   .day.last-of-month:not(.outside-month) .day--label.betweenSelected:before {
     background-color: transparent;
   }
+  .week:nth-child(6n + 1) .day--label.betweenSelected {
+    height: 80%;
+  }
+  .week:nth-child(6n + 1) .day--label.betweenSelected:hover,
+  .week:nth-child(6n + 2) .day--label.betweenSelected:hover {
+    height: 78%;
+  }
+  .week:nth-child(6n + 4) .day--label.betweenSelected:hover,
+  .week:nth-child(6n + 5) .day--label.betweenSelected:hover {
+    margin-top: 11%;
+  }
+  .week:nth-child(6n + 4) .day--label.selected,
+  .week:nth-child(6n + 4) .day--label.selectedEnd,
+  .week:nth-child(6n + 5) .day--label.selected,
+  .week:nth-child(6n + 5) .day--label.selectedEnd {
+    margin-top: 11%;
+  }
   .day.first-of-month:not(.outside-month) .day--label.betweenSelected {
     background: linear-gradient(to left, var(--passive-highlight-color) 70%, white);
     border: none;
+    margin-top: 9%;
+    height: 80%;
   }
   .day.last-of-month:not(.outside-month) .day--label.betweenSelected {
     background: linear-gradient(to right, var(--passive-highlight-color) 70%, white);
     border: none;
+    margin-top: 11%;
   }
   .day.is-today .day--label { 
     opacity: 1; 
