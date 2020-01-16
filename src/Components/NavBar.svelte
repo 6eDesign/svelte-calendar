@@ -81,6 +81,18 @@
     </div>
   </div>
   <div class="month-selector" class:open={monthSelectorOpen}>
+    <div class="display-months">
+      {#each availableMonths as monthDefinition, index}
+        <div 
+          class="month-selector--month" 
+          class:selected={index === month}
+          class:selectable={monthDefinition.selectable}
+          on:click={e => monthSelected(e, index)}
+        >
+          <span>{monthDefinition.abbrev}</span>
+        </div>
+      {/each}
+    </div>
     {#if range}
       <div class="display-months">
         {#each availableMonths as monthDefinition, index}
@@ -95,18 +107,6 @@
         {/each}
       </div>
     {/if}
-    <div class="display-months">
-      {#each availableMonths as monthDefinition, index}
-        <div 
-          class="month-selector--month" 
-          class:selected={index === month}
-          class:selectable={monthDefinition.selectable}
-          on:click={e => monthSelected(e, index)}
-        >
-          <span>{monthDefinition.abbrev}</span>
-        </div>
-      {/each}
-    </div>
   </div>
 </div>
 
@@ -189,16 +189,16 @@
   .display-months {
     width: 100%;
   }
-  .display-months:nth-last-child(1) {
+  .display-months:nth-last-child(2) {
     display: none;
   }
   @media (max-width: 480px) {
     .display-month:nth-child(2),
     .display-month:nth-child(3),
-    .display-months:nth-last-child(2) {
+    .display-months:nth-child(2) {
       display: none;
     }
-    .display-months:nth-last-child(1) {
+    .display-months:nth-last-child(2) {
       display: initial;
     }
   }
