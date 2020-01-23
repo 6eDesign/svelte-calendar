@@ -137,7 +137,7 @@
   function registerSelection(chosen) {
     if (!checkIfVisibleDateIsSelectable(chosen)) {
       return shakeDate(chosen);
-    } 
+    }
     // eslint-disable-next-line
     close();
     selected = chosen;
@@ -147,7 +147,7 @@
   }
 
   function handleKeyPress(evt) {
-    if (keyCodesArray.indexOf(evt.keyCode) === -1) return;
+    if (keyCodesArray.indexOf(evt.keyCode) === -1) return false;
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
@@ -163,16 +163,18 @@
       case keyCodes.pgdown:
         return incrementMonth(1);
       case keyCodes.escape:
+        // eslint-disable-next-line
         return close();
       case keyCodes.enter:
         return registerSelection(highlighted);
       default:
-        break;
+        return false;
     }
   }
 
   function close() {
     popover.close();
+    // eslint-disable-next-line
     registerClose();
   }
 

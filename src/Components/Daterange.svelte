@@ -61,19 +61,15 @@
     }
   }
   $: visibleMonth = months[monthIndex];
-  // this solution is temporary until the independant two months calendar is implemented
-  $: visibleNextMonth = screen.availWidth > 480
-    ? months[monthIndex + 1]
-    : visibleMonth;
+  // this solution is buggy and therefore temporary until the independant two months is implemented
+  $: visibleNextMonth = months[monthIndex + 1];
 
   $: visibleMonthId = 1 + year + month / 100;
   $: visibleNextMonthId = 2 + year + (month + 1) / 100;
   $: lastVisibleDate = visibleNextMonth.weeks[visibleNextMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   // temporary
-  $: canIncrementMonth = screen.availWidth > 480
-    ? monthIndex + 2 < months.length
-    : monthIndex < months.length - 1;
+  $: canIncrementMonth = monthIndex + 1 < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
   $: wrapperStyle = `
     --button-background-color: ${buttonBackgroundColor};
@@ -144,9 +140,10 @@
 
     if (!dayThisMonth && !dayNextMonth) {
       return false;
-    } else if (!dayThisMonth && dayNextMonth) {
+    }
+    if (!dayThisMonth && dayNextMonth) {
       return dayNextMonth.selectable;
-    } 
+    }
     return dayThisMonth.selectable;
   }
 
@@ -194,7 +191,7 @@
   }
 
   function handleKeyPress(evt) {
-    if (keyCodesArray.indexOf(evt.keyCode) === -1) return;
+    if (keyCodesArray.indexOf(evt.keyCode) === -1) return false;
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
@@ -210,16 +207,18 @@
       case keyCodes.pgdown:
         return incrementMonth(1);
       case keyCodes.escape:
+        // eslint-disable-next-line
         return close();
       case keyCodes.enter:
         return registerSelection(highlighted);
       default:
-        break;
+        return false;
     }
   }
 
   function close() {
     popover.close();
+    // eslint-disable-next-line
     registerClose();
   }
 

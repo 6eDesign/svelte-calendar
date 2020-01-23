@@ -29,9 +29,9 @@
         class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
         class:betweenSelected={isDateBetweenSelected(selected, selectedEnd, day.date)}
         class:is-today={
-          day.isToday && 
-          selected === selectedEnd && 
-          !isDateBetweenSelected(selected, selectedEnd, day.date)
+          day.isToday
+          && selected === selectedEnd
+          && !isDateBetweenSelected(selected, selectedEnd, day.date)
         }
         class:is-disabled={!day.selectable}
       >
