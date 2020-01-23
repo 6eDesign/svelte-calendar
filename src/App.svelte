@@ -15,7 +15,6 @@
 
 	// Daterange options
 	let dateChosenEnd = false;
-	let dateRange = true;
 	let combinedDates;
 	let end = new Date(today.getFullYear() + 1, today.getMonth(), today.getDay());
 	
@@ -59,8 +58,7 @@
 
 	<!-- daterange test -->
 	<Daterange bind:dateChosenStart={dateChosen} bind:dateChosenEnd
-  bind:formattedSelected bind:formattedCombined={combinedDates} {start}
-  {end} {dateRange} />
+  bind:formattedSelected bind:formattedCombined={combinedDates} {start} {end} />
 
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 
