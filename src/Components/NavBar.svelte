@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { monthsOfYear } from './lib/time';
 
   const dispatch = createEventDispatcher();
 
@@ -9,7 +10,6 @@
   export let year;
   export let canIncrementMonth;
   export let canDecrementMonth;
-  export let monthsOfYear;
   export let range;
 
   let monthSelectorOpen = false;
