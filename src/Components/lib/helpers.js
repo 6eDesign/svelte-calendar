@@ -48,9 +48,23 @@ export function getMonths(start, end, selectableCallback = null, weekStart = 0) 
   return months;
 }
 
+export function getDefaultHighlighted(date) {
+  return new Date(date);
+}
 export const areDatesEquivalent = (a, b) => a.getDate() === b.getDate()
   && a.getMonth() === b.getMonth()
   && a.getFullYear() === b.getFullYear();
 
 export const isDateBetweenSelected = (a, b, c) => c.getTime() > a.getTime()
   && c.getTime() < b.getTime();
+
+export function getDay(m, date) {
+  for (let i = 0; i < m.weeks.length; i += 1) {
+    for (let j = 0; j < m.weeks[i].days.length; j += 1) {
+      if (areDatesEquivalent(m.weeks[i].days[j].date, date)) {
+        return m.weeks[i].days[j];
+      }
+    }
+  }
+  return null;
+}
