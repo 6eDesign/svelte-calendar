@@ -2,8 +2,8 @@
   import Month from './Month.svelte';
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
-  import { getMonths, areDatesEquivalent } from './lib/helpers';
-  import { formatDate, internationalize } from 'timeUtils';
+  import { formatDate } from 'timeUtils';
+  import { getMonths, getDefaultHighlighted, getDay } from './lib/helpers';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -21,29 +21,6 @@
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
-  export let daysOfWeek = [
-    ['Sunday', 'Sun'],
-    ['Monday', 'Mon'],
-    ['Tuesday', 'Tue'],
-    ['Wednesday', 'Wed'],
-    ['Thursday', 'Thu'],
-    ['Friday', 'Fri'],
-    ['Saturday', 'Sat']
-  ];
-  export let monthsOfYear = [
-    ['January', 'Jan'],
-    ['February', 'Feb'],
-    ['March', 'Mar'],
-    ['April', 'Apr'],
-    ['May', 'May'],
-    ['June', 'Jun'],
-    ['July', 'Jul'],
-    ['August', 'Aug'],
-    ['September', 'Sep'],
-    ['October', 'Oct'],
-    ['November', 'Nov'],
-    ['December', 'Dec']
-  ];
 
   export let style = '';
   
@@ -56,13 +33,6 @@
   export let dayTextColor = '#4a4a4a';
   export let dayHighlightedBackgroundColor = '#efefef';
   export let dayHighlightedTextColor = '#4a4a4a';
-
-  internationalize({ daysOfWeek, monthsOfYear });
-  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
-    let dow = daysOfWeek.slice();
-    dow.push(dow.shift());
-    return dow;
-  })();
 
   let highlighted = today;
   let shouldShakeDate = false;
@@ -111,11 +81,9 @@
   `;
 
   export let formattedSelected;
-  $: {
-    formattedSelected = typeof format === 'function'
-      ? format(selected)
-      : formatDate(selected, format);
-  }
+  $: formattedSelected = typeof format === 'function'
+    ? format(selected)
+    : formatDate(selected, format);
 
   onMount(() => {
     month = selected.getMonth();
@@ -136,10 +104,6 @@
     highlighted = new Date(year, month, date || 1);
   }
 
-  function getDefaultHighlighted() {
-    return new Date(selected);
-  }
-
   function incrementDayHighlighted(amount) {
     highlighted = new Date(highlighted);
     highlighted.setDate(highlighted.getDate() + amount);
@@ -150,17 +114,6 @@
       return incrementMonth(-1, highlighted.getDate());
     }
     return highlighted;
-  }
-
-  function getDay(m, date) {
-    for (let i = 0; i < m.weeks.length; i += 1) {
-      for (let j = 0; j < m.weeks[i].days.length; j += 1) {
-        if (areDatesEquivalent(m.weeks[i].days[j].date, date)) {
-          return m.weeks[i].days[j];
-        }
-      }
-    }
-    return null;
   }
 
   function checkIfVisibleDateIsSelectable(date) {
@@ -182,7 +135,9 @@
   }
 
   function registerSelection(chosen) {
-    if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
+    if (!checkIfVisibleDateIsSelectable(chosen)) {
+      return shakeDate(chosen);
+    } 
     // eslint-disable-next-line
     close();
     selected = chosen;
@@ -196,38 +151,24 @@
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
-        incrementDayHighlighted(-1);
-        break;
+        return incrementDayHighlighted(-1);
       case keyCodes.up:
-        incrementDayHighlighted(-7);
-        break;
+        return incrementDayHighlighted(-7);
       case keyCodes.right:
-        incrementDayHighlighted(1);
-        break;
+        return incrementDayHighlighted(1);
       case keyCodes.down:
-        incrementDayHighlighted(7);
-        break;
+        return incrementDayHighlighted(7);
       case keyCodes.pgup:
-        incrementMonth(-1);
-        break;
+        return incrementMonth(-1);
       case keyCodes.pgdown:
-        incrementMonth(1);
-        break;
+        return incrementMonth(1);
       case keyCodes.escape:
-        // eslint-disable-next-line
-        close();
-        break;
+        return close();
       case keyCodes.enter:
-        registerSelection(highlighted);
-        break;
+        return registerSelection(highlighted);
       default:
         break;
     }
-  }
-
-  function registerClose() {
-    document.removeEventListener('keydown', handleKeyPress);
-    dispatch('close');
   }
 
   function close() {
@@ -236,11 +177,16 @@
   }
 
   function registerOpen() {
-    highlighted = getDefaultHighlighted();
+    highlighted = getDefaultHighlighted(selected);
     month = selected.getMonth();
     year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
+  }
+
+  function registerClose() {
+    document.removeEventListener('keydown', handleKeyPress);
+    dispatch('close');
   }
 
 </script>
@@ -252,10 +198,10 @@
   style={wrapperStyle}
 >
   <Popover
+    {trigger}
     bind:this="{popover}"
     bind:open="{isOpen}"
     bind:shrink="{isClosing}"
-    {trigger}
     on:opened="{registerOpen}"
     on:closed="{registerClose}"
   >
@@ -277,23 +223,16 @@
           {end}
           {canIncrementMonth}
           {canDecrementMonth}
-          {monthsOfYear}
           {range}
           on:monthSelected={e => changeMonth(e.detail)}
           on:incrementMonth={e => incrementMonth(e.detail)} 
         />
-        <div class="legend">
-          {#each sortedDaysOfWeek as day}
-          <span>{day[1]}</span>
-          {/each}
-        </div>
         <Month 
           {visibleMonth} 
           {selected} 
           {highlighted} 
           {shouldShakeDate} 
-          {start}
-          {end} 
+          {range}
           id={visibleMonthId} 
           on:dateSelected={e => registerSelection(e.detail)} 
         />
@@ -346,17 +285,5 @@
       width: 340px;
       max-width: 100%;
     }
-  }
-
-  .legend {
-    color: #4a4a4a;
-    padding: 10px 0;
-    margin-bottom: 5px;
-  }
-
-  .legend span {
-    width: 14.285714%;
-    display: inline-block;
-    text-align: center;
   }
 </style>

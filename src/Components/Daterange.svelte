@@ -2,8 +2,8 @@
   import Months from './Month.svelte';
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
-  import { getMonths, areDatesEquivalent } from './lib/helpers';
-  import { formatDate, internationalize } from 'timeUtils';
+  import { formatDate } from 'timeUtils';
+  import { getMonths, getDefaultHighlighted, getDay } from './lib/helpers';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -14,7 +14,7 @@
   let firstDate = true;
   let range = true;
 
-  export let format = '#{m}/#{d}/#{Y}';
+  export let format = '#{m} / #{d} / #{Y}';
   export let start = new Date(1987, 9, 29);
   export let end = new Date(2020, 9, 29);
   export let selected = today;
@@ -24,29 +24,6 @@
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
-  export let daysOfWeek = [
-    ['Sunday', 'Sun'],
-    ['Monday', 'Mon'],
-    ['Tuesday', 'Tue'],
-    ['Wednesday', 'Wed'],
-    ['Thursday', 'Thu'],
-    ['Friday', 'Fri'],
-    ['Saturday', 'Sat']
-  ];
-  export let monthsOfYear = [
-    ['January', 'Jan'],
-    ['February', 'Feb'],
-    ['March', 'Mar'],
-    ['April', 'Apr'],
-    ['May', 'May'],
-    ['June', 'Jun'],
-    ['July', 'Jul'],
-    ['August', 'Aug'],
-    ['September', 'Sep'],
-    ['October', 'Oct'],
-    ['November', 'Nov'],
-    ['December', 'Dec']
-  ];
 
   export let style = '';
 
@@ -60,13 +37,6 @@
   export let dayTextColor = '#4a4a4a';
   export let dayHighlightedBackgroundColor = '#efefef';
   export let dayHighlightedTextColor = '#4a4a4a';
-
-  internationalize({ daysOfWeek, monthsOfYear });
-  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
-    let dow = daysOfWeek.slice();
-    dow.push(dow.shift());
-    return dow;
-  })();
 
   let highlighted = today;
   let shouldShakeDate = false;
@@ -91,29 +61,36 @@
     }
   }
   $: visibleMonth = months[monthIndex];
-  $: visibleNextMonth = months[monthIndex + 1];
+  // this solution is temporary until the independant two months calendar is implemented
+  $: visibleNextMonth = screen.availWidth > 480
+    ? months[monthIndex + 1]
+    : visibleMonth;
 
-  $: visibleMonthId = year + month / 100;
-  $: visibleNextMonthId = year + (month + 1) / 100;
+  $: visibleMonthId = 1 + year + month / 100;
+  $: visibleNextMonthId = 2 + year + (month + 1) / 100;
   $: lastVisibleDate = visibleNextMonth.weeks[visibleNextMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
-  $: canIncrementMonth = monthIndex + 1 < months.length - 1;
+  // temporary
+  $: canIncrementMonth = screen.availWidth > 480
+    ? monthIndex + 2 < months.length
+    : monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
   $: wrapperStyle = `
-  --button-background-color: ${buttonBackgroundColor};
-  --button-border-color: ${buttonBorderColor};
-  --button-text-color: ${buttonTextColor};
-  --highlight-color: ${highlightColor};
-  --passive-highlight-color: ${passiveHighlightColor};
-  --day-background-color: ${dayBackgroundColor};
-  --day-text-color: ${dayTextColor};
-  --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
-  --day-highlighted-text-color: ${dayHighlightedTextColor};
-  ${style}
-`;
+    --button-background-color: ${buttonBackgroundColor};
+    --button-border-color: ${buttonBorderColor};
+    --button-text-color: ${buttonTextColor};
+    --highlight-color: ${highlightColor};
+    --passive-highlight-color: ${passiveHighlightColor};
+    --day-background-color: ${dayBackgroundColor};
+    --day-text-color: ${dayTextColor};
+    --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
+    --day-highlighted-text-color: ${dayHighlightedTextColor};
+    ${style}
+  `;
 
   export let formattedSelected;
   export let formattedSelectedEnd;
+  export let formattedCombined;
   $: {
     if (typeof format === 'function') {
       formattedSelected = format(selected);
@@ -122,9 +99,13 @@
       formattedSelected = formatDate(selected, format);
       formattedSelectedEnd = formatDate(selectedEnd, format);
     }
+    if (formattedSelected !== formattedSelectedEnd) {
+      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
+    } else {
+      formattedCombined = `${formattedSelected}`;
+    }
   }
 
-  export let formattedCombined = '';
 
   onMount(() => {
     month = selected.getMonth();
@@ -138,7 +119,6 @@
   function incrementMonth(direction, date) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
-
     let current = new Date(year, month, 1);
     current.setMonth(current.getMonth() + direction);
     month = current.getMonth();
@@ -146,14 +126,9 @@
     highlighted = new Date(year, month, date || 1);
   }
 
-  function getDefaultHighlighted() {
-    return new Date(selected);
-  }
-
   function incrementDayHighlighted(amount) {
     highlighted = new Date(highlighted);
     highlighted.setDate(highlighted.getDate() + amount);
-  
     if (amount > 0 && highlighted > lastVisibleDate) {
       return incrementMonth(1, highlighted.getDate());
     }
@@ -163,26 +138,15 @@
     return highlighted;
   }
 
-  function getDay(m, date) {
-    for (let i = 0; i < m.weeks.length; i += 1) {
-      for (let j = 0; j < m.weeks[i].days.length; j += 1) {
-        if (areDatesEquivalent(m.weeks[i].days[j].date, date)) {
-          return m.weeks[i].days[j];
-        }
-      }
-    }
-    return null;
-  }
-
   function checkIfVisibleDateIsSelectable(date) {
     const dayThisMonth = getDay(visibleMonth, date);
     const dayNextMonth = getDay(visibleNextMonth, date);
 
     if (!dayThisMonth && !dayNextMonth) {
       return false;
-    } if (!dayThisMonth && dayNextMonth) {
+    } else if (!dayThisMonth && dayNextMonth) {
       return dayNextMonth.selectable;
-    }
+    } 
     return dayThisMonth.selectable;
   }
 
@@ -234,40 +198,23 @@
     evt.preventDefault();
     switch (evt.keyCode) {
       case keyCodes.left:
-        incrementDayHighlighted(-1);
-        break;
+        return incrementDayHighlighted(-1);
       case keyCodes.up:
-        incrementDayHighlighted(-7);
-        break;
+        return incrementDayHighlighted(-7);
       case keyCodes.right:
-        incrementDayHighlighted(1);
-        break;
+        return incrementDayHighlighted(1);
       case keyCodes.down:
-        incrementDayHighlighted(7);
-        break;
+        return incrementDayHighlighted(7);
       case keyCodes.pgup:
-        incrementMonth(-1);
-        break;
+        return incrementMonth(-1);
       case keyCodes.pgdown:
-        incrementMonth(1);
-        break;
+        return incrementMonth(1);
       case keyCodes.escape:
-        // eslint-disable-next-line
-        close();
-        break;
+        return close();
       case keyCodes.enter:
-        registerSelection(highlighted);
-        break;
+        return registerSelection(highlighted);
       default:
         break;
-    }
-  }
-
-  function registerClose() {
-    document.removeEventListener('keydown', handleKeyPress);
-    dispatch('close');
-    if (formattedSelected !== formattedSelectedEnd) {
-      formattedCombined = `${formattedSelected} - ${formattedSelectedEnd}`;
     }
   }
 
@@ -277,11 +224,16 @@
   }
 
   function registerOpen() {
-    highlighted = getDefaultHighlighted();
+    highlighted = getDefaultHighlighted(selected);
     month = selected.getMonth();
     year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
+  }
+
+  function registerClose() {
+    document.removeEventListener('keydown', handleKeyPress);
+    dispatch('close');
   }
 
 </script>
@@ -304,7 +256,7 @@
       <slot>
         {#if !trigger}
         <button class="calendar-button" type="button">
-          {formattedCombined || formattedSelected}
+          {formattedCombined}
         </button>
         {/if}
       </slot>
@@ -319,23 +271,10 @@
             {end}
             {canIncrementMonth}
             {canDecrementMonth}
-            {monthsOfYear}
             {range}
             on:monthSelected={e => changeMonth(e.detail)}
             on:incrementMonth={e => incrementMonth(e.detail)} 
           />
-        </div>
-        <div class="legend">
-          <div class="first-month-week">
-            {#each sortedDaysOfWeek as day}
-              <span>{day[1]}</span>
-            {/each}
-          </div>
-          <div class="second-month-week">
-            {#each sortedDaysOfWeek as day}
-              <span>{day[1]}</span>
-            {/each}
-          </div>
         </div>
         <Months 
           {visibleMonth} 
@@ -344,6 +283,7 @@
           {selectedEnd} 
           {highlighted} 
           {shouldShakeDate}
+          {range}
           id={visibleMonthId} 
           on:dateSelected={e => registerSelection(e.detail)} 
         />
@@ -390,41 +330,11 @@
     padding-top: 0;
   }
 
-  .second-month-week {
-    display: none;
-  }
-
   @media (min-width: 480px) {
     .calendar {
       height: auto;
       width: 680px;
       max-width: 100%;
     }
-    .first-month-week {
-      flex: 1;
-      min-width: 47.5%;
-      margin-right: 2.5%;
-    }
-    .second-month-week {
-      display: initial;
-      flex: 2;
-      min-width: 47.5%;
-      margin-left: 2.5%;
-    }
-    .legend {
-      display: flex;
-    }
-  }
-
-  .legend {
-    color: #4a4a4a;
-    padding: 10px 0;
-    margin-bottom: 5px;
-  }
-
-  .legend span {
-    width: 14.285714%;
-    display: inline-block;
-    text-align: center;
   }
 </style>
