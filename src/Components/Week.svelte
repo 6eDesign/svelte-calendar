@@ -25,14 +25,18 @@
         class:outside-month={!day.partOfMonth}
         class:first-of-month={day.firstOfMonth}
         class:last-of-month={day.lastOfMonth}
-        class:is-today={day.isToday && !isDateBetweenSelected(selected, selectedEnd, day.date)}
+        class:selected={areDatesEquivalent(day.date, selected)}
+        class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
+        class:betweenSelected={isDateBetweenSelected(selected, selectedEnd, day.date)}
+        class:is-today={
+          day.isToday && 
+          selected === selectedEnd && 
+          !isDateBetweenSelected(selected, selectedEnd, day.date)
+        }
         class:is-disabled={!day.selectable}
       >
         <button 
           class="day--label" 
-          class:selected={areDatesEquivalent(day.date, selected)}
-          class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
-          class:betweenSelected={isDateBetweenSelected(selected, selectedEnd, day.date)}
           class:highlighted={areDatesEquivalent(day.date, highlighted)}
           class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
           class:disabled={!day.selectable}
@@ -46,12 +50,12 @@
       <div 
         class="day" 
         class:outside-month={!day.partOfMonth}
+        class:selected={areDatesEquivalent(day.date, selected)}
         class:is-today={day.isToday}
         class:is-disabled={!day.selectable}
       >
         <button 
           class="day--label" 
-          class:selected={areDatesEquivalent(day.date, selected)}
           class:highlighted={areDatesEquivalent(day.date, highlighted)}
           class:shake-date={shouldShakeDate && areDatesEquivalent(day.date, shouldShakeDate)}
           class:disabled={!day.selectable}
@@ -67,18 +71,12 @@
 
 <style>
   .week { 
-    padding: 0;
-    margin: 0;
+    margin: 3px 0;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    flex-flow: row;
-    -webkit-flex-flow: row;
-    justify-content: space-around;
-    -ms-grid-column: 1;
-    grid-column: 1; 
   }
   .week:nth-child(6n + 1) { 
     -ms-grid-row: 1; 
@@ -105,15 +103,11 @@
     grid-row: 6; 
   }
   .day { 
-    margin: 2px;
-    color: var(--day-text-color);
-    font-weight: bold;
-    text-align: center;
-    font-size: 16px;
     flex: 1 0 auto;
-    height: auto;
+    height: 32px;
     display: flex; 
     flex-basis: 0;
+    justify-content: center;
   }
   .day.outside-month, 
   .day.is-disabled { 
@@ -122,32 +116,72 @@
   .day:before { 
     content: '';
     float: left;
-    padding-top: 100%;
   }
   .day--label { 
     color: var(--day-text-color);
     display: flex;
     justify-content: center;
-    flex-direction: column;
-    width: 100%;
+    width: 32px;
+    height: 32px;
     position: relative;
-    border: 1px solid #fff;
+    border: 1px solid var(--button-background-color);
     border-radius: 50%; 
-    margin: 10%;
-    padding: 0;
     align-items: center;
     background: var(--day-background-color);
     cursor: pointer;
     transition: all 100ms linear;
-    font-weight: normal;
-    z-index: 1;
+    border: none;
+    outline: none;
   }
   .day--label.disabled { 
     cursor: default;
   }
-  .week:nth-child(6n + 5) .day--label.selected,
-  .week:nth-child(6n + 5) .day--label.selectedEnd {
-    margin-top: 9%;
+  .day--label.shake-date { 
+    animation: shake 0.4s 1 linear;
+  }
+  .day.selected,
+  .day.selectedEnd,
+  .day--label:active:not(.disabled) {
+    transform-style: preserve-3d;
+  }
+  .day.is-today.selectedEnd:not(.outside-month) .day--label,
+  .day.selectedEnd:not(.outside-month) .day--label {
+    background-color: var(--button-background-color);
+    border: var(--highlight-color) 1px solid;
+  }
+  .day.selectedEnd:not(.outside-month) .day--label:hover,
+  .day.selected:not(.outside-month) .day--label.highlighted,
+  .day.selected:not(.outside-month) .day--label {
+    background-color: var(--highlight-color);
+    color: var(--button-background-color);
+  }
+  .day.betweenSelected:before, 
+  .day.selected:before, 
+  .day.selectedEnd:before {
+    content: "";
+    background-color: var(--passive-highlight-color);
+    position: absolute;
+    height: 32px;
+    width: 15%;
+  }
+  .day.selected:before, 
+  .day.selectedEnd:before {
+    width: 50%;
+  }
+  .day.selected:before {
+    right: 0;
+  }
+  .day.selectedEnd:before {
+    left: 0;
+  }
+  .day.betweenSelected:hover {
+    background-color: var(--passive-highlight-color);
+    border-color: var(--passive-highlight-color);
+    color: var(--button-background-color);
+  }
+  .day.selected .day--label:hover {
+    background-color: var(--passive-highlight-color);
+    border: var(--highlight-color) 1px solid;
   }
   @media (min-width: 480px) { 
     .day--label.highlighted,
@@ -156,129 +190,42 @@
       border-color: var(--day-highlighted-background-color);
       color: var(--day-highlighted-text-color);
     }
-    .week:nth-child(6n + 5) .day--label.selected,
-    .week:nth-child(6n + 5) .day--label.selectedEnd {
-      margin-top: 11%;
+    .day.betweenSelected:before {
+      width: 45px;
     }
   }
-  .day--label.shake-date { 
-    animation: shake 0.4s 1 linear;
-  }
-  .day.is-today .day--label.selected,
-  .day.is-today .day--label.selectedEnd:hover,
-  .day--label.selected.selectedEnd,
-  .day--label.selected:hover,
-  .day--label.selected,
-  .day--label.selectedEnd:hover,
-  .day--label.selectedEnd,
-  .day--label:active:not(.disabled) { 
-    background-color: var(--highlight-color);
-    border-color: var(--highlight-color);
-    color: #fff;
-    border-radius: 50%;
-    transform-style: preserve-3d;
-    outline: none;
-  }
-  .day.is-today .day--label.selectedEnd,
-  .day--label.selectedEnd {
-    background-color: white;
+  .day.outside-month.betweenSelected:before,
+  .day.outside-month.betweenSelected:hover,
+  .day.outside-month.betweenSelected,
+  .day.outside-month.selectedEnd:before,
+  .day.outside-month.selected:before,
+  .day.outside-month.selectedEnd,
+  .day.outside-month.selected,
+  .day.selected.selectedEnd:before,
+  .day.first-of-month:not(.outside-month).betweenSelected:before,
+  .day.last-of-month:not(.outside-month).betweenSelected:before {
+    background-color: transparent;
     color: var(--day-text-color);
   }
-  .day--label.betweenSelected:before, 
-  .day--label.selected:after, 
-  .day--label.selectedEnd:after {
-    content: "";
-    background-color: var(--passive-highlight-color);
-    position: absolute;
-    height: 105%;
-    width: 116%;
-  }
-  .day--label.selected:after, 
-  .day--label.selectedEnd:after {
-    width: 75%;
-    transform: translateZ(-1px);    
-  }
-  .day--label.betweenSelected:before {
-    z-index: -1;
-  }
-  .day--label.selected:after {
-    left: 15px;
-  }
-  .day--label.selectedEnd:after {
-    right: 15px;
-  }
-  .day--label.betweenSelected {
-    transition: none;
-    border-radius: 0;
-    margin: 10% -6%;
-    width: 116%;
-    color: #fff;
-  }
-  .day.outside-month .day--label.betweenSelected:before,
-  .day.outside-month .day--label.betweenSelected:hover,
-  .day.outside-month .day--label.betweenSelected,
-  .day.outside-month .day--label.selectedEnd:after,
-  .day.outside-month .day--label.selected:after,
-  .day.outside-month .day--label.selectedEnd,
-  .day.outside-month .day--label.selected {
-    background-color: transparent;
-    border-color: transparent;
-    color: var(--day-text-color);
-  }
-  .day--label.betweenSelected:hover {
-    background-color: var(--passive-highlight-color);
-    border-color: var(--passive-highlight-color);
-    color: #fff;
-  }
-  .day--label.betweenSelected:active {
-    border-radius: 0;
-  }
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:hover:before,
-  .day--label.betweenSelected:hover:before {
-    border-radius: 50%;
+  .day.betweenSelected:not(.outside-month) .day--label:hover {
     background-color: var(--highlight-color);
-    width: 32.6px;
-    height: 32.6px;
-    z-index: -1;
   }
-  .day--label.selected.selectedEnd.highlighted:after,
-  .day--label.selected.selectedEnd:after,
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected:before,
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected:before {
-    background-color: transparent;
+  .day:not(.outside-month).betweenSelected .day--label {
+    color: var(--button-background-color);
   }
-  .week:nth-child(6n + 1) .day--label.betweenSelected {
-    height: 80%;
+  .day.first-of-month:not(.outside-month).selectedEnd:not(.selected):before,
+  .day.first-of-month:not(.outside-month).betweenSelected {
+    background: linear-gradient(to left, var(--passive-highlight-color) 70%, var(--button-background-color));
   }
-  .week:nth-child(6n + 1) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 2) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 3) .day--label.betweenSelected:active {
-    height: 78%;
+  .day.last-of-month:not(.outside-month).selected:not(.selectedEnd):before,
+  .day.last-of-month:not(.outside-month).betweenSelected {
+    background: linear-gradient(to right, var(--passive-highlight-color) 70%, var(--button-background-color));
   }
-  .week:nth-child(6n + 4) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 5) .day--label.betweenSelected:hover,
-  .week:nth-child(6n + 3) .day--label.selected,
-  .week:nth-child(6n + 3) .day--label.selectedEnd,
-  .week:nth-child(6n + 4) .day--label.selected,
-  .week:nth-child(6n + 4) .day--label.selectedEnd {
-    margin-top: 11%;
-  }
-  .day.first-of-month:not(.outside-month) .day--label.betweenSelected {
-    background: linear-gradient(to left, var(--passive-highlight-color) 70%, white);
-    border: none;
-    margin-top: 9%;
-    height: 80%;
-  }
-  .day.last-of-month:not(.outside-month) .day--label.betweenSelected {
-    background: linear-gradient(to right, var(--passive-highlight-color) 70%, white);
-    border: none;
-    margin-top: 11%;
-  }
-  .day.is-today .day--label { 
+  .day.is-today .day--label,
+  .day.selected.selectedEnd.is-today .day--label {
     opacity: 1; 
     background: none;
-    border-color: var(--highlight-color);
+    border: var(--highlight-color)  1px solid;
     color: #000;
   }
   @keyframes shake {
