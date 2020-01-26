@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.2"></a>
+## [1.3.2](https://github.com/6eDesign/svelte-calendar/compare/v1.3.1...v1.3.2) (2020-01-26)
+
+
+### Bug Fixes
+
+* eslint fixes ([d6df6ac](https://github.com/6eDesign/svelte-calendar/commit/d6df6ac))
+
+
+
 <a name="1.3.1"></a>
 ## [1.3.1](https://github.com/6eDesign/svelte-calendar/compare/v1.3.0...v1.3.1) (2020-01-15)
 
