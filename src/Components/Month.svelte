@@ -4,8 +4,6 @@
   export let id;
   export let visibleMonth;
   export let selected;
-  export let start;
-  export let end;
   export let highlighted;
   export let shouldShakeDate;
 

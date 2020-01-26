@@ -294,8 +294,14 @@
           <span>{day[1]}</span>
           {/each}
         </div>
-        <Month {visibleMonth} {selected} {highlighted} {shouldShakeDate} {start}
-        {end} id={visibleMonthId} on:dateSelected={e => registerSelection(e.detail)} />
+        <Month 
+          {visibleMonth}
+          {selected}
+          {highlighted}
+          {shouldShakeDate}
+          id={visibleMonthId}
+          on:dateSelected={e => registerSelection(e.detail)} 
+        />
       </div>
     </div>
   </Popover>
