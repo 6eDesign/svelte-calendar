@@ -23,8 +23,6 @@
     <Week 
       days={week.days} 
       {selected} 
-      {start} 
-      {end} 
       {highlighted} 
       {shouldShakeDate} 
       {direction}

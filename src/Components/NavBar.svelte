@@ -4,9 +4,9 @@
   const dispatch = createEventDispatcher();
 
   export let month;
+  export let year;
   export let start;
   export let end;
-  export let year;
   export let canIncrementMonth;
   export let canDecrementMonth;
   export let monthsOfYear;
@@ -36,9 +36,10 @@
     monthSelectorOpen = !monthSelectorOpen;
   }
 
-  function monthSelected(event, m) {
+  function monthSelected(event, { m, i }) {
     event.stopPropagation();
-    dispatch('monthSelected', m);
+    if (!m.selectable) return false;
+    dispatch('monthSelected', i);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -65,7 +66,7 @@
         class="month-selector--month" 
         class:selected={index === month}
         class:selectable={monthDefinition.selectable}
-        on:click={e => monthSelected(e, index)}
+        on:click={e => monthSelected(e, { m: monthDefinition, i: index })}
       >
         <span>{monthDefinition.abbrev}</span>
       </div>

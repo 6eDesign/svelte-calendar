@@ -2,7 +2,7 @@
   import Month from './Month.svelte';
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
-  import { getMonths, areDatesEquivalent } from './lib/helpers';
+  import { getMonths } from './lib/helpers';
   import { formatDate, internationalize } from 'timeUtils';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
@@ -123,49 +123,56 @@
 
   function changeMonth(selectedMonth) {
     month = selectedMonth;
+    highlighted = new Date(year, month, 1);
   }
 
-  function incrementMonth(direction, date) {
+  function incrementMonth(direction, day = 1) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
     let current = new Date(year, month, 1);
     current.setMonth(current.getMonth() + direction);
     month = current.getMonth();
     year = current.getFullYear();
-    highlighted = new Date(year, month, date || 1);
+    highlighted = new Date(year, month, day);
   }
 
   function getDefaultHighlighted() {
     return new Date(selected);
   }
 
-  function incrementDayHighlighted(amount) {
-    highlighted = new Date(highlighted);
-    highlighted.setDate(highlighted.getDate() + amount);
-    if (amount > 0 && highlighted > lastVisibleDate) {
-      return incrementMonth(1, highlighted.getDate());
-    }
-    if (amount < 0 && highlighted < firstVisibleDate) {
-      return incrementMonth(-1, highlighted.getDate());
-    }
-    return highlighted;
-  }
-
-  function getDay(m, date) {
-    for (let i = 0; i < m.weeks.length; i += 1) {
-      for (let j = 0; j < m.weeks[i].days.length; j += 1) {
-        if (areDatesEquivalent(m.weeks[i].days[j].date, date)) {
-          return m.weeks[i].days[j];
-        }
+  const getDay = (m, d, y) => {
+    let theMonth = months.find(aMonth => aMonth.month === m && aMonth.year === y);
+    if (!theMonth) return null;
+    for (let i = 0; i < theMonth.weeks.length; ++i) {
+      for (let j = 0; j < theMonth.weeks[i].days.length; ++j) {
+        let aDay = theMonth.weeks[i].days[j];
+        if (aDay.month === m && aDay.day === d && aDay.year === y) return aDay;
       }
     }
     return null;
+  };
+
+  function incrementDayHighlighted(amount) {
+    let proposedDate = new Date(highlighted);
+    proposedDate.setDate(highlighted.getDate() + amount);
+    let correspondingDayObj = getDay(
+      proposedDate.getMonth(),
+      proposedDate.getDate(),
+      proposedDate.getFullYear()
+    );
+    if (!correspondingDayObj || !correspondingDayObj.isInRange) return;
+    highlighted = proposedDate;
+    if (amount > 0 && highlighted > lastVisibleDate) {
+      incrementMonth(1, highlighted.getDate());
+    }
+    if (amount < 0 && highlighted < firstVisibleDate) {
+      incrementMonth(-1, highlighted.getDate());
+    }
   }
 
   function checkIfVisibleDateIsSelectable(date) {
-    const day = getDay(visibleMonth, date);
-    if (!day) return false;
-    return day.selectable;
+    const proposedDay = getDay(date.getMonth(), date.getDate(), date.getFullYear());
+    return proposedDay && proposedDay.selectable;
   }
 
   function shakeDate(date) {
@@ -272,10 +279,10 @@
         <NavBar 
           {month}
           {year}
-          {start}
-          {end}
           {canIncrementMonth}
           {canDecrementMonth}
+          {start}
+          {end}
           {monthsOfYear}
           on:monthSelected={e => changeMonth(e.detail)}
           on:incrementMonth={e => incrementMonth(e.detail)} 

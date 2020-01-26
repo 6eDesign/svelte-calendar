@@ -9,6 +9,9 @@ const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
     if (date.getDay() === weekStart) weeks.unshift({ days: [], id: `${year}${month}${year}${weeks.length}` });
     const updated = Object.assign({
       partOfMonth: date.getMonth() === month,
+      day: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
       date: new Date(date)
     }, dayProps(date));
     weeks[0].days.push(updated);
@@ -21,11 +24,14 @@ const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
 const getDayPropsHandler = (start, end, selectableCallback) => {
   let today = new Date();
   today.setHours(0, 0, 0, 0);
-  return date => ({
-    selectable: date >= start && date <= end
-     && (!selectableCallback || selectableCallback(date)),
-    isToday: date.getTime() === today.getTime()
-  });
+  return date => {
+    const isInRange = date >= start && date <= end;
+    return {
+      isInRange,
+      selectable: isInRange && (!selectableCallback || selectableCallback(date)),
+      isToday: date.getTime() === today.getTime()
+    };
+  };
 };
 
 export function getMonths(start, end, selectableCallback = null, weekStart = 0) {
