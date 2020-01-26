@@ -38,7 +38,7 @@
 
   function monthSelected(event, { m, i }) {
     event.stopPropagation();
-    if (!m.selectable) return false;
+    if (!m.selectable) return;
     dispatch('monthSelected', i);
     toggleMonthSelectorOpen();
   }

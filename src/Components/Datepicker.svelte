@@ -143,7 +143,9 @@
   const getDay = (m, d, y) => {
     let theMonth = months.find(aMonth => aMonth.month === m && aMonth.year === y);
     if (!theMonth) return null;
+    // eslint-disable-next-line
     for (let i = 0; i < theMonth.weeks.length; ++i) {
+      // eslint-disable-next-line
       for (let j = 0; j < theMonth.weeks[i].days.length; ++j) {
         let aDay = theMonth.weeks[i].days[j];
         if (aDay.month === m && aDay.day === d && aDay.year === y) return aDay;
