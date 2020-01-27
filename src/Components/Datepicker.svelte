@@ -92,16 +92,17 @@
 
   function changeMonth(selectedMonth) {
     month = selectedMonth;
+    highlighted = new Date(year, month, 1);
   }
 
-  function incrementMonth(direction, date) {
+  function incrementMonth(direction, date = 1) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
     let current = new Date(year, month, 1);
     current.setMonth(current.getMonth() + direction);
     month = current.getMonth();
     year = current.getFullYear();
-    highlighted = new Date(year, month, date || 1);
+    highlighted = new Date(year, month, date);
   }
 
   function getDay(month, day, year) {
