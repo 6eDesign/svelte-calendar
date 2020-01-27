@@ -3,8 +3,8 @@
   "file": "bundle.css",
   "sources": [
     "..\\src\\Components\\Datepicker.svelte",
-    "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Month.svelte",
+    "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Popover.svelte",
     "..\\src\\Components\\Week.svelte"
   ],

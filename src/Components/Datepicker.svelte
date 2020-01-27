@@ -92,16 +92,17 @@
 
   function changeMonth(selectedMonth) {
     month = selectedMonth;
+    highlighted = new Date(year, month, 1);
   }
 
-  function incrementMonth(direction, date) {
+  function incrementMonth(direction, day = 1) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
     let current = new Date(year, month, 1);
     current.setMonth(current.getMonth() + direction);
     month = current.getMonth();
     year = current.getFullYear();
-    highlighted = new Date(year, month, date || 1);
+    highlighted = new Date(year, month, day);
   }
 
   function getDay(month, day, year) {
@@ -113,6 +114,20 @@
         if (aDay.month === month && aDay.day === day && aDay.year === year) {
           return aDay;
         }
+      }
+    }
+    return null;
+  };
+
+  const getDay = (m, d, y) => {
+    let theMonth = months.find(aMonth => aMonth.month === m && aMonth.year === y);
+    if (!theMonth) return null;
+    // eslint-disable-next-line
+    for (let i = 0; i < theMonth.weeks.length; ++i) {
+      // eslint-disable-next-line
+      for (let j = 0; j < theMonth.weeks[i].days.length; ++j) {
+        let aDay = theMonth.weeks[i].days[j];
+        if (aDay.month === m && aDay.day === d && aDay.year === y) return aDay;
       }
     }
     return null;
