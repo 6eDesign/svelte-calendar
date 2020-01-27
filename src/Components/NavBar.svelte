@@ -5,9 +5,9 @@
   const dispatch = createEventDispatcher();
 
   export let month;
+  export let year;
   export let start;
   export let end;
-  export let year;
   export let canIncrementMonth;
   export let canDecrementMonth;
   export let range;
@@ -47,9 +47,10 @@
     toggleMonthSelectorOpen();
   }
 
-  function monthSelected(event, m) {
+  function monthSelected(event, { monthDefinition, index }) {
     event.stopPropagation();
-    dispatch('monthSelected', m);
+    if (!monthDefinition.selectable) return false;
+    dispatch('monthSelected', index);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -87,26 +88,12 @@
           class="month-selector--month" 
           class:selected={index === month}
           class:selectable={monthDefinition.selectable}
-          on:click={e => monthSelected(e, index)}
+          on:click={e => monthSelected(e, { monthDefinition, index })}
         >
           <span>{monthDefinition.abbrev}</span>
         </div>
       {/each}
     </div>
-    {#if range}
-      <div class="display-months">
-        {#each availableMonths as monthDefinition, index}
-          <div 
-            class="month-selector--two-months" 
-            class:selected={index === month || index === month + 1}
-            class:selectable={monthDefinition.selectable}
-            on:click={e => twoMonthsSelected(e, index)}
-          >
-            <span>{monthDefinition.abbrev}</span>
-          </div>
-        {/each}
-      </div>
-    {/if}
   </div>
 </div>
 
@@ -149,8 +136,7 @@
     visibility: visible;
     opacity: 1;
   }
-  .month-selector--month,
-  .month-selector--two-months { 
+  .month-selector--month{ 
     width: 31.333%; 
     margin: .5%; 
     height: 21.5%;
@@ -159,30 +145,25 @@
     border: 1px solid #efefef;
     opacity: 0.2;
   }
-  .month-selector--month.selectable,
-  .month-selector--two-months.selectable { 
+  .month-selector--month.selectable { 
     opacity: 1; 
   }
-  .month-selector--month.selectable:hover,
-  .month-selector--two-months.selectable:hover { 
+  .month-selector--month.selectable:hover { 
     cursor: pointer;
     box-shadow: 0px 0px 3px rgba(0,0,0,0.15);
   }
-  .month-selector--month.selected,
-  .month-selector--two-months.selected { 
+  .month-selector--month.selected { 
     background: var(--highlight-color);
     color: #fff;
   }
   .display-months,
-  .month-selector--month:before,
-  .month-selector--two-months:before { 
+  .month-selector--month:before { 
     content: ' ';
     display: inline-block;
     height: 100%;
     vertical-align: middle;
   }
-  .month-selector--month span,
-  .month-selector--two-months span { 
+  .month-selector--month span { 
     vertical-align: middle; 
     display: inline-block;
   }

@@ -15,6 +15,9 @@ const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
       partOfMonth: date.getMonth() === month,
       firstOfMonth: checkStartDate.getMonth() !== date.getMonth(),
       lastOfMonth: checkEndDate.getMonth() !== date.getMonth(),
+      day: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
       date: new Date(date)
     }, dayProps(date));
     weeks[0].days.push(updated);
@@ -24,14 +27,17 @@ const getCalendarPage = (month, year, dayProps, weekStart = 0) => {
   return { month, year, weeks };
 };
 
-const getDayPropsHandler = (start, end, selectableCallback) => {
+function getDayPropsHandler(start, end, selectableCallback) {
   let today = new Date();
   today.setHours(0, 0, 0, 0);
-  return date => ({
-    selectable: date >= start && date <= end
-     && (!selectableCallback || selectableCallback(date)),
-    isToday: date.getTime() === today.getTime()
-  });
+  return date => {
+    const isInRange = date >= start && date <= end;
+    return {
+      isInRange,
+      selectable: isInRange && (!selectableCallback || selectableCallback(date)),
+      isToday: date.getTime() === today.getTime()
+    };
+  };
 };
 
 export function getMonths(start, end, selectableCallback = null, weekStart = 0) {
@@ -48,23 +54,9 @@ export function getMonths(start, end, selectableCallback = null, weekStart = 0) 
   return months;
 }
 
-export function getDefaultHighlighted(date) {
-  return new Date(date);
-}
 export const areDatesEquivalent = (a, b) => a.getDate() === b.getDate()
   && a.getMonth() === b.getMonth()
   && a.getFullYear() === b.getFullYear();
 
 export const isDateBetweenSelected = (a, b, c) => c.getTime() > a.getTime()
   && c.getTime() < b.getTime();
-
-export function getDay(m, date) {
-  for (let i = 0; i < m.weeks.length; i += 1) {
-    for (let j = 0; j < m.weeks[i].days.length; j += 1) {
-      if (areDatesEquivalent(m.weeks[i].days[j].date, date)) {
-        return m.weeks[i].days[j];
-      }
-    }
-  }
-  return null;
-}

@@ -3,7 +3,7 @@
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
   import { formatDate } from 'timeUtils';
-  import { getMonths, getDefaultHighlighted, getDay } from './lib/helpers';
+  import { getMonths } from './lib/helpers';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
   import { onMount, createEventDispatcher } from 'svelte';
 
@@ -104,22 +104,41 @@
     highlighted = new Date(year, month, date || 1);
   }
 
+  function getDay(month, day, year) {
+    const theMonth = months.find(aMonth => aMonth.month === month && aMonth.year === year);
+    if (!theMonth) return null;
+    for (let i = 0; i < theMonth.weeks.length; ++i) {
+      for (let j = 0; j < theMonth.weeks[i].days.length; ++j) {
+        let aDay = theMonth.weeks[i].days[j];
+        if (aDay.month === month && aDay.day === day && aDay.year === year) {
+          return aDay;
+        }
+      }
+    }
+    return null;
+  };
+
   function incrementDayHighlighted(amount) {
-    highlighted = new Date(highlighted);
-    highlighted.setDate(highlighted.getDate() + amount);
+    let proposedDate = new Date(highlighted);
+    proposedDate.setDate(highlighted.getDate() + amount);
+    let correspondingDayObj = getDay(
+      proposedDate.getMonth(),
+      proposedDate.getDate(),
+      proposedDate.getFullYear()
+    );
+    if (!correspondingDayObj || !correspondingDayObj.isInRange) return;
+    highlighted = proposedDate;
     if (amount > 0 && highlighted > lastVisibleDate) {
-      return incrementMonth(1, highlighted.getDate());
+      incrementMonth(1, highlighted.getDate());
     }
     if (amount < 0 && highlighted < firstVisibleDate) {
-      return incrementMonth(-1, highlighted.getDate());
+      incrementMonth(-1, highlighted.getDate());
     }
-    return highlighted;
   }
 
   function checkIfVisibleDateIsSelectable(date) {
-    const day = getDay(visibleMonth, date);
-    if (!day) return false;
-    return day.selectable;
+    const proposedDay = getDay(date.getMonth(), date.getDate(), date.getFullYear());
+    return proposedDay && proposedDay.selectable;
   }
 
   function shakeDate(date) {
@@ -179,7 +198,7 @@
   }
 
   function registerOpen() {
-    highlighted = getDefaultHighlighted(selected);
+    highlighted = new Date(selected);
     month = selected.getMonth();
     year = selected.getFullYear();
     document.addEventListener('keydown', handleKeyPress);
@@ -221,10 +240,10 @@
         <NavBar 
           {month}
           {year}
-          {start}
-          {end}
           {canIncrementMonth}
           {canDecrementMonth}
+          {start}
+          {end}
           {range}
           on:monthSelected={e => changeMonth(e.detail)}
           on:incrementMonth={e => incrementMonth(e.detail)} 

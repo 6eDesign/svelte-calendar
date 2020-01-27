@@ -194,6 +194,8 @@
       width: 45px;
     }
   }
+  .day.outside-month.selected.selectedEnd.is-today .day--label,
+  .day.outside-month.is-today .day--label,
   .day.outside-month.betweenSelected:before,
   .day.outside-month.betweenSelected:hover,
   .day.outside-month.betweenSelected,
@@ -205,6 +207,7 @@
   .day.first-of-month:not(.outside-month).betweenSelected:before,
   .day.last-of-month:not(.outside-month).betweenSelected:before {
     background-color: transparent;
+    border: none;
     color: var(--day-text-color);
   }
   .day.betweenSelected:not(.outside-month) .day--label:hover {
