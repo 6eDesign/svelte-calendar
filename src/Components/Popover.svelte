@@ -91,7 +91,7 @@
     const { x, y } = await getTranslate();
 
     translateX = x;
-    translateY = screen.availWidth > 480 ? y : 0;
+    translateY = y;
     open = true;
 
     dispatch('opened');

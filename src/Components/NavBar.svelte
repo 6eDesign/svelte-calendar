@@ -41,7 +41,7 @@
     event.stopPropagation();
     if (!monthDefinition.selectable) return false;
     dispatch('monthSelected', index);
-    toggleMonthSelectorOpen();
+    return toggleMonthSelectorOpen();
   }
 </script>
 

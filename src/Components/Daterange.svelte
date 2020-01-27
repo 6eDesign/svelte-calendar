@@ -124,19 +124,17 @@
     highlighted = new Date(year, month, date);
   }
 
-  function getDay(month, day, year) {
-    const theMonth = months.find(aMonth => aMonth.month === month && aMonth.year === year);
+  function getDay(m, d, y) {
+    const theMonth = months.find(aMonth => aMonth.month === m && aMonth.year === y);
     if (!theMonth) return null;
-    for (let i = 0; i < theMonth.weeks.length; ++i) {
-      for (let j = 0; j < theMonth.weeks[i].days.length; ++j) {
+    for (let i = 0; i < theMonth.weeks.length; i += 1) {
+      for (let j = 0; j < theMonth.weeks[i].days.length; j += 1) {
         let aDay = theMonth.weeks[i].days[j];
-        if (aDay.month === month && aDay.day === day && aDay.year === year) {
-          return aDay;
-        }
+        if (aDay.month === m && aDay.day === d && aDay.year === y) return aDay;
       }
     }
     return null;
-  };
+  }
 
   function incrementDayHighlighted(amount) {
     let proposedDate = new Date(highlighted);

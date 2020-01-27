@@ -38,7 +38,7 @@ function getDayPropsHandler(start, end, selectableCallback) {
       isToday: date.getTime() === today.getTime()
     };
   };
-};
+}
 
 export function getMonths(start, end, selectableCallback = null, weekStart = 0) {
   start.setHours(0, 0, 0, 0);
