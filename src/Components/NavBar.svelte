@@ -37,16 +37,6 @@
     monthSelectorOpen = !monthSelectorOpen;
   }
 
-  function twoMonthsSelected(event, m) {
-    event.stopPropagation();
-    if (end.getMonth() === m) {
-      dispatch('monthSelected', m - 1);
-    } else {
-      dispatch('monthSelected', m);
-    }
-    toggleMonthSelectorOpen();
-  }
-
   function monthSelected(event, { monthDefinition, index }) {
     event.stopPropagation();
     if (!monthDefinition.selectable) return false;
