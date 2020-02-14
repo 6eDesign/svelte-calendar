@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.5"></a>
+## [1.3.5](https://github.com/6eDesign/svelte-calendar/compare/v1.3.4...v1.3.5) (2020-02-14)
+
+
+### Bug Fixes
+
+* use |local modifier for transitions so that they don't play out on navigation ([#67](https://github.com/6eDesign/svelte-calendar/issues/67)) ([8242299](https://github.com/6eDesign/svelte-calendar/commit/8242299))
+
+
+
 <a name="1.3.4"></a>
 ## [1.3.4](https://github.com/6eDesign/svelte-calendar/compare/v1.3.3...v1.3.4) (2020-01-26)
 
