@@ -14,8 +14,8 @@
 
 <div 
   class="week" 
-  in:fly={{ x: direction * 50, duration: 180, delay: 90 }}
-  out:fade={{ duration: 180 }}
+  in:fly|local={{ x: direction * 50, duration: 180, delay: 90 }}
+  out:fade|local={{ duration: 180 }}
 >
   {#each days as day}
     <div 
