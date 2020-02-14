@@ -84,7 +84,6 @@
 
   let monthIndex = 0;
   $: {
-    console.log(years);
     monthIndex = 0;
     for (let i = 0; i < months.length; i += 1) {
       if (months[i].month === month && months[i].year === year) {
@@ -129,7 +128,6 @@
   }
 
   function changeYear(selectedYear){
-      console.log(selectedYear)
       year = selectedYear;
       highlighted = new Date(year, month, 1);
   }

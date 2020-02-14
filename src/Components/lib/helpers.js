@@ -49,7 +49,6 @@ export function getMonths(start, end, selectableCallback = null, weekStart = 0) 
 }
 
 export function getYears(start, end, selectableCallback = null, weekStart = 0) {
-    console.log(start,end)
   start.setHours(0, 0, 0, 0);
   end.setHours(0, 0, 0, 0);
   let endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1);

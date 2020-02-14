@@ -45,7 +45,6 @@
           )
       });
     });
-    console.log(availableYears,calendarYears)
   }
 
   function toggleMonthSelectorOpen() {
