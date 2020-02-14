@@ -48,6 +48,22 @@ export function getMonths(start, end, selectableCallback = null, weekStart = 0) 
   return months;
 }
 
+export function getYears(start, end, selectableCallback = null, weekStart = 0) {
+    console.log(start,end)
+  start.setHours(0, 0, 0, 0);
+  end.setHours(0, 0, 0, 0);
+  let endDate = new Date(end.getFullYear(), end.getMonth() + 1, 1);
+  let years = [];
+  let date = new Date(start.getFullYear(), start.getMonth(), 1);
+  let dayPropsHandler = getDayPropsHandler(start, end, selectableCallback);
+  while (date < endDate) {
+    let {year} = getCalendarPage(date.getMonth(), date.getFullYear(), dayPropsHandler, weekStart);
+    years.push(year);
+    date.setYear(date.getFullYear() + 1);
+  }
+  return years;
+}
+
 export const areDatesEquivalent = (a, b) => a.getDate() === b.getDate()
   && a.getMonth() === b.getMonth()
   && a.getFullYear() === b.getFullYear();
