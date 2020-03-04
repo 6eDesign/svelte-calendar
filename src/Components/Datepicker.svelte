@@ -20,6 +20,7 @@
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
+  export let position = "";
   export let daysOfWeek = [
     ['Sunday', 'Sun'],
     ['Monday', 'Mon'],
@@ -207,8 +208,10 @@
   }
 
   function close() {
-    popover.close();
-    registerClose();
+    if (isOpen) {
+      popover.close();
+      registerClose();
+    }
   }
 
   function registerOpen() {
@@ -250,10 +253,11 @@
     bind:open="{isOpen}"
     bind:shrink="{isClosing}"
     {trigger}
+    {position}
     on:opened="{registerOpen}"
     on:closed="{registerClose}"
   >
-    <div slot="trigger">
+    <div slot="trigger" on:click={close}>
       <slot>
         {#if !trigger}
         <button class="calendar-button" type="button">

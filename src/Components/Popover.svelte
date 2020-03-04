@@ -18,6 +18,11 @@
   let contentsWrapper;
   let translateY = 0;
   let translateX = 0;
+  let positionTop;
+  let positionLeft;
+  let positionTranslateX = "-50%";
+  let positionTranslateY = "-50%";
+  let marginPosition;
 
   export let open = false;
   export let shrink;
@@ -30,6 +35,29 @@
       dispatch('closed');
     });
   };
+  export let position;
+
+  switch (position) {
+    case "bottom-right":
+      positionTop = 100;
+      positionLeft = 0;
+      positionTranslateX = 0;
+      positionTranslateY = 0;
+      break;
+    case "bottom-left":
+      positionTop = 100;
+      positionLeft = -13;
+      positionTranslateX = 0;
+      positionTranslateY = 0;
+      break;
+    case "middle-bottom":
+      positionTop = 100;
+      positionLeft = 50;
+      positionTranslateY = 0;
+      break;
+    default:
+      break;
+  }
 
   function checkForFocusLoss(evt) {
     if (!open) return;
@@ -90,8 +118,10 @@
   const doOpen = async () => {
     const { x, y } = await getTranslate();
 
-    translateX = x;
-    translateY = y;
+    if (!position) {
+      translateX = x;
+      translateY = y;
+    }
     open = true;
 
     dispatch('opened');
@@ -108,7 +138,10 @@
     class="contents-wrapper" 
     class:visible={open}
     class:shrink={shrink}
-    style="transform: translate(-50%,-50%) translate({translateX}px, {translateY}px)" 
+    style="transform: translate({positionTranslateX},{positionTranslateY}) translate({translateX}px, {translateY}px); 
+    margin-top: 5px;
+    top: {positionTop}%; 
+    left: {positionLeft}%" 
     bind:this={contentsWrapper}>
     <div class="contents" bind:this={contentsAnimated}>
       <div class="contents-inner">

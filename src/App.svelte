@@ -10,6 +10,7 @@
 	let dateChosen = false;
 	let exampleFormatted = false;
 	let exampleChosen = false;
+	let position = "middle-bottom";
 	
 	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720);
 	
@@ -49,7 +50,7 @@
 <div class='container'>
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 
-	<Datepicker format='{dateFormat}' />
+	<Datepicker format='{dateFormat}' {position} />
 	<!-- <Datepicker ref:cal {start} {end} format='mm/dd/yyyy' /> -->
 
 	<p>This component can be used with or without the Svelte compiler.</p>
