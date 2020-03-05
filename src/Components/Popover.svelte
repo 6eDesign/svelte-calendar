@@ -23,7 +23,7 @@
   let positionRight;
   let positionTranslateX = "-50%";
   let positionTranslateY = "-50%";
-  let marginPosition;
+  let margin;
 
   export let open = false;
   export let shrink;
@@ -44,24 +44,31 @@
       positionLeft = 0;
       positionTranslateX = 0;
       positionTranslateY = 0;
+      margin = "5px 0 0 0";
       break;
     case "bottom-left":
       positionTop = 100;
       positionLeft = -13;
       positionTranslateX = 0;
       positionTranslateY = 0;
+      margin = "5px 0 0 0";
       break;
     case "middle-bottom":
       positionTop = 100;
       positionLeft = 50;
       positionTranslateY = 0;
+      margin = "5px 0 0 0";
       break;
     case "right":
-      positionTranslateX = 0;
       positionLeft = 100;
+      positionTranslateX = 0;
+      margin = "0 0 0 5px";
+      break;
     case "left": 
       positionRight = 100;
       positionLeft = null;
+      positionTranslateX = 0;
+      margin = "0 5px 0 0";
     default:
       break;
   }
@@ -146,7 +153,7 @@
     class:visible={open}
     class:shrink={shrink}
     style="transform: translate({positionTranslateX},{positionTranslateY}) translate({translateX}px, {translateY}px); 
-    margin-top: 5px;
+    margin: {margin};
     top: {positionTop}%; 
     left: {positionLeft}%;
     right: {positionRight}%" 
