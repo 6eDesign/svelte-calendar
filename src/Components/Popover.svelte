@@ -18,8 +18,9 @@
   let contentsWrapper;
   let translateY = 0;
   let translateX = 0;
-  let positionTop;
-  let positionLeft;
+  let positionTop = 50;
+  let positionLeft = 50;
+  let positionRight;
   let positionTranslateX = "-50%";
   let positionTranslateY = "-50%";
   let marginPosition;
@@ -55,6 +56,12 @@
       positionLeft = 50;
       positionTranslateY = 0;
       break;
+    case "right":
+      positionTranslateX = 0;
+      positionLeft = 100;
+    case "left": 
+      positionRight = 100;
+      positionLeft = null;
     default:
       break;
   }
@@ -141,7 +148,8 @@
     style="transform: translate({positionTranslateX},{positionTranslateY}) translate({translateX}px, {translateY}px); 
     margin-top: 5px;
     top: {positionTop}%; 
-    left: {positionLeft}%" 
+    left: {positionLeft}%;
+    right: {positionRight}%" 
     bind:this={contentsWrapper}>
     <div class="contents" bind:this={contentsAnimated}>
       <div class="contents-inner">
@@ -159,8 +167,6 @@
   .contents-wrapper { 
     transform: translate(-50%, -50%); 
     position: absolute;
-    top: 50%; 
-    left: 50%; 
     transition: none;
     z-index: 2;
     display: none;
