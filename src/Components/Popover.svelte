@@ -55,7 +55,6 @@
       break;
     case "middle-bottom":
       positionTop = 100;
-      positionLeft = 50;
       positionTranslateY = 0;
       margin = "5px 0 0 0";
       break;
