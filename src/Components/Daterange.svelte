@@ -13,6 +13,7 @@
   let popover;
   let firstDate = true;
   let range = true;
+  let width;
 
   export let format = '#{m} / #{d} / #{Y}';
   export let start = new Date(1987, 9, 29);
@@ -23,6 +24,7 @@
   export let dateChosenEnd = false;
   export let trigger = null;
   export let selectableCallback = null;
+  export let autoClose = false;
   export let weekStart = 0;
 
   export let style = '';
@@ -42,36 +44,47 @@
   let shouldShakeDate = false;
   let shakeHighlightTimeout;
   let month = today.getMonth();
+  let secMonth = today.getMonth();
   let year = today.getFullYear();
+  let secYear = today.getFullYear();
 
   let isOpen = false;
   let isClosing = false;
 
   today.setHours(0, 0, 0, 0);
 
+  if (start.getMonth() === end.getMonth()
+      && start.getFullYear() === end.getFullYear()) {
+    range = false;
+    width = 340;
+  }
+
   $: months = getMonths(start, end, selectableCallback, weekStart);
 
   let monthIndex = 0;
+  let secMonthIndex = 0;
   $: {
     monthIndex = 0;
+    secMonthIndex = 0;
     for (let i = 0; i < months.length; i += 1) {
       if (months[i].month === month && months[i].year === year) {
         monthIndex = i;
       }
+      if (months[i].month === secMonth && months[i].year === secYear) {
+        secMonthIndex = i;
+      }
     }
   }
   $: visibleMonth = months[monthIndex];
-  // this solution is buggy and therefore temporary until the independant
-  // two months solution is implemented
-  $: visibleNextMonth = months[monthIndex + 1];
+  $: visibleSecMonth = months[secMonthIndex];
 
-  $: visibleMonthId = 1 + year + month / 100;
-  $: visibleNextMonthId = 2 + year + (month + 1) / 100;
-  $: lastVisibleDate = visibleNextMonth.weeks[visibleNextMonth.weeks.length - 1].days[6].date;
+  $: visibleMonthsId = year + month / 100;
+  $: lastVisibleDate = visibleMonth.weeks[visibleMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
-  // temporary
-  $: canIncrementMonth = monthIndex + 1 < months.length - 1;
+  $: canIncrementMonth = monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
+  $: canIncrementSecMonth = secMonthIndex < months.length - 1;
+  $: canDecrementSecMonth = secMonthIndex > 0;
   $: wrapperStyle = `
     --button-background-color: ${buttonBackgroundColor};
     --button-border-color: ${buttonBorderColor};
@@ -103,7 +116,6 @@
     }
   }
 
-
   onMount(() => {
     month = selected.getMonth();
     year = selected.getFullYear();
@@ -114,6 +126,10 @@
     highlighted = new Date(year, month, 1);
   }
 
+  function changeSecMonth(selectedMonth) {
+    secMonth = selectedMonth;
+  }
+
   function incrementMonth(direction, date = 1) {
     if (direction === 1 && !canIncrementMonth) return;
     if (direction === -1 && !canDecrementMonth) return;
@@ -122,6 +138,15 @@
     month = current.getMonth();
     year = current.getFullYear();
     highlighted = new Date(year, month, date);
+  }
+
+  function incrementSecMonth(direction) {
+    if (direction === 1 && !canIncrementSecMonth) return;
+    if (direction === -1 && !canDecrementSecMonth) return;
+    let current = new Date(secYear, secMonth, 1);
+    current.setMonth(current.getMonth() + direction);
+    secMonth = current.getMonth();
+    secYear = current.getFullYear();
   }
 
   function getDay(m, d, y) {
@@ -155,7 +180,11 @@
   }
 
   function checkIfVisibleDateIsSelectable(date) {
-    const proposedDay = getDay(date.getMonth(), date.getDate(), date.getFullYear());
+    const proposedDay = getDay(
+      date.getMonth(),
+      date.getDate(),
+      date.getFullYear()
+    );
     return proposedDay && proposedDay.selectable;
   }
 
@@ -192,6 +221,10 @@
       } else {
         selectedEnd = selected;
         selected = chosen;
+      }
+      if (autoClose) {
+        // eslint-disable-next-line
+        close();
       }
       dateChosenEnd = true;
     }
@@ -238,6 +271,14 @@
     highlighted = new Date(selected);
     month = selected.getMonth();
     year = selected.getFullYear();
+    if (selected.getMonth() === selectedEnd.getMonth()
+    && selected.getFullYear() === selectedEnd.getFullYear()) {
+      secMonth = selected.getMonth() + 1;
+      secYear = selected.getFullYear();
+    } else {
+      secMonth = selectedEnd.getMonth();
+      secYear = selectedEnd.getFullYear();
+    }
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
@@ -246,67 +287,11 @@
     document.removeEventListener('keydown', handleKeyPress);
     dispatch('close');
   }
-
 </script>
-
-<div 
-  class="daterangepicker" 
-  class:open="{isOpen}" 
-  class:closing="{isClosing}"
-  style={wrapperStyle}
->
-  <Popover
-    bind:this="{popover}"
-    bind:open="{isOpen}"
-    bind:shrink="{isClosing}"
-    {trigger}
-    on:opened="{registerOpen}"
-    on:closed="{registerClose}"
-  >
-    <div slot="trigger">
-      <slot>
-        {#if !trigger}
-        <button class="calendar-button" type="button">
-          {formattedCombined}
-        </button>
-        {/if}
-      </slot>
-    </div>
-    <div slot="contents">
-      <div class="calendar">
-        <div class="non-mobile">
-          <NavBar 
-            {month}
-            {year}
-            {start}
-            {end}
-            {canIncrementMonth}
-            {canDecrementMonth}
-            {range}
-            on:monthSelected={e => changeMonth(e.detail)}
-            on:incrementMonth={e => incrementMonth(e.detail)} 
-          />
-        </div>
-        <Months 
-          {visibleMonth} 
-          {visibleNextMonth} 
-          {selected} 
-          {selectedEnd} 
-          {highlighted} 
-          {shouldShakeDate}
-          {range}
-          id={visibleMonthId} 
-          on:dateSelected={e => registerSelection(e.detail)} 
-        />
-      </div>
-    </div>
-  </Popover>
-</div>
 
 <style>
   .daterangepicker {
     display: inline-block;
-    margin: 0 auto;
     text-align: center;
     overflow: visible;
   }
@@ -336,12 +321,12 @@
     position: relative;
     overflow: hidden;
     user-select: none;
-    width: 100vw;
+    width: 340px;
     padding: 10px;
     padding-top: 0;
   }
-
-  @media (min-width: 480px) {
+  
+  @media (min-width: 600px) {
     .calendar {
       height: auto;
       width: 680px;
@@ -349,3 +334,57 @@
     }
   }
 </style>
+
+<div
+  class="daterangepicker"
+  class:open={isOpen}
+  class:closing={isClosing}
+  style={wrapperStyle}>
+  <Popover
+    {trigger}
+    bind:this={popover}
+    bind:open={isOpen}
+    bind:shrink={isClosing}
+    on:opened={registerOpen}
+    on:closed={registerClose}>
+    <div slot="trigger">
+      <slot>
+        {#if !trigger}
+          <button class="calendar-button" type="button">
+            {formattedCombined}
+          </button>
+        {/if}
+      </slot>
+    </div>
+    <div slot="contents">
+      <div class="calendar" style="width: {width}px">
+        <NavBar
+          {month}
+          {secMonth}
+          {year}
+          {secYear}
+          {start}
+          {end}
+          {canIncrementMonth}
+          {canDecrementMonth}
+          {canIncrementSecMonth}
+          {canDecrementSecMonth}
+          {range}
+          on:monthSelected={e => changeMonth(e.detail)}
+          on:monthSelected={e => changeSecMonth(e.detail)}
+          on:incrementMonth={e => incrementMonth(e.detail)}
+          on:incrementSecMonth={e => incrementSecMonth(e.detail)} />
+        <Months
+          {visibleMonth}
+          {visibleSecMonth}
+          {selected}
+          {selectedEnd}
+          {highlighted}
+          {shouldShakeDate}
+          {range}
+          id={visibleMonthsId}
+          on:dateSelected={e => registerSelection(e.detail)} />
+      </div>
+    </div>
+  </Popover>
+</div>

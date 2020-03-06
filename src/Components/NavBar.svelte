@@ -5,19 +5,23 @@
   const dispatch = createEventDispatcher();
 
   export let month;
-  export let year;
+  export let secMonth;
   export let start;
   export let end;
+  export let year;
+  export let secYear;
   export let canIncrementMonth;
   export let canDecrementMonth;
+  export let canIncrementSecMonth;
+  export let canDecrementSecMonth;
   export let range;
 
   let monthSelectorOpen = false;
   let availableMonths;
 
   $: {
-    let isOnLowerBoundary = start.getFullYear() === year;
-    let isOnUpperBoundary = end.getFullYear() === year;
+    let isOnLowerBoundary = start.getFullYear() === (year || secYear);
+    let isOnUpperBoundary = end.getFullYear() === (year || secYear);
     availableMonths = monthsOfYear.map((m, i) => {
       return Object.assign({}, {
         name: m[0],
@@ -41,7 +45,7 @@
     event.stopPropagation();
     if (!monthDefinition.selectable) return false;
     dispatch('monthSelected', index);
-    return toggleMonthSelectorOpen();
+    toggleMonthSelectorOpen();
   }
 </script>
 
@@ -53,17 +57,7 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      <span class="display-month">{monthsOfYear[month][0]} {year}</span>
-      {#if range}
-        <span class="display-month">-</span>
-        <span class="display-month">
-          {#if month === 11}
-            {monthsOfYear[0][0]} {year + 1}
-          {:else}
-            {monthsOfYear[month + 1][0]} {year}
-          {/if}
-        </span>
-      {/if}
+      <span>{monthsOfYear[month][0]} {year}</span>
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -72,40 +66,62 @@
     </div>
   </div>
   <div class="month-selector" class:open={monthSelectorOpen}>
-    <div class="display-months">
       {#each availableMonths as monthDefinition, index}
         <div 
           class="month-selector--month" 
           class:selected={index === month}
           class:selectable={monthDefinition.selectable}
-          on:click={e => monthSelected(e, { monthDefinition, index })}
+          on:click={e => monthSelected(e, index)}
         >
           <span>{monthDefinition.abbrev}</span>
         </div>
       {/each}
+  </div>
+{#if range}
+  <div class="heading-section">
+    <div class="control" 
+      class:enabled={canDecrementSecMonth}
+      on:click={() => dispatch('incrementSecMonth', -1)}>
+      <i class="arrow left"></i>
+    </div>
+    <div class="label" on:click={toggleMonthSelectorOpen}>
+      <span>{monthsOfYear[secMonth][0]} {secYear}</span>
+    </div> 
+    <div class="control"
+      class:enabled={canIncrementSecMonth}
+      on:click={() => dispatch('incrementSecMonth', 1)}>
+      <i class="arrow right"></i>
     </div>
   </div>
+  <div class="month-selector" class:open={monthSelectorOpen}>
+    {#each availableMonths as monthDefinition, index}
+      <div 
+        class="month-selector--month" 
+        class:selected={index === secMonth}
+        class:selectable={monthDefinition.selectable}
+        on:click={e => monthSelected(e, { monthDefinition, index })}
+      >
+        <span>{monthDefinition.abbrev}</span>
+      </div>
+    {/each}
+  </div>
+{/if}
 </div>
 
 <style>
   .heading-section { 
-    font-size: 20px;
+    font-size: 16px;
     padding: 24px 15px;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     color: #3d4548;
     font-weight: bold;
   }
-  .label { 
+  .label,
+  .title { 
     cursor: pointer;
     display: flex;
-    width: 100%;
-  }
-  .display-month {
-    flex: 1;
-  }
-  .display-month:nth-child(2) {
-    max-width: 15%;
   }
   .month-selector { 
     position: absolute;
@@ -126,7 +142,7 @@
     visibility: visible;
     opacity: 1;
   }
-  .month-selector--month{ 
+  .month-selector--month { 
     width: 31.333%; 
     margin: .5%; 
     height: 21.5%;
@@ -146,7 +162,6 @@
     background: var(--highlight-color);
     color: #fff;
   }
-  .display-months,
   .month-selector--month:before { 
     content: ' ';
     display: inline-block;
@@ -157,24 +172,8 @@
     vertical-align: middle; 
     display: inline-block;
   }
-  .display-months {
-    width: 100%;
-  }
-  .display-months:nth-last-child(2) {
-    display: none;
-  }
-  @media (max-width: 480px) {
-    .display-month:nth-child(2),
-    .display-month:nth-child(3),
-    .display-months:nth-child(2) {
-      display: none;
-    }
-    .display-months:nth-last-child(2) {
-      display: initial;
-    }
-  }
   .control { 
-    padding: 0 8px;
+    padding: 0 3px;
     opacity: 0.2;
     transform: translateY(3px);
   }
@@ -186,8 +185,8 @@
 
   .arrow {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
     border-style: solid;
     border-color: #a9a9a9;
     border-width: 0;
@@ -205,4 +204,19 @@
     -webkit-transform: rotate(135deg);
   }
 
+  @media (min-width: 600px) {
+    .arrow {
+      width: 18px;
+      height: 18px;
+    }
+    .control {
+      padding: 0 8px;
+    }
+    .heading-section { 
+      font-size: 20px;
+    }
+    .label {
+      margin-left: 5%;
+    }
+  }
 </style>

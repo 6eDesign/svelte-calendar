@@ -1,6 +1,6 @@
 <script>
   import { areDatesEquivalent, isDateBetweenSelected } from './lib/helpers';
-  import { fly, fade } from 'svelte/transition';
+  import { fly } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
@@ -16,7 +16,6 @@
 <div 
   class="week" 
   in:fly={{ x: direction * 50, duration: 180, delay: 90 }}
-  out:fade={{ duration: 180 }}
 >
   {#each days as day}
     {#if selectedEnd}
@@ -29,9 +28,9 @@
         class:selectedEnd={areDatesEquivalent(day.date, selectedEnd)}
         class:betweenSelected={isDateBetweenSelected(selected, selectedEnd, day.date)}
         class:is-today={
-          day.isToday
-          && selected === selectedEnd
-          && !isDateBetweenSelected(selected, selectedEnd, day.date)
+          day.isToday && 
+          selected === selectedEnd && 
+          !isDateBetweenSelected(selected, selectedEnd, day.date)
         }
         class:is-disabled={!day.selectable}
       >
@@ -79,8 +78,8 @@
     display: flex;
   }
   .week:nth-child(6n + 1) { 
-    -ms-grid-row: 1; 
-    grid-row: 1; 
+    -ms-grid-row: 7; 
+    grid-row: 7; 
   }
   .week:nth-child(6n + 2) { 
     -ms-grid-row: 2; 
@@ -108,6 +107,7 @@
     display: flex; 
     flex-basis: 0;
     justify-content: center;
+    position: relative;
   }
   .day.outside-month, 
   .day.is-disabled { 
@@ -139,18 +139,12 @@
   .day--label.shake-date { 
     animation: shake 0.4s 1 linear;
   }
-  .day.selected,
-  .day.selectedEnd,
-  .day--label:active:not(.disabled) {
-    transform-style: preserve-3d;
-  }
   .day.is-today.selectedEnd:not(.outside-month) .day--label,
   .day.selectedEnd:not(.outside-month) .day--label {
     background-color: var(--button-background-color);
     border: var(--highlight-color) 1px solid;
   }
   .day.selectedEnd:not(.outside-month) .day--label:hover,
-  .day.selected:not(.outside-month) .day--label.highlighted,
   .day.selected:not(.outside-month) .day--label {
     background-color: var(--highlight-color);
     color: var(--button-background-color);
@@ -162,7 +156,7 @@
     background-color: var(--passive-highlight-color);
     position: absolute;
     height: 32px;
-    width: 15%;
+    width: 100%;
   }
   .day.selected:before, 
   .day.selectedEnd:before {
@@ -190,12 +184,9 @@
       border-color: var(--day-highlighted-background-color);
       color: var(--day-highlighted-text-color);
     }
-    .day.betweenSelected:before {
-      width: 45px;
-    }
   }
-  .day.outside-month.selected.selectedEnd.is-today .day--label,
-  .day.outside-month.is-today .day--label,
+  .day.outside-month.selected.selectedEnd.is-today .day--label.highlighted,
+  .day.outside-month.is-today .day--label.highlighted,
   .day.outside-month.betweenSelected:before,
   .day.outside-month.betweenSelected:hover,
   .day.outside-month.betweenSelected,
