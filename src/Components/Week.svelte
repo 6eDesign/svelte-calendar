@@ -1,6 +1,6 @@
 <script>
   import { areDatesEquivalent, isDateBetweenSelected } from './lib/helpers';
-  import { fly, fade } from 'svelte/transition';
+  import { fly } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
