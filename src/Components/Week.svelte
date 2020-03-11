@@ -16,7 +16,6 @@
 <div 
   class="week" 
   in:fly|local={{ x: direction * 50, duration: 180, delay: 90 }}
-  out:fade|local={{ duration: 180 }}
 >
   {#each days as day}
     {#if selectedEnd}
