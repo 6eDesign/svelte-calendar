@@ -4,8 +4,8 @@
   const dispatch = createEventDispatcher();
 
   let once = (el, evt, cb) => {
-    function handler () {
-      cb();
+    function handler (...args) {
+      cb.apply(this, args);
       el.removeEventListener(evt, handler);
     }
     el.addEventListener(evt, handler);
