@@ -268,7 +268,7 @@
     on:closed="{registerClose}"
   >
     <div slot="trigger">
-      <slot {selected}>
+      <slot {selected} {formattedSelected}>
         {#if !trigger}
         <button class="calendar-button" type="button">
           {formattedSelected}
