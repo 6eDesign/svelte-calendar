@@ -212,6 +212,9 @@
     border: none;
     color: var(--day-text-color);
   }
+  .day.betweenSelected:not(.outside-month) .day--label.highlighted {
+    background-color: transparent;
+  }
   .day.betweenSelected:not(.outside-month) .day--label:hover {
     background-color: var(--highlight-color);
   }
