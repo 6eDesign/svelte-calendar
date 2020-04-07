@@ -1,5 +1,5 @@
 <script>
-	import Datepicker from './Components/Datepicker.svelte';
+	import Datepicker from './main.js';
 	import { onMount } from 'svelte';
 
 	const today = new Date();
@@ -154,6 +154,13 @@ var cal = new SvelteCalendar(&#123;
   dayHighlightedTextColor='#fff'
 /&gt;
 	</code></pre>
+
+  <p>You can turn the DatePicker into a RangePicker:</p>
+
+	<div class='text-center'>
+		<Datepicker format={dateFormat} rangePicker={true} />
+	</div>
+
 </div>
 
 <style>

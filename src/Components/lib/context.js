@@ -1,0 +1,3 @@
+const contextKey = {};
+
+export { contextKey };

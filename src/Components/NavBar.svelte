@@ -1,7 +1,9 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, getContext } from 'svelte';
+  import { contextKey } from './lib/context';
   import { monthsOfYear } from './lib/time';
 
+  const { config } = getContext(contextKey);
   const dispatch = createEventDispatcher();
 
   export let month;
@@ -14,7 +16,6 @@
   export let canDecrementMonth;
   export let canIncrementSecMonth;
   export let canDecrementSecMonth;
-  export let range;
 
   let monthSelectorOpen = false;
   let availableMonths;
@@ -77,7 +78,7 @@
         </div>
       {/each}
   </div>
-{#if range}
+{#if config.isRangePicker}
   <div class="heading-section">
     <div class="control" 
       class:enabled={canDecrementSecMonth}

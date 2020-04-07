@@ -1,5 +1,7 @@
 <script>
   import Week from './Week.svelte';
+  import { contextKey } from './lib/context';
+  import { getContext } from 'svelte';
   import { sortedDaysOfWeek } from './lib/time';
 
   export let id;
@@ -9,7 +11,8 @@
   export let selectedEnd;
   export let highlighted;
   export let shouldShakeDate;
-  export let range;
+
+  const { config } = getContext(contextKey);
 
   let lastId = id;
   let direction;
@@ -19,7 +22,6 @@
     lastId = id;
   }
 </script>
-
 
 <div class="month-container">
   <div class="first-month-container">
@@ -42,8 +44,8 @@
       />
     {/each}
   </div>
-  {#if visibleSecMonth && range}
-    <div class="second-month-container">
+  {#if config.isRangePicker}
+  <div class="second-month-container">
     <div class="legend">
       <div class="second-month-week">
         {#each sortedDaysOfWeek as day}

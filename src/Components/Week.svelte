@@ -3,6 +3,11 @@
   import { fly } from 'svelte/transition';
   import { createEventDispatcher } from 'svelte';
 
+  import { contextKey } from './lib/context';
+  import { getContext } from 'svelte';
+
+  const { config } = getContext(contextKey);
+
   const dispatch = createEventDispatcher();
 
   export let days;
@@ -20,7 +25,8 @@
   {#each days as day}
     {#if selectedEnd}
       <div 
-        class="day" 
+        class="day"
+        class:is-range-picker={config.isRangePicker}
         class:outside-month={!day.partOfMonth}
         class:first-of-month={day.firstOfMonth}
         class:last-of-month={day.lastOfMonth}
@@ -49,6 +55,7 @@
       <div 
         class="day" 
         class:outside-month={!day.partOfMonth}
+        class:is-range-picker={config.isRangePicker}
         class:selected={areDatesEquivalent(day.date, selected)}
         class:is-today={day.isToday}
         class:is-disabled={!day.selectable}
@@ -153,10 +160,14 @@
   .day.selected:before, 
   .day.selectedEnd:before {
     content: "";
-    background-color: var(--passive-highlight-color);
     position: absolute;
     height: 32px;
     width: 100%;
+  }
+  .day.is-range-picker.betweenSelected:before, 
+  .day.is-range-picker.selected:before, 
+  .day.is-range-picker.selectedEnd:before {
+    background-color: var(--passive-highlight-color);
   }
   .day.selected:before, 
   .day.selectedEnd:before {
@@ -168,12 +179,12 @@
   .day.selectedEnd:before {
     left: 0;
   }
-  .day.betweenSelected:hover {
+  .day.is-range-picker.betweenSelected:hover {
     background-color: var(--passive-highlight-color);
     border-color: var(--passive-highlight-color);
     color: var(--button-background-color);
   }
-  .day.selected .day--label:hover {
+  .day.is-range-picker.selected .day--label:hover {
     background-color: var(--passive-highlight-color);
     border: var(--highlight-color) 1px solid;
   }
@@ -207,12 +218,12 @@
   .day:not(.outside-month).betweenSelected .day--label {
     color: var(--button-background-color);
   }
-  .day.first-of-month:not(.outside-month).selectedEnd:not(.selected):before,
-  .day.first-of-month:not(.outside-month).betweenSelected {
+  .day.is-range-picker.first-of-month:not(.outside-month).selectedEnd:not(.selected):before,
+  .day.is-range-picker.first-of-month:not(.outside-month).betweenSelected {
     background: linear-gradient(to left, var(--passive-highlight-color) 70%, var(--button-background-color));
   }
-  .day.last-of-month:not(.outside-month).selected:not(.selectedEnd):before,
-  .day.last-of-month:not(.outside-month).betweenSelected {
+  .day.is-range-picker.last-of-month:not(.outside-month).selected:not(.selectedEnd):before,
+  .day.is-range-picker.last-of-month:not(.outside-month).betweenSelected {
     background: linear-gradient(to right, var(--passive-highlight-color) 70%, var(--button-background-color));
   }
   .day.is-today .day--label,
