@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/6eDesign/svelte-calendar/compare/v1.4.0...v1.5.0) (2020-03-12)
+
+
+### Features
+
+* pass formattedSelected to slot ([3149c93](https://github.com/6eDesign/svelte-calendar/commit/3149c93))
+
+
+
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/6eDesign/svelte-calendar/compare/v1.3.5...v1.4.0) (2020-03-12)
+
+
+### Features
+
+* pass selected to slot ([3a5bd43](https://github.com/6eDesign/svelte-calendar/commit/3a5bd43))
+
+
+
 <a name="1.3.5"></a>
 ## [1.3.5](https://github.com/6eDesign/svelte-calendar/compare/v1.3.4...v1.3.5) (2020-02-14)
 

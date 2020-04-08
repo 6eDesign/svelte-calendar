@@ -6,6 +6,7 @@
     "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Month.svelte",
     "..\\src\\Components\\Popover.svelte",
+    "..\\src\\Components\\NavBar.svelte",
     "..\\src\\Components\\Week.svelte"
   ],
   "sourcesContent": [
