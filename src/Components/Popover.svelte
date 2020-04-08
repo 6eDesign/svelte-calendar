@@ -37,7 +37,7 @@
     // eslint-disable-next-line
     do {
       if (el === popover) return;
-    // eslint-disable-next-line
+      // eslint-disable-next-line
     } while (el = el.parentNode);
     close();
   }
@@ -91,8 +91,8 @@
   const doOpen = async () => {
     const { x, y } = await getTranslate();
 
-    translateX = x;
     translateY = y;
+    translateX = x;
     open = true;
 
     dispatch('opened');

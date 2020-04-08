@@ -1,22 +1,28 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, getContext } from 'svelte';
+  import { contextKey } from './lib/context';
+  import { monthsOfYear } from './lib/time';
 
+  const { config } = getContext(contextKey);
   const dispatch = createEventDispatcher();
 
   export let month;
-  export let year;
+  export let secMonth;
   export let start;
   export let end;
+  export let year;
+  export let secYear;
   export let canIncrementMonth;
   export let canDecrementMonth;
-  export let monthsOfYear;
+  export let canIncrementSecMonth;
+  export let canDecrementSecMonth;
 
   let monthSelectorOpen = false;
   let availableMonths;
 
   $: {
-    let isOnLowerBoundary = start.getFullYear() === year;
-    let isOnUpperBoundary = end.getFullYear() === year;
+    let isOnLowerBoundary = start.getFullYear() === (year || secYear);
+    let isOnUpperBoundary = end.getFullYear() === (year || secYear);
     availableMonths = monthsOfYear.map((m, i) => {
       return Object.assign({}, {
         name: m[0],
@@ -36,10 +42,10 @@
     monthSelectorOpen = !monthSelectorOpen;
   }
 
-  function monthSelected(event, { m, i }) {
+  function monthSelected(event, { monthDefinition, index }) {
     event.stopPropagation();
-    if (!m.selectable) return;
-    dispatch('monthSelected', i);
+    if (!monthDefinition.selectable) return;
+    dispatch('monthSelected', index);
     toggleMonthSelectorOpen();
   }
 </script>
@@ -52,7 +58,7 @@
       <i class="arrow left"></i>
     </div>
     <div class="label" on:click={toggleMonthSelectorOpen}>
-      {monthsOfYear[month][0]} {year}
+      <span>{monthsOfYear[month][0]} {year}</span>
     </div> 
     <div class="control"
       class:enabled={canIncrementMonth}
@@ -61,30 +67,62 @@
     </div>
   </div>
   <div class="month-selector" class:open={monthSelectorOpen}>
+      {#each availableMonths as monthDefinition, index}
+        <div 
+          class="month-selector--month" 
+          class:selected={index === month}
+          class:selectable={monthDefinition.selectable}
+          on:click={e => monthSelected(e, index)}
+        >
+          <span>{monthDefinition.abbrev}</span>
+        </div>
+      {/each}
+  </div>
+{#if config.isRangePicker}
+  <div class="heading-section">
+    <div class="control" 
+      class:enabled={canDecrementSecMonth}
+      on:click={() => dispatch('incrementSecMonth', -1)}>
+      <i class="arrow left"></i>
+    </div>
+    <div class="label" on:click={toggleMonthSelectorOpen}>
+      <span>{monthsOfYear[secMonth][0]} {secYear}</span>
+    </div> 
+    <div class="control"
+      class:enabled={canIncrementSecMonth}
+      on:click={() => dispatch('incrementSecMonth', 1)}>
+      <i class="arrow right"></i>
+    </div>
+  </div>
+  <div class="month-selector" class:open={monthSelectorOpen}>
     {#each availableMonths as monthDefinition, index}
       <div 
         class="month-selector--month" 
-        class:selected={index === month}
+        class:selected={index === secMonth}
         class:selectable={monthDefinition.selectable}
-        on:click={e => monthSelected(e, { m: monthDefinition, i: index })}
+        on:click={e => monthSelected(e, { monthDefinition, index })}
       >
         <span>{monthDefinition.abbrev}</span>
       </div>
     {/each}
   </div>
+{/if}
 </div>
 
 <style>
   .heading-section { 
-    font-size: 20px;
+    font-size: 16px;
     padding: 24px 15px;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     color: #3d4548;
     font-weight: bold;
   }
-  .label { 
+  .label,
+  .title { 
     cursor: pointer;
+    display: flex;
   }
   .month-selector { 
     position: absolute;
@@ -97,7 +135,7 @@
     transform: scale(1.2); 
     opacity: 0; 
     visibility: hidden;
-    z-index: 1;
+    z-index: 2;
     text-align: center;
   }
   .month-selector.open { 
@@ -108,7 +146,7 @@
   .month-selector--month { 
     width: 31.333%; 
     margin: .5%; 
-    height: 23%;
+    height: 21.5%;
     display: inline-block;
     color: #4a4a4a;
     border: 1px solid #efefef;
@@ -135,9 +173,8 @@
     vertical-align: middle; 
     display: inline-block;
   }
-
   .control { 
-    padding: 0 8px;
+    padding: 0 3px;
     opacity: 0.2;
     transform: translateY(3px);
   }
@@ -149,8 +186,8 @@
 
   .arrow {
     display: inline-block;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
     border-style: solid;
     border-color: #a9a9a9;
     border-width: 0;
@@ -168,4 +205,19 @@
     -webkit-transform: rotate(135deg);
   }
 
+  @media (min-width: 600px) {
+    .arrow {
+      width: 18px;
+      height: 18px;
+    }
+    .control {
+      padding: 0 8px;
+    }
+    .heading-section { 
+      font-size: 20px;
+    }
+    .label {
+      margin-left: 5%;
+    }
+  }
 </style>
