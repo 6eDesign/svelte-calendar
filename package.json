@@ -1,7 +1,7 @@
 {
   "name": "@beyonk/svelte-calendar",
   "svelte": "src/Components/Datepicker.svelte",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "devDependencies": {
     "es6-object-assign": "^1.1.0",
