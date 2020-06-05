@@ -279,7 +279,7 @@
     }
 
     firstDate = !firstDate;
-    return true
+    return true;
   }
 
   function registerOpen() {
