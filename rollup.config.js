@@ -7,6 +7,11 @@ import buble from "rollup-plugin-buble";
 
 const production = !process.env.ROLLUP_WATCH;
 
+const bubleConfig = buble({ 
+  objectAssign: true, 
+  transforms: { asyncAwait: false, dangerousForOf: true }
+})
+
 const bundle = {
   input: "src/main.js",
   output: {
@@ -33,10 +38,7 @@ const bundle = {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve(),
     commonjs(),
-    buble({ 
-      objectAssign: true, 
-      transforms: { asyncAwait: false }
-    }),
+    bubleConfig,
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
@@ -70,7 +72,7 @@ const test = {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve(),
     commonjs(),
-    buble({ objectAssign: true, transforms: { asyncAwait: false } }),
+    bubleConfig,
 
     !production && browsersync({ server: "docs" }),
 
