@@ -31,7 +31,11 @@
     config
   });
 
-  // theming variables:
+  selected = (
+    selected.getTime() < start.getTime()
+    || selected.getTime() > end.getTime()
+  ) ? start : selected;
+
   export let style = '';
   export let buttonBackgroundColor = '#fff';
   export let buttonBorderColor = '#eee';
