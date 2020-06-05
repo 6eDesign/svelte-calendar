@@ -248,7 +248,7 @@
       selected = chosen;
       assignValueToTrigger(formattedSelected);
       close();
-      return dispatch('dateSelected', { date: chosen });
+      return dispatch('dateSelected', { date: selected });
     }
 
     if (firstDate) {
@@ -271,10 +271,14 @@
     }
   
     dateChosenStart = true;
-    firstDate = !firstDate;
     assignValueToTrigger(formattedSelected);
     assignValueToTrigger(formattedSelectedEnd);
-    return dispatch('dateSelected', { date: chosen });
+    
+    if (!firstDate) {
+      dispatch('dateSelected', { from: selected, to: selectedEnd });
+    }
+
+    firstDate = !firstDate;
   }
 
   function registerOpen() {

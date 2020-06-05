@@ -34,9 +34,12 @@
 	  inThirtyDays = date;
 	}
 
-	function logChoice(date) {
+	function logChoice(date1, date2) {
 	  // eslint-disable-next-line
-	  console.log(`User chose ${date}.`);
+		console.log(`Selected date ${date1}.`);
+		if (date2) {
+			console.log(`Selected end date ${date2}.`);
+		}
 	}
 
 	onMount(() => {
@@ -129,10 +132,16 @@ var cal = new SvelteCalendar(&#123;
 		<Datepicker format={dateFormat} on:dateSelected={e => logChoice(e.detail.date)} />
 	</div>
 
+	<p>If it's a range picker, it has from and to:</p>
+	
+	<div class='text-center'>
+		<Datepicker rangePicker={true} format={dateFormat} on:dateSelected={e => logChoice(e.detail.from, e.detail.to)} />
+	</div>
+
 	<p>You can theme the datepicker:</p>
 	<div>
 		<Datepicker 
-			format={dateFormat} 
+			format={dateFormat}
 			buttonBackgroundColor='#e20074'
 			buttonTextColor='white'
 			highlightColor='#e20074'
