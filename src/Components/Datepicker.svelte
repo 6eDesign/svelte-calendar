@@ -269,12 +269,13 @@
     dateChosenStart = true;
     assignValueToTrigger(formattedSelected);
     assignValueToTrigger(formattedSelectedEnd);
-    
+  
     if (!firstDate) {
       dispatch('dateSelected', { from: selected, to: selectedEnd });
     }
 
     firstDate = !firstDate;
+    return true;
   }
 
   function registerOpen() {
