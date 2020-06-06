@@ -17,7 +17,7 @@
   export let end = new Date(2020, 9, 29);
   export let selected = today;
   export let selectedEnd = rangePicker ? today : null;
-  export let dateChosenStart = false;
+  export let dateChosen = false;
   export let dateChosenEnd = false;
   export let trigger = null;
   export let selectableCallback = null;
@@ -248,10 +248,10 @@
     }
 
     if (firstDate) {
-      if (dateChosenStart) {
+      if (dateChosen) {
         selectedEnd = chosen;
       }
-      if (chosen <= selectedEnd || !dateChosenStart) {
+      if (chosen <= selectedEnd || !dateChosen) {
         selected = chosen;
         selectedEnd = selected;
       }
@@ -266,7 +266,7 @@
       dateChosenEnd = true;
     }
   
-    dateChosenStart = true;
+    dateChosen = true;
     assignValueToTrigger(formattedSelected);
     assignValueToTrigger(formattedSelectedEnd);
   
