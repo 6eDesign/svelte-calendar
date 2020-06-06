@@ -246,6 +246,7 @@
 
     if (!config.isRangePicker) {
       selected = chosen;
+      dateChosen = true;
       assignValueToTrigger(formattedSelected);
       close();
       return dispatch('dateSelected', { date: selected });
@@ -259,6 +260,7 @@
         selected = chosen;
         selectedEnd = selected;
       }
+      dateChosen = true;
     } else {
       if (chosen >= selected) {
         selectedEnd = chosen;
@@ -270,7 +272,6 @@
       dateChosenEnd = true;
     }
   
-    dateChosen = true;
     assignValueToTrigger(formattedSelected);
     assignValueToTrigger(formattedSelectedEnd);
   
