@@ -45,7 +45,7 @@
 
   let popover;
   let firstDate = true;
-  let width = rangePicker ? null : 340;
+  let width = rangePicker ? null : 320;
 
   let highlighted = today;
   let shouldShakeDate = false;
