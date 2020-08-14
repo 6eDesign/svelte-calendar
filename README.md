@@ -4,7 +4,15 @@ A small date picker built with Svelte 3. Demo available here: [demo page].
 
 ## Basic usage
 
-```html
+```sh
+npm install --save-dev svelte-calendar
+```
+
+```jsx
+<script>
+  import Datepicker from 'svelte-calendar'
+</script>
+
 <Datepicker start={minDate} end={maxDate} />
 ```
 
