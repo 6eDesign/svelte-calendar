@@ -2,6 +2,12 @@
 
 A small date picker built with Svelte 3. Demo available here: [demo page].
 
+## Install
+```
+# It's important to install as dev dependency.
+npm i -D svelte-calendar
+```
+
 ## Basic usage
 
 ```html
