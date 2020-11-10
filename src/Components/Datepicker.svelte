@@ -14,7 +14,7 @@
   export let rangePicker = false;
   export let format = '#{m} / #{d} / #{Y}';
   export let start = new Date(1987, 9, 29);
-  export let end = new Date(2020, 9, 29);
+  export let end = new Date(start.getFullYear() + 1, start.getMonth(), start.getDate());
   export let selected = today;
   export let selectedEnd = rangePicker ? today : null;
   export let dateChosen = false;
