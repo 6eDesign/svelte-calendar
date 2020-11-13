@@ -44,6 +44,11 @@
     ['December', 'Dec']
   ];
 
+  selected = (
+    selected.getTime() < start.getTime()
+    || selected.getTime() > end.getTime()
+  ) ? start : selected;
+
   export let style = '';
   
   // theming variables:
