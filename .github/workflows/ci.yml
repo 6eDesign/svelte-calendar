@@ -1,6 +1,8 @@
 name: CI
 on:
-  push
+  push:
+    branches-ignore:
+      - master
 jobs:
   release:
     name: Lint
