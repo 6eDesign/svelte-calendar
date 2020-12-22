@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/6eDesign/svelte-calendar/compare/v2.0.1...v2.0.2) (2020-12-22)
+
+
+### Bug Fixes
+
+* update gh-pages title ([a736fe0](https://github.com/6eDesign/svelte-calendar/commit/a736fe0d7c91533d225dd2a81bc0365e7c2b5fed))
+
 ## [2.0.1](https://github.com/6eDesign/svelte-calendar/compare/v2.0.0...v2.0.1) (2020-12-22)
 
 
