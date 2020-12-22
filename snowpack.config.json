@@ -1,6 +1,17 @@
 {
   "extends": "@snowpack/app-scripts-svelte",
   "plugins": [
-    "@snowpack/plugin-webpack"
+    "@snowpack/plugin-webpack",
+    [
+      "snowpack-plugin-baseurl-handler",
+      {
+        "exts": [
+          ".html",
+          ".js",
+          ".css"
+        ],
+        "baseUrl": "/svelte-calendar"
+      }
+    ]
   ]
 }
