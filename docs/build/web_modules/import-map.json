@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "highlight.js": "./highlightjs.js",
+    "svelte": "./svelte.js",
+    "svelte/internal": "./svelte/internal.js",
+    "svelte/transition": "./svelte/transition.js",
+    "timeUtils": "./timeUtils.js"
+  }
+}
