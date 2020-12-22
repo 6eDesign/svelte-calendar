@@ -3,41 +3,42 @@
   "svelte": "src/Components/Datepicker.svelte",
   "version": "1.5.0",
   "license": "MIT",
-  "devDependencies": {
-    "es6-object-assign": "^1.1.0",
-    "eslint": "^6.0.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.2",
-    "eslint-plugin-svelte3": "^2.7.3",
-    "npm-run-all": "^4.1.3",
-    "rollup": "^1.16.2",
-    "rollup-plugin-browsersync": "^1.0.0",
-    "rollup-plugin-buble": "^0.19.6",
-    "rollup-plugin-commonjs": "^10.0.1",
-    "rollup-plugin-node-resolve": "^5.1.0",
-    "rollup-plugin-svelte": "^5.1.0",
-    "rollup-plugin-terser": "^5.0.0",
-    "sirv-cli": "^0.2.2",
-    "standard-version": "^4.4.0",
-    "svelte": "^3.6.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/6eDesign/svelte-calendar.git"
+  "keywords": [
+    "svelte",
+    "calendar",
+    "datepicker",
+    "svelte-datepicker",
+    "svelte-calendar"
+  ],
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "autobuild": "rollup -c -w",
-    "build": "rollup -c",
-    "dev": "run-p start:dev autobuild",
-    "lint": "eslint src/**/*.svelte src/**/*.js",
-    "release": "npm test && npm run build && standard-version && git push --follow-tags origin master",
-    "start": "sirv public",
-    "start:dev": "sirv public --dev",
-    "test": "npm run lint"
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "pretest": "eslint src/**/*.svelte src/**/*.js",
+    "test": "jest"
   },
   "dependencies": {
-    "timeUtils": "2.0.0"
+    "timeUtils": "^2.0.0"
+  },
+  "devDependencies": {
+    "@snowpack/app-scripts-svelte": "^1.9.1",
+    "@snowpack/plugin-webpack": "^2.0.17",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/svelte": "^3.0.0",
+    "es6-object-assign": "^1.1.0",
+    "eslint": "^7.16.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-svelte3": "^3.0.0",
+    "highlight.js": "^10.4.1",
+    "jest": "^26.6.3",
+    "snowpack": "^2.15.1",
+    "svelte": "^3.29.4",
+    "svelte-check": "^1.1.2"
   }
 }

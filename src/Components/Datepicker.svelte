@@ -9,12 +9,13 @@
 
   const dispatch = createEventDispatcher();
   const today = new Date();
+  const oneYear = 1000 * 60 * 60 * 24 * 365;
 
   let popover;
 
   export let format = '#{m}/#{d}/#{Y}';
-  export let start = new Date(1987, 9, 29);
-  export let end = new Date(2020, 9, 29);
+  export let start = new Date(Date.now() - oneYear);
+  export let end = new Date(Date.now() + oneYear);
   export let selected = today;
   export let dateChosen = false;
   export let trigger = null;
@@ -50,7 +51,7 @@
   ) ? start : selected;
 
   export let style = '';
-  
+
   // theming variables:
   export let buttonBackgroundColor = '#fff';
   export let buttonBorderColor = '#eee';
@@ -255,12 +256,11 @@
     document.addEventListener('keydown', handleKeyPress);
     dispatch('open');
   }
-
 </script>
 
-<div 
-  class="datepicker" 
-  class:open="{isOpen}" 
+<div
+  class="datepicker"
+  class:open="{isOpen}"
   class:closing="{isClosing}"
   style={wrapperStyle}
 >
@@ -283,7 +283,7 @@
     </div>
     <div slot="contents">
       <div class="calendar">
-        <NavBar 
+        <NavBar
           {month}
           {year}
           {canIncrementMonth}
@@ -292,20 +292,20 @@
           {end}
           {monthsOfYear}
           on:monthSelected={e => changeMonth(e.detail)}
-          on:incrementMonth={e => incrementMonth(e.detail)} 
+          on:incrementMonth={e => incrementMonth(e.detail)}
         />
         <div class="legend">
           {#each sortedDaysOfWeek as day}
           <span>{day[1]}</span>
           {/each}
         </div>
-        <Month 
+        <Month
           {visibleMonth}
           {selected}
           {highlighted}
           {shouldShakeDate}
           id={visibleMonthId}
-          on:dateSelected={e => registerSelection(e.detail)} 
+          on:dateSelected={e => registerSelection(e.detail)}
         />
       </div>
     </div>

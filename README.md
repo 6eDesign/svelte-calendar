@@ -2,9 +2,19 @@
 
 A small date picker built with Svelte 3. Demo available here: [demo page].
 
+## Installation
+
+```sh
+npm i -D svelte-calendar
+```
+
 ## Basic usage
 
 ```html
+<script>
+  import Datepicker from 'svelte-calendar';
+</script>
+
 <Datepicker start={minDate} end={maxDate} />
 ```
 
@@ -12,8 +22,8 @@ A small date picker built with Svelte 3. Demo available here: [demo page].
 
 prop name            | type                   | default
 ---------------------|------------------------|-------------------------
-`start`              | `date`                 | `new Date(1987, 9, 29)`
-`end`                | `date`                 | `new Date(2020, 9, 29)`
+`start`              | `date`                 | one year in past
+`end`                | `date`                 | one year in future
 `selected`           | `date`                 | `today`
 `formattedSelected`  | `string`               | `today`
 `dateChosen`         | `boolean`              | `false`
@@ -24,7 +34,7 @@ prop name            | type                   | default
 `style`              | `string`               | ""
 
 ### `start` and `end`
-These properties set the minimum and maximum dates that will be rendered by this calendar.  It is **highly** recommended that you do not leave these as their defaults and supply values which suit your application's needs.
+These properties set the minimum and maximum dates that will be rendered by this calendar.  It is recommended that you do not leave these as their defaults and supply values which suit your application's needs.
 
 ### `selected` and `formattedSelected`
 Bind to these properties to observe the selected date as either a date or a string.  Use `selected` to set the day which is selected by default.
@@ -36,10 +46,10 @@ Bind to this property to observe whether a user has selected a day.
 Provide a function which accepts a date and returns a boolean determining whether a day between `start` and `end` is selectable.  For example, use this to prevent weekend days from being selected.
 
 ### `format`
-Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).  If you would like to use a different formatting library, supply a function which accepts a date and returns a string. 
+Date formatting uses [`timeUtils`] formatting (MM/DD/YYYY by default).  If you would like to use a different formatting library, supply a function which accepts a date and returns a string.
 
 ### `daysOfWeek` and `monthsOfYear`
-These two props are used to internationalize the calendar.  The default values are: 
+These two props are used to internationalize the calendar.  The default values are:
 
 ```javascript
 export let daysOfWeek = [
@@ -51,6 +61,7 @@ export let daysOfWeek = [
   ['Friday', 'Fri'],
   ['Saturday', 'Sat']
 ];
+
 export let monthsOfYear = [
   ['January', 'Jan'],
   ['February', 'Feb'],
