@@ -1,3 +1,32 @@
+# [2.0.0](https://github.com/6eDesign/svelte-calendar/compare/v1.5.0...v2.0.0) (2020-12-22)
+
+
+### Bug Fixes
+
+* add [@semantic-release](https://github.com/semantic-release) plugins ([f93d866](https://github.com/6eDesign/svelte-calendar/commit/f93d866e5d56c891c9ea7ba6a5bee7fdbfc7a3a7))
+
+
+* breaking change: add snowpack build process, github actions, and fix for default start/end dates (#103) ([40346a4](https://github.com/6eDesign/svelte-calendar/commit/40346a4b9e7e308d13a36cd7a205bcadabc1fc35)), closes [#103](https://github.com/6eDesign/svelte-calendar/issues/103)
+
+
+### BREAKING CHANGES
+
+* update default start/end dates & new build process
+
+* feat: CI workflow
+
+* fix: CI workflow update
+
+* fix: remove package-lock from gitignore
+
+* fix: remove .travis.yml
+
+* fix: add github pages to release.yml workflow
+
+* fix: update readme
+
+Co-authored-by: Jonathan Greenemeier <jonathan.greenemeier31@t-mobile.com>
+
 # Change Log
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
