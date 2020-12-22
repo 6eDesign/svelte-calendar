@@ -1,0 +1,8 @@
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "svelteSortOrder": "scripts-markup-styles",
+  "svelteBracketNewLine": true
+}

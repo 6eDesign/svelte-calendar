@@ -1,4 +1,5 @@
 <script>
+	import hljs from 'highlight.js';
 	import Datepicker from './Components/Datepicker.svelte';
 	import { onMount } from 'svelte';
 
@@ -10,9 +11,9 @@
 	let dateChosen = false;
 	let exampleFormatted = false;
 	let exampleChosen = false;
-	
+
 	$: end = new Date(start.getTime() + 1000 * 3600 * 24 * 720);
-	
+
 	let threeDaysInPast;
 	$: {
 	  const date = new Date(today);
@@ -40,12 +41,11 @@
 	}
 
 	onMount(() => {
-	  // eslint-disable-next-line
 	  hljs.initHighlightingOnLoad();
 	});
 </script>
 
-<h1>SvelteCalendar</h1>
+<h1>svelte-calendar</h1>
 <div class='container'>
 	<p>A lightweight date picker written with Svelte. Here is an example: </p>
 
@@ -92,9 +92,9 @@
 	<h4>Without Svelte JS:</h4>
 	<pre><code class='js'>
 var trigger = document.getElementById('test');
-var cal = new SvelteCalendar(&#123; 
+var cal = new SvelteCalendar(&#123;
   target: document.querySelector('.button-container'),
-  anchor: trigger, 
+  anchor: trigger,
   props: &#123;
     trigger: trigger
   }
@@ -124,15 +124,15 @@ var cal = new SvelteCalendar(&#123;
 	</div>
 
 	<p>You can bind to the `dateSelected` event, which has a data property `date`:</p>
-	
+
 	<div class='text-center'>
 		<Datepicker format={dateFormat} on:dateSelected={e => logChoice(e.detail.date)} />
 	</div>
 
 	<p>You can theme the datepicker:</p>
 	<div>
-		<Datepicker 
-			format={dateFormat} 
+		<Datepicker
+			format={dateFormat}
 			buttonBackgroundColor='#e20074'
 			buttonTextColor='white'
 			highlightColor='#e20074'
@@ -143,8 +143,8 @@ var cal = new SvelteCalendar(&#123;
 		/>
 	</div>
 	<pre><code class="html">
-&lt;Datepicker 
-  format={dateFormat} 
+&lt;Datepicker
+  format={dateFormat}
   buttonBackgroundColor='#e20074'
   buttonTextColor='white'
   highlightColor='#e20074'
@@ -157,14 +157,14 @@ var cal = new SvelteCalendar(&#123;
 </div>
 
 <style>
-	h1 { 
+	h1 {
 		text-align: center;
 		margin: 100px 0;
 	}
 	.container {
 	  background: #eee;
 		padding: 15px;
-		max-width: 100%; 
+		max-width: 100%;
 		width: 800px;
 		margin: 0 auto;
 	}
