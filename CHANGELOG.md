@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/6eDesign/svelte-calendar/compare/v2.0.3...v2.0.4) (2020-12-22)
+
+
+### Bug Fixes
+
+* gh-pages & snowpack issues ([2e79a69](https://github.com/6eDesign/svelte-calendar/commit/2e79a69a9d308e35fcec2f17c691fa8a81eaccbd))
+
 ## [2.0.3](https://github.com/6eDesign/svelte-calendar/compare/v2.0.2...v2.0.3) (2020-12-22)
 
 
