@@ -1,14 +1,11 @@
 <script>
-  import { setContext } from 'svelte';
-  import * as stores from './stores/index';
-  import * as constants from './config/constants';
   import Month from './Month.svelte';
   import NavBar from './NavBar.svelte';
   import Popover from './Popover.svelte';
   import { getMonths } from './lib/helpers';
   import { formatDate, internationalize } from 'timeUtils';
   import { keyCodes, keyCodesArray } from './lib/keyCodes';
-  import { createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
   const today = new Date();
@@ -16,43 +13,70 @@
 
   let popover;
 
-  export let format = constants.DEFAULT_FORMAT;
-  export let formatter = formatDate;
+  export let format = '#{m}/#{d}/#{Y}';
   export let start = new Date(Date.now() - oneYear);
   export let end = new Date(Date.now() + oneYear);
-  export let selected = today.getTime() < start.getTime() || today.getTime() > end.getTime()
-    ? start
-    : today;
-  export let highlighted = today;
+  export let selected = today;
   export let dateChosen = false;
   export let trigger = null;
   export let selectableCallback = null;
   export let weekStart = 0;
-  export let daysOfWeek = constants.DAYS_OF_WEEK;
-  export let monthsOfYear = constants.MONTHS_OF_YEAR;
+  export let daysOfWeek = [
+    ['Sunday', 'Sun'],
+    ['Monday', 'Mon'],
+    ['Tuesday', 'Tue'],
+    ['Wednesday', 'Wed'],
+    ['Thursday', 'Thu'],
+    ['Friday', 'Fri'],
+    ['Saturday', 'Sat']
+  ];
+  export let monthsOfYear = [
+    ['January', 'Jan'],
+    ['February', 'Feb'],
+    ['March', 'Mar'],
+    ['April', 'Apr'],
+    ['May', 'May'],
+    ['June', 'Jun'],
+    ['July', 'Jul'],
+    ['August', 'Aug'],
+    ['September', 'Sep'],
+    ['October', 'Oct'],
+    ['November', 'Nov'],
+    ['December', 'Dec']
+  ];
+
+  selected = (
+    selected.getTime() < start.getTime()
+    || selected.getTime() > end.getTime()
+  ) ? start : selected;
+
   export let style = '';
-  export let month;
-  export let year;
-  export let theme = {
-    buttonBackgroundColor: '#fff',
-    buttonBorderColor: '#eee',
-    buttonTextColor: '#333',
-    highlightColor: '#f7901e',
-    dayBackgroundColor: 'none',
-    dayTextColor: '#4a4a4a',
-    dayHighlightedBackgroundColor: '#efefef',
-    dayHighlightedTextColor: '#4a4a4a'
-  };
 
-  setContext('svelte-calendar', {
-    store: stores.createDatepickerStore()
-  });
+  // theming variables:
+  export let --button-background-color = '#fff';
+  export let buttonBorderColor = '#eee';
+  export let buttonTextColor = '#333';
+  export let highlightColor = '#f7901e';
+  export let dayBackgroundColor = 'none';
+  export let dayTextColor = '#4a4a4a';
+  export let dayHighlightedBackgroundColor = '#efefef';
+  export let dayHighlightedTextColor = '#4a4a4a';
 
+  internationalize({ daysOfWeek, monthsOfYear });
+  let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
+    let dow = daysOfWeek.slice();
+    dow.push(dow.shift());
+    return dow;
+  })();
+
+  let highlighted = today;
   let shouldShakeDate = false;
   let shakeHighlightTimeout;
+  let month = today.getMonth();
+  let year = today.getFullYear();
+
   let isOpen = false;
   let isClosing = false;
-  let monthIndex = 0;
 
   today.setHours(0, 0, 0, 0);
 
@@ -61,29 +85,47 @@
     trigger.innerHTML = formatted;
   }
 
-  $: internationalize({ daysOfWeek, monthsOfYear });
-  $: sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
-    let dow = daysOfWeek.slice();
-    dow.push(dow.shift());
-    return dow;
-  })();
-  $: month = selected.getMonth();
-  $: year = selected.getFullYear();
   $: months = getMonths(start, end, selectableCallback, weekStart);
-  $: monthIndex = months.findIndex(m => m.month === month && m.year === year) || 0;
+
+  let monthIndex = 0;
+  $: {
+    monthIndex = 0;
+    for (let i = 0; i < months.length; i += 1) {
+      if (months[i].month === month && months[i].year === year) {
+        monthIndex = i;
+      }
+    }
+  }
   $: visibleMonth = months[monthIndex];
+
   $: visibleMonthId = year + month / 100;
   $: lastVisibleDate = visibleMonth.weeks[visibleMonth.weeks.length - 1].days[6].date;
   $: firstVisibleDate = visibleMonth.weeks[0].days[0].date;
   $: canIncrementMonth = monthIndex < months.length - 1;
   $: canDecrementMonth = monthIndex > 0;
-  $: wrapperStyle = [
-    ...Object.entries(theme).map(
-      ([k, v]) => `--${k.replace(/[A-Z]/g, l => `-${l.toLowerCase()}`)}: ${v}`
-    ),
-    style
-  ].join(';\n');
-  $: formattedSelected = formatter(selected, format);
+  $: wrapperStyle = `
+    --button-background-color: ${--button-background-color};
+    --button-border-color: ${buttonBorderColor};
+    --button-text-color: ${buttonTextColor};
+    --highlight-color: ${highlightColor};
+    --day-background-color: ${dayBackgroundColor};
+    --day-text-color: ${dayTextColor};
+    --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
+    --day-highlighted-text-color: ${dayHighlightedTextColor};
+    ${style}
+  `;
+
+  export let formattedSelected;
+  $: {
+    formattedSelected = typeof format === 'function'
+      ? format(selected)
+      : formatDate(selected, format);
+  }
+
+  onMount(() => {
+    month = selected.getMonth();
+    year = selected.getFullYear();
+  });
 
   function changeMonth(selectedMonth) {
     month = selectedMonth;

@@ -4,6 +4,16 @@
 	import { onMount } from 'svelte';
 
 	const today = new Date();
+	const themeExample = {
+	  buttonBackgroundColor: '#e20074',
+	  buttonTextColor: 'white',
+	  highlightColor: '#e20074',
+	  dayBackgroundColor: '#efefef',
+	  dayTextColor: '#333',
+	  dayHighlightedBackgroundColor: '#e20074',
+	  dayHighlightedTextColor: '#fff'
+	};
+
 	let start = new Date();
 	let dateFormat = '#{l}, #{F} #{j}, #{Y}';
 	let noWeekendsSelectableCallback = (date) => date.getDay() !== 0 && date.getDay() !== 6;
@@ -133,27 +143,26 @@ var cal = new SvelteCalendar(&#123;
 	<div>
 		<Datepicker
 			format={dateFormat}
-			buttonBackgroundColor='#e20074'
-			buttonTextColor='white'
-			highlightColor='#e20074'
-			dayBackgroundColor='#efefef'
-			dayTextColor='#333'
-			dayHighlightedBackgroundColor='#e20074'
-			dayHighlightedTextColor='#fff'
+			theme={themeExample}
 		/>
 	</div>
-	<pre><code class="html">
-&lt;Datepicker
-  format={dateFormat}
-  buttonBackgroundColor='#e20074'
-  buttonTextColor='white'
-  highlightColor='#e20074'
-  dayBackgroundColor='#efefef'
-  dayTextColor='#333'
-  dayHighlightedBackgroundColor='#e20074'
-  dayHighlightedTextColor='#fff'
-/&gt;
-	</code></pre>
+	<pre>
+		<code class="html">
+&lt;script&gt;
+  const theme = &#123;
+    buttonBackgroundColor: '#e20074',
+    buttonTextColor: 'white',
+    highlightColor: '#e20074',
+    dayBackgroundColor: '#efefef',
+    dayTextColor: '#333',
+    dayHighlightedBackgroundColor: '#e20074',
+    dayHighlightedTextColor: '#fff'
+  &#125;
+&lt;/script&gt;
+
+&lt;Datepicker &#123;theme&#125; /&gt;
+		</code>
+	</pre>
 </div>
 
 <style>
