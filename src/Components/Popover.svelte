@@ -1,5 +1,5 @@
 <script>
-  import { onMount, createEventDispatcher, tick } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher, tick } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -51,6 +51,10 @@
     return () => {
       document.removeEventListener('click', checkForFocusLoss);
     };
+  });
+
+  onDestroy(() => {
+    document.removeEventListener("click", checkForFocusLoss);
   });
 
   const getDistanceToEdges = async () => {
