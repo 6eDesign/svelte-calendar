@@ -199,6 +199,7 @@
     if (!checkIfVisibleDateIsSelectable(chosen)) return shakeDate(chosen);
     // eslint-disable-next-line
     close();
+    chosen.setHours(selected.getHours(), selected.getMinutes(), 0, 0);
     selected = chosen;
     dateChosen = true;
     assignValueToTrigger(formattedSelected);
