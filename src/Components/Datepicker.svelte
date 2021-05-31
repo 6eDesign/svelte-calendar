@@ -59,8 +59,11 @@
   export let highlightColor = '#f7901e';
   export let dayBackgroundColor = 'none';
   export let dayTextColor = '#4a4a4a';
+  export let dayBorderColor = '#fff';
   export let dayHighlightedBackgroundColor = '#efefef';
   export let dayHighlightedTextColor = '#4a4a4a';
+  export let backgroundColor = '#ffffff';
+  export let textColor = '#3d4548';
 
   internationalize({ daysOfWeek, monthsOfYear });
   let sortedDaysOfWeek = weekStart === 0 ? daysOfWeek : (() => {
@@ -110,8 +113,11 @@
     --highlight-color: ${highlightColor};
     --day-background-color: ${dayBackgroundColor};
     --day-text-color: ${dayTextColor};
+    --day-border-color: ${dayBorderColor};
     --day-highlighted-background-color: ${dayHighlightedBackgroundColor};
     --day-highlighted-text-color: ${dayHighlightedTextColor};
+    --background-color: ${backgroundColor};
+    --text-color: ${textColor};
     ${style}
   `;
 
@@ -348,6 +354,8 @@
     width: 100vw;
     padding: 10px;
     padding-top: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
   }
 
   @media (min-width: 480px) {
@@ -359,7 +367,7 @@
   }
 
   .legend {
-    color: #4a4a4a;
+    color: var(--text-color);
     padding: 10px 0;
     margin-bottom: 5px;
   }

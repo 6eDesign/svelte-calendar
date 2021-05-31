@@ -136,10 +136,13 @@ var cal = new SvelteCalendar(&#123;
 			buttonBackgroundColor='#e20074'
 			buttonTextColor='white'
 			highlightColor='#e20074'
-			dayBackgroundColor='#efefef'
-			dayTextColor='#333'
-			dayHighlightedBackgroundColor='#e20074'
+			dayBackgroundColor='#374b5e'
+			dayTextColor='#fff'
+			dayBorderColor='#5f75ce'
+			dayHighlightedBackgroundColor='#d93856'
 			dayHighlightedTextColor='#fff'
+			backgroundColor='#2a3048'
+			textColor='#fff'
 		/>
 	</div>
 	<pre><code class="html">
@@ -148,10 +151,13 @@ var cal = new SvelteCalendar(&#123;
   buttonBackgroundColor='#e20074'
   buttonTextColor='white'
   highlightColor='#e20074'
-  dayBackgroundColor='#efefef'
-  dayTextColor='#333'
-  dayHighlightedBackgroundColor='#e20074'
+  dayBackgroundColor='#374b5e'
+  dayTextColor='#fff'
+  dayBorderColor='#5f75ce'
+  dayHighlightedBackgroundColor='#d93856'
   dayHighlightedTextColor='#fff'
+  backgroundColor='#2a3048'
+  textColor='#fff'
 /&gt;
 	</code></pre>
 </div>

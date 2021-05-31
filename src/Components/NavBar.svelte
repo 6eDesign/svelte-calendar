@@ -80,7 +80,6 @@
     padding: 24px 15px;
     display: flex;
     justify-content: space-between;
-    color: #3d4548;
     font-weight: bold;
   }
   .label { 
@@ -110,7 +109,6 @@
     margin: .5%; 
     height: 23%;
     display: inline-block;
-    color: #4a4a4a;
     border: 1px solid #efefef;
     opacity: 0.2;
   }
