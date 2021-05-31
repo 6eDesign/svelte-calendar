@@ -105,7 +105,7 @@
     flex-direction: column;
     width: 100%;
     position: relative;
-    border: 1px solid #fff;
+    border: 1px solid var(--day-border-color);
     border-radius: 50%; 
     margin: 10%;
     padding: 0;
