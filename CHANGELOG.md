@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/6eDesign/svelte-calendar/compare/v3.0.0...v3.0.1) (2021-09-16)
+
+
+### Bug Fixes
+
+* .nojekyll for gh-pages ([0cfe8ae](https://github.com/6eDesign/svelte-calendar/commit/0cfe8aea31825b663a1d1e9767580c252027bc49))
+
 # [3.0.0](https://github.com/6eDesign/svelte-calendar/compare/v2.0.5...v3.0.0) (2021-09-16)
 
 
