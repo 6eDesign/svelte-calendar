@@ -1,3 +1,10 @@
+## [3.0.2](https://github.com/6eDesign/svelte-calendar/compare/v3.0.1...v3.0.2) (2021-09-16)
+
+
+### Bug Fixes
+
+* doc navigation bar ([0384cf7](https://github.com/6eDesign/svelte-calendar/commit/0384cf781f7623091c0fcc5996346ad7a50308fb))
+
 ## [3.0.1](https://github.com/6eDesign/svelte-calendar/compare/v3.0.0...v3.0.1) (2021-09-16)
 
 
