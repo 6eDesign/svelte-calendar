@@ -33,8 +33,12 @@
 </DocPage>
 
 <style>
+	h3 {
+		font-weight: normal;
+	}
+
 	a {
-		color: var(--sc-theme-calendar-colors-background-highlight);
+		color: var(--sc-theme-calendar-colors-text-primary);
 		text-decoration: none;
 		font-weight: bold;
 	}

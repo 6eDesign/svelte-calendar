@@ -95,6 +95,6 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		z-index: 2;
+		z-index: 10;
 	}
 </style>

@@ -81,7 +81,7 @@
 	}
 
 	.table :global(a) {
-		color: #fff;
+		color: var(--sc-theme-calendar-colors-text-primary);
 		text-decoration: none;
 		font-weight: bold;
 	}

@@ -31,8 +31,6 @@
 	@media (max-width: 720px) {
 		nav section:last-child {
 			display: none;
-			position: sticky;
-			top: 0;
 		}
 		nav::-webkit-scrollbar-track {
 			box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

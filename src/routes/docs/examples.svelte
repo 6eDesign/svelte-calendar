@@ -207,10 +207,16 @@
 		display: grid;
 		padding: 20px;
 		grid-template-rows: auto auto 1fr;
+		grid-template-rows: 1fr auto auto;
 		align-items: center;
 		height: 100%;
 		text-align: center;
 		align-items: center;
+	}
+
+	@media (min-width: 720px) {
+		.modal .example {
+		}
 	}
 
 	@media (max-width: 720px) {
