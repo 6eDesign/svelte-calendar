@@ -2,7 +2,12 @@ module.exports = {
 	branches: ['master'],
 	verifyConditions: [
 		'@semantic-release/changelog',
-		'@semantic-release/npm',
+		[
+			'@semantic-release/npm',
+			{
+				pkgRoot: 'package'
+			}
+		],
 		'@semantic-release/git'
 	],
 	prepare: [

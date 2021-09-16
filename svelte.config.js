@@ -21,7 +21,10 @@ const config = {
 			pages: 'docs',
 			assets: 'docs',
 			fallback: null
-		})
+		}),
+		package: {
+			exports: { excludes: [], includes: ['src/lib/components/Datepicker'] }
+		}
 	},
 	preprocess: [
 		replace([

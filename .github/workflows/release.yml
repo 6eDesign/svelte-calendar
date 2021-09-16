@@ -20,6 +20,8 @@ jobs:
         run: npm ci
       - name: Github Pages
         run: DEPLOY=true npm run build
+      - name: NPM Package
+        run: npm run package
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

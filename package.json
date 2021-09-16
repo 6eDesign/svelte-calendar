@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "svelte-kit dev",
+    "package": "svelte-kit package",
     "prebuild": "rm -rf build",
     "build": "svelte-kit build",
     "postbuild": "touch docs/.nojekyll",
@@ -28,7 +29,9 @@
     "prism-themes": "^1.8.0",
     "prismjs": "^1.24.1",
     "svelte": "3.38.0",
-    "svelte-preprocess": "^4.8.0"
+    "svelte-preprocess": "^4.8.0",
+    "svelte2tsx": "^0.4.6",
+    "typescript": "^4.4.3"
   },
   "type": "module"
 }
