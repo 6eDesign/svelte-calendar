@@ -1,3 +1,10 @@
+## [3.0.5](https://github.com/6eDesign/svelte-calendar/compare/v3.0.4...v3.0.5) (2021-09-16)
+
+
+### Bug Fixes
+
+* add stopPropagation to touch events ([98f8ac1](https://github.com/6eDesign/svelte-calendar/commit/98f8ac1d1cbe0d29d7566a5107467b283031245e))
+
 ## [3.0.4](https://github.com/6eDesign/svelte-calendar/compare/v3.0.3...v3.0.4) (2021-09-16)
 
 
