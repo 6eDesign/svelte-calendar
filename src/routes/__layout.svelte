@@ -16,7 +16,7 @@
 		{ href: `${base}/docs/examples`, text: 'Examples' },
 		{
 			href: `${base}/docs/theme-editor/light`,
-			isActive: (p) => p.startsWith(`${base}/docs/theme-editor`),
+			isActive: (p) => p.startsWith(`/docs/theme-editor`),
 			text: 'Theme Editor'
 		}
 	];
@@ -57,15 +57,6 @@
 			</NavBar>
 			<div class="route-wrapper">
 				<slot />
-				<!-- Can consider re-adding this but would want to avoid transition between theme pages -->
-				<!-- <Swappable
-					magnitude={0.06}
-					vertical={true}
-					value={$page.path}
-					getId={(path) => links.findIndex(({ href }) => path === href)}
-				>
-          <slot />
-				</Swappable> -->
 			</div>
 		</div>
 	</div>

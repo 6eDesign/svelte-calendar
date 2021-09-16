@@ -1,12 +1,13 @@
 <script>
 	import CrossfadeProvider from '$lib/components/generic/crossfade/CrossfadeProvider.svelte';
 	import { createEventDispatcher, getContext } from 'svelte';
+	import { base } from '$app/paths';
 
 	const page = getContext('navbar');
 	const dispatch = createEventDispatcher();
 
 	export let href;
-	export let isActive = (path) => path === href;
+	export let isActive = (path) => `${base}${path}` === href;
 
 	const click = (evt) => dispatch('click', evt);
 
