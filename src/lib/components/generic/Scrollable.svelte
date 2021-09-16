@@ -12,7 +12,11 @@
 	};
 </script>
 
-<div on:wheel={wheel} on:touchstart={touchstart} on:touchmove={touchmove}>
+<div
+	on:wheel={wheel}
+	on:touchstart|stopPropagation={touchstart}
+	on:touchmove|stopPropagation={touchmove}
+>
 	<slot />
 </div>
 
