@@ -6,6 +6,7 @@
     "dev": "svelte-kit dev",
     "prebuild": "rm -rf build",
     "build": "svelte-kit build",
+    "postbuild": "touch docs/.nojekyll",
     "preview": "svelte-kit preview",
     "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --write --plugin-search-dir=. ."
