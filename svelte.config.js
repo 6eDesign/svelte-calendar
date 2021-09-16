@@ -13,7 +13,8 @@ const config = {
 		paths: !process.env.DEPLOY
 			? {}
 			: {
-					base: '/svelte-calendar'
+					base: '/svelte-calendar',
+					assets: '/svelte-calendar'
 			  },
 		appDir: 'internal',
 		adapter: static_adapter({

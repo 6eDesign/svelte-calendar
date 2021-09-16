@@ -5,6 +5,7 @@
 <script>
 	import Code from '$lib/docs/Code.svelte';
 	import DocPage from '$lib/docs/DocPage.svelte';
+	import { base } from '$app/paths';
 
 	// @example(quickStart, QuickStart.svelte)
 
@@ -24,7 +25,8 @@
 		</li>
 		<li>
 			<h3>
-				See <a href="/docs/props">props</a> &amp; <a href="/docs/examples">examples</a> for more information
+				See <a href="{base}/docs/props">props</a> &amp; <a href="{base}/docs/examples">examples</a> for
+				more information
 			</h3>
 		</li>
 	</ol>

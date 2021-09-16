@@ -1,7 +1,6 @@
 <script>
-	import { page, navigating } from '$app/stores';
-
-	import Swappable from '$lib/components/generic/Swappable.svelte';
+	import { navigating } from '$app/stores';
+	import { base } from '$app/paths';
 
 	import Theme from '$lib/components/generic/Theme.svelte';
 	import ToggleSwitch from '$lib/components/generic/ToggleSwitch.svelte';
@@ -11,13 +10,13 @@
 	import { spring } from 'svelte/motion';
 
 	const links = [
-		{ href: '/', text: 'Home' },
-		{ href: '/docs/quick-start', text: 'Quick-Start' },
-		{ href: '/docs/props', text: 'Props' },
-		{ href: '/docs/examples', text: 'Examples' },
+		{ href: `${base}/`, text: 'Home' },
+		{ href: `${base}/docs/quick-start`, text: 'Quick-Start' },
+		{ href: `${base}/docs/props`, text: 'Props' },
+		{ href: `${base}/docs/examples`, text: 'Examples' },
 		{
-			href: '/docs/theme-editor/light',
-			isActive: (p) => p.startsWith('/docs/theme-editor'),
+			href: `${base}/docs/theme-editor/light`,
+			isActive: (p) => p.startsWith(`${base}/docs/theme-editor`),
 			text: 'Theme Editor'
 		}
 	];
@@ -39,7 +38,7 @@
 	<div {style} class="container">
 		<div class="header">
 			<div class="stage">
-				<img src="/logo.png" alt="6eDesign" style="transform: rotate({$rotation}deg);" />
+				<img src="{base}/logo.png" alt="6eDesign" style="transform: rotate({$rotation}deg);" />
 			</div>
 			<h1>svelte-calendar</h1>
 			<div class="header-right">

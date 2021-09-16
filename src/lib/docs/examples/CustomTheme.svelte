@@ -1,5 +1,6 @@
 <script>
 	import { InlineCalendar } from '../../../../index';
+	import { base } from '$app/paths';
 
 	const theme = {
 		calendar: {
@@ -16,5 +17,5 @@
 
 <!-- Example Notes -->
 <p>
-	See <a href="/docs/theme-editor/light">theme-editor page</a> to design your own theme.
+	See <a href="{base}/docs/theme-editor/light">theme-editor page</a> to design your own theme.
 </p>

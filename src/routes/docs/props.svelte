@@ -5,6 +5,7 @@
 <script>
 	import Code from '$lib/docs/Code.svelte';
 	import DocPage from '$lib/docs/DocPage.svelte';
+	import { base } from '$app/paths';
 
 	const props = [
 		{
@@ -42,8 +43,7 @@
 		{
 			name: 'theme',
 			defaultVal: '{}',
-			description:
-				'An object containing theme/style overrides for the component.  See <a href="/docs/theme-editor/light">theme-editor documentation</a>'
+			description: `An object containing theme/style overrides for the component.  See <a href="${base}/docs/theme-editor/light">theme-editor documentation</a>`
 		}
 	];
 </script>

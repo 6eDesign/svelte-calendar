@@ -10,6 +10,7 @@
 	import NavBarItem from '$lib/docs/NavBarItem.svelte';
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { base } from '$app/paths';
 
 	const focused = writable(false);
 
@@ -50,8 +51,8 @@
 		>
 			<JsonEditor bind:json={theme} bind:this={jsonEditor} />
 			<NavBar>
-				<NavBarItem href="/docs/theme-editor/light">Light</NavBarItem>
-				<NavBarItem href="/docs/theme-editor/dark">Dark</NavBarItem>
+				<NavBarItem href="{base}/docs/theme-editor/light">Light</NavBarItem>
+				<NavBarItem href="{base}/docs/theme-editor/dark">Dark</NavBarItem>
 			</NavBar>
 		</div>
 		<div class="results-panel">
