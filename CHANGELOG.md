@@ -1,3 +1,11 @@
+## [2.0.5](https://github.com/6eDesign/svelte-calendar/compare/v2.0.4...v2.0.5) (2021-09-16)
+
+
+### Bug Fixes
+
+* relase.config.js -> release.config.cjs ([52dce22](https://github.com/6eDesign/svelte-calendar/commit/52dce229cf1e506c676f36f967b05275cfae12ef))
+* update action workflows ([890432f](https://github.com/6eDesign/svelte-calendar/commit/890432f9fd91f4a1a78dcb48a877cae344c3cc30))
+
 ## [2.0.4](https://github.com/6eDesign/svelte-calendar/compare/v2.0.3...v2.0.4) (2020-12-22)
 
 
