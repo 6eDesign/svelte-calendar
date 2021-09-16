@@ -1,4 +1,4 @@
 .DS_Store
 node_modules
-yarn.lock
-build
+/.svelte-kit
+/package

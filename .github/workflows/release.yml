@@ -21,7 +21,7 @@ jobs:
       - name: Lint
         run: npm run pretest
       - name: Github Pages
-        run: npm run build && rm -rf docs/ && cp -r build/ docs/
+        run: DEPLOY=true npm run build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
