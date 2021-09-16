@@ -1,3 +1,11 @@
+## [3.0.4](https://github.com/6eDesign/svelte-calendar/compare/v3.0.3...v3.0.4) (2021-09-16)
+
+
+### Bug Fixes
+
+* remove erroneous setting from svelte.config.js ([38c529e](https://github.com/6eDesign/svelte-calendar/commit/38c529eac8b2d695457b291e1a4f6484ef182c10))
+* update release.config to use sveltekit package command ([acd0752](https://github.com/6eDesign/svelte-calendar/commit/acd0752ffe77ff6ee55852f6f32b81e0478036bb))
+
 ## [3.0.3](https://github.com/6eDesign/svelte-calendar/compare/v3.0.2...v3.0.3) (2021-09-16)
 
 
