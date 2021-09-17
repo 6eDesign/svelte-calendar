@@ -26,7 +26,9 @@ const transformFolder = async ({ folders, files, depth }) => {
 			const filepath = path.join(CWD, f);
 			const contents = await fs.readFile(filepath, 'utf-8');
 			const base = depth ? [...Array(depth + 1).fill('..')].join('/') : './';
-			const updated = contents.replace(/from '\$lib(.*)'/g, `from '${base}$1'`);
+			const updated = contents
+				.replace(/from '\$lib(.*)'/g, `from '${base}$1'`)
+				.replace(/src\/lib\//g, '');
 			await Promise.all(
 				[
 					updated === contents ? null : fs.writeFile(filepath, updated),
