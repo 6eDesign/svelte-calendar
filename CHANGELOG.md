@@ -1,3 +1,10 @@
+## [3.0.15](https://github.com/6eDesign/svelte-calendar/compare/v3.0.14...v3.0.15) (2021-09-17)
+
+
+### Bug Fixes
+
+* handle scrollable action destroy lifecycle + fix touch delta math ([0b07ad3](https://github.com/6eDesign/svelte-calendar/commit/0b07ad3c0a7344fe98f3a29ad38c9cae3cfbf5f2))
+
 ## [3.0.14](https://github.com/6eDesign/svelte-calendar/compare/v3.0.13...v3.0.14) (2021-09-17)
 
 
