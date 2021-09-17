@@ -1,3 +1,10 @@
+## [3.0.16](https://github.com/6eDesign/svelte-calendar/compare/v3.0.15...v3.0.16) (2021-09-17)
+
+
+### Bug Fixes
+
+* scrollable action - prevent scrolling on supplied node by disabling touch-action ([089f808](https://github.com/6eDesign/svelte-calendar/commit/089f808b38dd3a8d976a2af7c2a61b67037be01f))
+
 ## [3.0.15](https://github.com/6eDesign/svelte-calendar/compare/v3.0.14...v3.0.15) (2021-09-17)
 
 
