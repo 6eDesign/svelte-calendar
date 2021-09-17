@@ -1,3 +1,10 @@
+## [3.0.12](https://github.com/6eDesign/svelte-calendar/compare/v3.0.11...v3.0.12) (2021-09-17)
+
+
+### Bug Fixes
+
+* postpackage script ([0e5b953](https://github.com/6eDesign/svelte-calendar/commit/0e5b9532a8c5fe5bf8837e2f01ce0045159fe269))
+
 ## [3.0.11](https://github.com/6eDesign/svelte-calendar/compare/v3.0.10...v3.0.11) (2021-09-17)
 
 
