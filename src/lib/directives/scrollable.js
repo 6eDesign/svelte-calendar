@@ -7,12 +7,6 @@ export default (node, { y: yi = 0, step = scrollStep, maxSteps = Infinity }) => 
 	const updateY = (val) => {
 		y = Math.max(0, Math.min(maxSteps * step, val));
 	};
-	const wheel = ({ deltaY }) => updateY(y + deltaY);
-	const touchstart = ({ touches: [{ pageY }] }) => (lastTouch = pageY);
-	const touchmove = ({ touches: [{ pageY }] }) => {
-		updateY(y - pageY - lastTouch);
-		lastTouch = pageY;
-	};
 
 	const emitY = () => {
 		if (Math.round(y / step) === Math.round(yi / step)) return;
@@ -27,16 +21,30 @@ export default (node, { y: yi = 0, step = scrollStep, maxSteps = Infinity }) => 
 		);
 	};
 
-	node.addEventListener('wheel', (evt) => {
-		wheel(evt);
+	const wheelListener = ({ deltaY }) => {
+		updateY(y + deltaY);
 		emitY();
-	});
-	node.addEventListener('touchstart', (evt) => {
-		touchstart(evt);
+	};
+	const touchstartListener = ({ touches: [{ pageY }] }) => {
+		lastTouch = pageY;
 		emitY();
-	});
-	node.addEventListener('touchmove', (evt) => {
-		touchmove(evt);
+	};
+	const touchmoveListener = ({ touches: [{ pageY }] }) => {
+		updateY(y - (pageY - lastTouch));
+		lastTouch = pageY;
 		emitY();
-	});
+	};
+
+	node.addEventListener('wheel', wheelListener);
+	node.addEventListener('touchstart', touchstartListener);
+	node.addEventListener('touchmove', touchmoveListener);
+
+	return {
+		destroy() {
+			console.log('cleaning up');
+			node.removeEventListener('wheel', wheelListener);
+			node.removeEventListener('touchstart', touchstartListener);
+			node.removeEventListener('touchmove', touchmoveListener);
+		}
+	};
 };
