@@ -50,6 +50,7 @@
 	.button-container > * {
 		grid-column: 1;
 		grid-row: 1;
+		height: 100%;
 	}
 	button {
 		padding: 16px 30px;
