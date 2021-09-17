@@ -1,3 +1,10 @@
+## [3.0.7](https://github.com/6eDesign/svelte-calendar/compare/v3.0.6...v3.0.7) (2021-09-17)
+
+
+### Bug Fixes
+
+* add additional targets to postpackage  rewrite script ([83312d6](https://github.com/6eDesign/svelte-calendar/commit/83312d68d7106ab6ef5afc1622152aa5dbe2efee))
+
 ## [3.0.6](https://github.com/6eDesign/svelte-calendar/compare/v3.0.5...v3.0.6) (2021-09-17)
 
 
