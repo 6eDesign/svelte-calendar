@@ -42,7 +42,6 @@ export default (node, { y: yi = 0, step = scrollStep, maxSteps = Infinity }) => 
 
 	return {
 		destroy() {
-			console.log('cleaning up');
 			node.removeEventListener('wheel', wheelListener);
 			node.removeEventListener('touchstart', touchstartListener);
 			node.removeEventListener('touchmove', touchmoveListener);
