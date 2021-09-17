@@ -1,3 +1,10 @@
+## [3.0.10](https://github.com/6eDesign/svelte-calendar/compare/v3.0.9...v3.0.10) (2021-09-17)
+
+
+### Bug Fixes
+
+* release.config.cjs ([62ce395](https://github.com/6eDesign/svelte-calendar/commit/62ce395371ec1ab49bddeeab884d42f1dfa06396))
+
 ## [3.0.9](https://github.com/6eDesign/svelte-calendar/compare/v3.0.8...v3.0.9) (2021-09-17)
 
 
