@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/6eDesign/svelte-calendar/compare/v3.0.5...v3.0.6) (2021-09-17)
+
+
+### Bug Fixes
+
+* add prepackage step to rewrite  imports ([e19de04](https://github.com/6eDesign/svelte-calendar/commit/e19de04aacf8f4a39a2ea8b565fbd4f8556b495b))
+
 ## [3.0.5](https://github.com/6eDesign/svelte-calendar/compare/v3.0.4...v3.0.5) (2021-09-16)
 
 
