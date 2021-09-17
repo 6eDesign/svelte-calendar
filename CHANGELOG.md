@@ -1,3 +1,10 @@
+## [3.0.17](https://github.com/6eDesign/svelte-calendar/compare/v3.0.16...v3.0.17) (2021-09-17)
+
+
+### Bug Fixes
+
+* remove console.log ([a08ddf3](https://github.com/6eDesign/svelte-calendar/commit/a08ddf334c1fc6a0ed02309b12925a9bb1a97929))
+
 ## [3.0.16](https://github.com/6eDesign/svelte-calendar/compare/v3.0.15...v3.0.16) (2021-09-17)
 
 
