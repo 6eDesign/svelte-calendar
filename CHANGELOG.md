@@ -1,3 +1,10 @@
+## [3.0.9](https://github.com/6eDesign/svelte-calendar/compare/v3.0.8...v3.0.9) (2021-09-17)
+
+
+### Bug Fixes
+
+* add postversion step for semantic-release ([2e80dfc](https://github.com/6eDesign/svelte-calendar/commit/2e80dfce51a8cc79225e0794e86c4918fdffbc55))
+
 ## [3.0.8](https://github.com/6eDesign/svelte-calendar/compare/v3.0.7...v3.0.8) (2021-09-17)
 
 
