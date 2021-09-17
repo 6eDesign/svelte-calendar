@@ -9,6 +9,7 @@
     "prebuild": "rm -rf build",
     "build": "svelte-kit build",
     "postbuild": "touch docs/.nojekyll",
+    "postversion": "cp package.json ./package/ && cp package-lock.json ./package/",
     "preview": "svelte-kit preview",
     "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --write --plugin-search-dir=. ."
