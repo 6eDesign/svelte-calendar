@@ -38,6 +38,7 @@ export default (node, { y: yi = 0, step = scrollStep, maxSteps = Infinity }) => 
 	node.addEventListener('wheel', wheelListener);
 	node.addEventListener('touchstart', touchstartListener);
 	node.addEventListener('touchmove', touchmoveListener);
+	node.style.touchAction = 'none';
 
 	return {
 		destroy() {
