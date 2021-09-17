@@ -1,7 +1,7 @@
 {
   "name": "svelte-calendar",
   "version": "3.0.11",
-  "main": "index.d.ts",
+  "main": "index.js",
   "scripts": {
     "dev": "svelte-kit dev",
     "package": "svelte-kit package",
@@ -9,7 +9,7 @@
     "prebuild": "rm -rf build",
     "build": "svelte-kit build",
     "postbuild": "touch docs/.nojekyll",
-    "postversion": "cp package.json ./package/ && cp package-lock.json ./package/",
+    "postversion": "cp package.json ./package/ && cp package-lock.json ./package/ && mv ./package/index.d.ts ./package/index.js",
     "preview": "svelte-kit preview",
     "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --write --plugin-search-dir=. ."
