@@ -1,3 +1,10 @@
+## [3.0.8](https://github.com/6eDesign/svelte-calendar/compare/v3.0.7...v3.0.8) (2021-09-17)
+
+
+### Bug Fixes
+
+* rewrite package.main (index.js) imports in postpackage script ([8374348](https://github.com/6eDesign/svelte-calendar/commit/8374348f4a97aef5dbfe15c4894dd52adaaa975f))
+
 ## [3.0.7](https://github.com/6eDesign/svelte-calendar/compare/v3.0.6...v3.0.7) (2021-09-17)
 
 
