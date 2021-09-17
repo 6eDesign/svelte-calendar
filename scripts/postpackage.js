@@ -25,7 +25,7 @@ const transformFolder = async ({ folders, files, depth }) => {
 		files.map(async (f) => {
 			const filepath = path.join(CWD, f);
 			const contents = await fs.readFile(filepath, 'utf-8');
-			const base = depth ? [...Array(depth + 1).fill('..')].join('/') : './';
+			const base = depth ? [...Array(depth).fill('..')].join('/') : './';
 			const updated = contents
 				.replace(/from '\$lib(.*)'/g, `from '${base}$1'`)
 				.replace(/src\/lib\//g, '');
