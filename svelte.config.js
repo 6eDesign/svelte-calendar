@@ -21,7 +21,10 @@ const config = {
 			pages: 'docs',
 			assets: 'docs',
 			fallback: null
-		})
+		}),
+		package: {
+			emitTypes: false
+		}
 	},
 	preprocess: [
 		replace([

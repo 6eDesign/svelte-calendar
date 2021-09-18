@@ -1,8 +1,10 @@
 <script>
 	import { KEY_CODES } from '$lib/config';
 	import { keyControlsContextKey } from '$lib/context';
+	import throttle from 'just-throttle';
 	import { getContext } from 'svelte';
 
+	export let limit = 0;
 	export let ctx = null;
 
 	const currentCtx = getContext(keyControlsContextKey);
@@ -13,7 +15,7 @@
 		if (mapping) mapping();
 	};
 
-	$: eventHandler = key;
+	$: eventHandler = limit ? throttle(key, limit) : key;
 </script>
 
 <svelte:window on:keydown={eventHandler} />
