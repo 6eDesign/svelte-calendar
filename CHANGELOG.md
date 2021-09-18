@@ -1,3 +1,10 @@
+## [3.0.25](https://github.com/6eDesign/svelte-calendar/compare/v3.0.24...v3.0.25) (2021-09-18)
+
+
+### Bug Fixes
+
+* remove emitTypes again ([e4c79d1](https://github.com/6eDesign/svelte-calendar/commit/e4c79d1ce585101f2e4a6debfb362797293e5ac7))
+
 ## [3.0.24](https://github.com/6eDesign/svelte-calendar/compare/v3.0.23...v3.0.24) (2021-09-18)
 
 
