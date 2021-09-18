@@ -29,7 +29,7 @@ const config = {
 				/\/\/\s+\@example\((.*), (.*)\)/g,
 				(_, name, path) => {
 					const text = readFileSync(resolve('./src/lib/docs/examples', path), 'utf-8')
-						.replace(/\'\.\.\/\.\.\/\.\.\/\.\.\/index\'/g, "'svelte-calendar'")
+						.replace(/\'\.\.\/\.\.\/index\'/g, "'svelte-calendar'")
 						.split(/\<!\-\- Example Notes \-\-\>/)
 						.shift();
 					const highlighted = Prism.highlight(text, Prism.languages.svelte, 'svelte');
