@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "svelte-kit dev",
     "package": "svelte-kit package",
+    "postpackage": "node scripts/postpackage",
     "prebuild": "rm -rf build",
     "build": "svelte-kit build",
     "postbuild": "touch docs/.nojekyll",
