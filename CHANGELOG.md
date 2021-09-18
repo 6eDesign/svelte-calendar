@@ -1,3 +1,10 @@
+## [3.0.23](https://github.com/6eDesign/svelte-calendar/compare/v3.0.22...v3.0.23) (2021-09-18)
+
+
+### Bug Fixes
+
+* attempt removing type generation ([be4437f](https://github.com/6eDesign/svelte-calendar/commit/be4437fc749bb1d5e12061728ea45bc81da45440))
+
 ## [3.0.22](https://github.com/6eDesign/svelte-calendar/compare/v3.0.21...v3.0.22) (2021-09-18)
 
 
