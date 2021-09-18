@@ -1,3 +1,10 @@
+## [3.0.21](https://github.com/6eDesign/svelte-calendar/compare/v3.0.20...v3.0.21) (2021-09-18)
+
+
+### Bug Fixes
+
+* attempt removing throttle dep ([d85b620](https://github.com/6eDesign/svelte-calendar/commit/d85b620e84c04adc6adc2806a55faf59e0e17258))
+
 ## [3.0.20](https://github.com/6eDesign/svelte-calendar/compare/v3.0.19...v3.0.20) (2021-09-18)
 
 
