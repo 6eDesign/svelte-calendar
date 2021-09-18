@@ -1,6 +1,6 @@
 <script>
 	import dayjs from 'dayjs';
-	import { Datepicker } from '../../../../index';
+	import { Datepicker } from '../../index';
 
 	let store;
 </script>

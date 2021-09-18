@@ -1,6 +1,6 @@
 <script>
 	import { base } from '$app/paths';
-	import { InlineCalendar, themes } from '../../../../index';
+	import { InlineCalendar, themes } from '../../index';
 	const { dark: theme } = themes;
 </script>
 

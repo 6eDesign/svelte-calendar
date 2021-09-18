@@ -1,5 +1,5 @@
 <script>
-	import { InlineCalendar } from '../../../../index';
+	import { InlineCalendar } from '../../index';
 	import dayjs from 'dayjs';
 
 	const theme = {

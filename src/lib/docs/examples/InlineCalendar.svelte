@@ -1,5 +1,5 @@
 <script>
-	import { InlineCalendar } from '../../../../index';
+	import { InlineCalendar } from '../../index';
 	const theme = {
 		calendar: {
 			width: '600px',

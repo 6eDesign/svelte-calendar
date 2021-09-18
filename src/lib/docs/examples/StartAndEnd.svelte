@@ -1,6 +1,6 @@
 <script>
 	import dayjs from 'dayjs';
-	import { Datepicker } from '../../../../index';
+	import { Datepicker } from '../../index';
 
 	const today = new Date();
 	const tomorrow = dayjs().add(1, 'day').toDate();

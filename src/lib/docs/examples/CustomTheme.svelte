@@ -1,5 +1,5 @@
 <script>
-	import { InlineCalendar } from '../../../../index';
+	import { InlineCalendar } from '../../index';
 	import { base } from '$app/paths';
 
 	const theme = {

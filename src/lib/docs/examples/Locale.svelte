@@ -4,7 +4,7 @@
 	import 'dayjs/locale/ar-dz.js';
 	import 'dayjs/locale/he.js';
 	import dayjs from 'dayjs';
-	import { InlineCalendar, Swappable, themes } from '../../../../index.js';
+	import { InlineCalendar, Swappable, themes } from '../../index.js';
 	import { onDestroy } from 'svelte';
 
 	const locales = ['en', 'es', 'zh-cn', 'ar-dz', 'he'];
