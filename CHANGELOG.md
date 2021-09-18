@@ -1,3 +1,11 @@
+## [3.0.18](https://github.com/6eDesign/svelte-calendar/compare/v3.0.17...v3.0.18) (2021-09-18)
+
+
+### Bug Fixes
+
+* move dayjs and just-throttle to dependencies ([6dee7b3](https://github.com/6eDesign/svelte-calendar/commit/6dee7b31ab1ab9bfe306e0015f8d53bf7069473d))
+* update ci nodejs to v14 ([9c7c8e6](https://github.com/6eDesign/svelte-calendar/commit/9c7c8e645edb0749354b57f3bd7b18df9fcb4e0d))
+
 ## [3.0.17](https://github.com/6eDesign/svelte-calendar/compare/v3.0.16...v3.0.17) (2021-09-17)
 
 

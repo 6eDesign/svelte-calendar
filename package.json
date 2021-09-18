@@ -1,6 +1,6 @@
 {
   "name": "svelte-calendar",
-  "version": "3.0.17",
+  "version": "3.0.18",
   "main": "src/lib/index.js",
   "scripts": {
     "dev": "svelte-kit dev",
