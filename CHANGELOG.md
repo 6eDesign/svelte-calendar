@@ -1,3 +1,10 @@
+## [3.0.24](https://github.com/6eDesign/svelte-calendar/compare/v3.0.23...v3.0.24) (2021-09-18)
+
+
+### Bug Fixes
+
+* attempt to add svelte field to package.json ([36f394e](https://github.com/6eDesign/svelte-calendar/commit/36f394e16d2ff881892c0b29b3004e55676b6a77))
+
 ## [3.0.23](https://github.com/6eDesign/svelte-calendar/compare/v3.0.22...v3.0.23) (2021-09-18)
 
 
