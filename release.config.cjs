@@ -1,5 +1,5 @@
 module.exports = {
-	branches: ['master', 'next'],
+	branches: [{ name: 'master' }, { name: 'next', channel: 'next' }],
 	verifyConditions: [
 		'@semantic-release/changelog',
 		'@semantic-release/npm',
