@@ -4,6 +4,15 @@
 ### Bug Fixes
 
 * **#128, #126:** Updates to project configuration to support usage inside svelte-kit applications ([#130](https://github.com/6eDesign/svelte-calendar/issues/130)) ([1edd9ef](https://github.com/6eDesign/svelte-calendar/commit/1edd9eff820a47a5619e5a11228ea80f3cd7a4cc)), closes [#128](https://github.com/6eDesign/svelte-calendar/issues/128) [#126](https://github.com/6eDesign/svelte-calendar/issues/126)
+* update readme ([f879ed1](https://github.com/6eDesign/svelte-calendar/commit/f879ed15f9c8917a51ee3ac106feaaf8e1ab4343))
+* update readme ([c76eb3e](https://github.com/6eDesign/svelte-calendar/commit/c76eb3e3a45c3ae823df37521910f037df1b8ed0))
+
+## [3.0.20](https://github.com/6eDesign/svelte-calendar/compare/v3.0.19...v3.0.20) (2021-09-19)
+
+
+### Bug Fixes
+
+* **#128, #126:** Updates to project configuration to support usage inside svelte-kit applications ([#130](https://github.com/6eDesign/svelte-calendar/issues/130)) ([1edd9ef](https://github.com/6eDesign/svelte-calendar/commit/1edd9eff820a47a5619e5a11228ea80f3cd7a4cc)), closes [#128](https://github.com/6eDesign/svelte-calendar/issues/128) [#126](https://github.com/6eDesign/svelte-calendar/issues/126)
 * update readme ([c76eb3e](https://github.com/6eDesign/svelte-calendar/commit/c76eb3e3a45c3ae823df37521910f037df1b8ed0))
 
 ## [3.0.27](https://github.com/6eDesign/svelte-calendar/compare/v3.0.26...v3.0.27) (2021-09-19)
