@@ -37,6 +37,7 @@ export default config;
 - Virtual/infinite grid for animation performance
 - Store-driven and extensible
 - [Localization](https://6edesign.github.io/svelte-calendar) using `day.js`
+- Svelte-Kit support
 
 ## Features In Development
 
