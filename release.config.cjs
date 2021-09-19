@@ -1,11 +1,5 @@
-const npm = [
-	'@semantic-release/npm',
-	{
-		pkgRoot: 'package'
-	}
-];
 module.exports = {
-	branches: ['master'],
+	branches: [{ name: 'master' }, { name: 'next', channel: 'next' }],
 	verifyConditions: [
 		'@semantic-release/changelog',
 		'@semantic-release/npm',
@@ -20,5 +14,13 @@ module.exports = {
 			message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
 		}
 	],
-	publish: [npm, '@semantic-release/github']
+	publish: [
+		[
+			'@semantic-release/npm',
+			{
+				pkgRoot: 'package'
+			}
+		],
+		'@semantic-release/github'
+	]
 };
