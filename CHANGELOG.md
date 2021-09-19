@@ -1,3 +1,10 @@
+## [3.0.38](https://github.com/6eDesign/svelte-calendar/compare/v3.0.37...v3.0.38) (2021-09-19)
+
+
+### Bug Fixes
+
+* animation bug when enlarging day that is also present as outsider date of adjacent calendar page ([43199af](https://github.com/6eDesign/svelte-calendar/commit/43199af9c6a03e3c8ebf72bcd1ab9dd2e0774614))
+
 ## [3.0.37](https://github.com/6eDesign/svelte-calendar/compare/v3.0.36...v3.0.37) (2021-09-19)
 
 
