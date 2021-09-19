@@ -15,7 +15,7 @@
 	export let end = calendarDefaults.end;
 	export let format = calendarDefaults.format;
 	export let formatted;
-	export let store = datepickerStore.get({ selected, start, end });
+	export let store = datepickerStore.get({ selected, start, end, shouldEnlargeDay: true });
 	export let theme = {};
 	export let defaultTheme = undefined;
 

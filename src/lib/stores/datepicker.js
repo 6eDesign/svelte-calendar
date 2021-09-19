@@ -1,7 +1,6 @@
 import { writable, get as getFromStore } from 'svelte/store';
 import dayjs from 'dayjs';
 
-const ONE_DAY = 1000 * 60 * 60 * 24;
 const PICKER_TYPES = ['days', 'months', 'years'];
 
 const updateSelected = (value, property) => (state) => {
@@ -13,13 +12,15 @@ const pipe = (...fns) => (val) => fns.reduce((accum, fn) => fn(accum), val);
 
 const zeroDay = (date) => dayjs(date).startOf('day').toDate();
 
-const get = ({ selected, start, end }) => {
+const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
 	const { subscribe, set, update } = writable({
 		open: false,
 		hasChosen: false,
-		selected: selected,
+		selected,
 		start: zeroDay(start),
 		end: zeroDay(end),
+		shouldEnlargeDay,
+		enlargeDay: false,
 		year: selected.getFullYear(),
 		month: selected.getMonth(),
 		day: selected.getDate(),
@@ -30,6 +31,9 @@ const get = ({ selected, start, end }) => {
 	return {
 		set,
 		subscribe,
+		enlargeDay(enlargeDay = true) {
+			update((state) => ({ ...state, enlargeDay }));
+		},
 		getSelectableVector(date) {
 			const { start, end } = getFromStore({ subscribe });
 			if (date < start) return -1;
@@ -65,7 +69,6 @@ const get = ({ selected, start, end }) => {
 		setActiveView(newActiveView) {
 			const newIndex = PICKER_TYPES.indexOf(newActiveView);
 			if (newIndex === -1) return;
-			const activeViewDirection = 1;
 			update(({ activeView, ...state }) => ({
 				...state,
 				activeViewDirection: PICKER_TYPES.indexOf(activeView) > newIndex ? -1 : 1,

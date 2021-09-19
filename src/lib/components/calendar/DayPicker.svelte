@@ -9,8 +9,6 @@
 	import scrollable from '$lib/directives/scrollable';
 	import { scrollStep } from '$lib/config/scroll';
 
-	let showDay = false;
-
 	const duration = 450;
 
 	const legend = Array(7)
@@ -24,7 +22,8 @@
 	const select = (day) => () => {
 		if (!store.isSelectable(day)) return;
 		store.setDay(day || $store.selected);
-		showDay = true;
+		if (!$store.shouldEnlargeDay) return store.selectDay();
+		store.enlargeDay();
 		setTimeout(() => store.selectDay(), duration + 60);
 	};
 
@@ -79,7 +78,7 @@
 			>
 				<Grid template="repeat(6, 1fr) / repeat(7, 1fr)">
 					{#each days as day, i (day)}
-						{#if !showDay || !dayjs(day.date).isSame($store.selected, 'day')}
+						{#if !$store.enlargeDay || !dayjs(day.date).isSame($store.selected, 'day')}
 							<a
 								href="#pickday"
 								on:keydown|preventDefault
@@ -98,7 +97,7 @@
 				</Grid>
 			</InfiniteGrid>
 		</div>
-		{#if showDay}
+		{#if $store.enlargeDay}
 			<div class="stage selected-big" in:receive|local={{ key }} out:send|local={{ key }}>
 				{dayjs($store.selected).date()}
 			</div>

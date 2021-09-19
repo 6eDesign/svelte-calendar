@@ -11,6 +11,8 @@
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { base } from '$app/paths';
+	import ToggleSwitch from '$lib/components/generic/ToggleSwitch.svelte';
+	import datepicker from '$lib/stores/datepicker';
 
 	const focused = writable(false);
 
@@ -20,6 +22,7 @@
 	let theme;
 	let jsonEditor;
 	let lastSlug;
+	let datepickerStore;
 
 	const deepCopy = (obj) =>
 		Object.entries(obj).reduce(
@@ -55,10 +58,18 @@
 				<NavBarItem href="{base}/docs/theme-editor/dark">Dark</NavBarItem>
 			</NavBar>
 		</div>
-		<div class="results-panel">
-			<div />
-			<InlineCalendar {theme} />
-			<div />
+		<div class="secondary-column">
+			<div class="settings-panel">
+				{#if $datepickerStore}
+					<ToggleSwitch bind:value={$datepickerStore.enlargeDay} />
+					Enlarge Day
+				{/if}
+			</div>
+			<div class="results-panel">
+				<div />
+				<InlineCalendar {theme} bind:store={datepickerStore} />
+				<div />
+			</div>
 		</div>
 	</CodeExample>
 </Theme>
@@ -69,10 +80,24 @@
 		transition: all 180ms linear;
 	}
 
+	.secondary-column {
+		display: grid;
+		grid-template-rows: auto 1fr;
+	}
+
+	.settings-panel {
+		display: grid;
+		align-items: center;
+		grid-template-columns: auto auto 1fr;
+		column-gap: 10px;
+		padding: 18px;
+		border-bottom: 1px solid var(--sc-theme-calendar-colors-border);
+	}
+
 	.results-panel {
 		display: grid;
 		height: 100%;
-		grid-template: auto / 1fr auto 1fr;
+		grid-template: 1fr / 1fr auto 1fr;
 		background: var(--sc-theme-calendar-colors-background-primary);
 		padding: 20px 0;
 		align-items: center;
