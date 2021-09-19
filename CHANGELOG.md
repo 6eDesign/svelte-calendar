@@ -1,3 +1,15 @@
+## [3.0.22](https://github.com/6eDesign/svelte-calendar/compare/v3.0.21...v3.0.22) (2021-09-19)
+
+
+### Bug Fixes
+
+* docs ([85da44c](https://github.com/6eDesign/svelte-calendar/commit/85da44c749b3601c6d6ecd90052b15e35e786c84))
+* docs ([904b716](https://github.com/6eDesign/svelte-calendar/commit/904b716d00c0652b5ebe7439fd0d38df22cef56c))
+* docs ([71d44db](https://github.com/6eDesign/svelte-calendar/commit/71d44dbec755eb74e35ed2982257a240551d8305))
+* docs ([04c449e](https://github.com/6eDesign/svelte-calendar/commit/04c449e7ce704f4041c5fabdd210b2500f3a1b6f))
+* docs ([cf0d7cd](https://github.com/6eDesign/svelte-calendar/commit/cf0d7cdacf0c533a54bd5645561f3fab2924f4a5))
+* docs ([c0533a3](https://github.com/6eDesign/svelte-calendar/commit/c0533a3326f56e285f9f8d41eb4070ff39f36646))
+
 ## [3.0.21](https://github.com/6eDesign/svelte-calendar/compare/v3.0.20...v3.0.21) (2021-09-19)
 
 
