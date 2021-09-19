@@ -1,3 +1,10 @@
+## [3.0.26](https://github.com/6eDesign/svelte-calendar/compare/v3.0.25...v3.0.26) (2021-09-18)
+
+
+### Bug Fixes
+
+* attempt to re-add types ([f6356c1](https://github.com/6eDesign/svelte-calendar/commit/f6356c10fe6f416103590102a7dd1d6198456262))
+
 ## [3.0.25](https://github.com/6eDesign/svelte-calendar/compare/v3.0.24...v3.0.25) (2021-09-18)
 
 
