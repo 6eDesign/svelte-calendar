@@ -48,7 +48,6 @@
 		display: grid;
 		grid-template: 1fr / 1fr;
 		text-align: left;
-		/* background: #0f0b0c; */
 		background: var(--sc-theme-calendar-colors-background-highlight);
 		margin: 0;
 		grid-column: 1;

@@ -6,7 +6,7 @@
 	const page = getContext('navbar');
 	const dispatch = createEventDispatcher();
 
-	export let href;
+	export let href = '';
 	export let isActive = (path) => `${base}${path}` === href;
 
 	const click = (evt) => dispatch('click', evt);

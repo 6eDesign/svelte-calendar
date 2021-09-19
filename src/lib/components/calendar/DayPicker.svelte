@@ -81,7 +81,7 @@
 			>
 				<Grid template="repeat(6, 1fr) / repeat(7, 1fr)">
 					{#each days as day, i (day)}
-						{#if !$store.enlargeDay || !dayjs(day.date).isSame($store.selected, 'day')}
+						{#if !$store.enlargeDay || index !== monthIndex || !dayjs(day.date).isSame($store.selected)}
 							<a
 								href="#pickday"
 								on:keydown|preventDefault

@@ -19,7 +19,7 @@
 	export const visibleData = derived(
 		[dim, offset],
 		([{ w, h }, $o]) => {
-			if (!w || !h) return [];
+			if (!w || !h || !intiailized) return [];
 			const cellHeight = h / cellCount;
 			const start = Math.max(-1, Math.floor((-1 * $o) / cellHeight) - 1);
 			const baseOffset = $o % cellHeight;
