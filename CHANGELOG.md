@@ -1,3 +1,15 @@
+# [3.1.0](https://github.com/6eDesign/svelte-calendar/compare/v3.0.39...v3.1.0) (2021-09-19)
+
+
+### Bug Fixes
+
+* update inlinecalendar default props ([ecb3734](https://github.com/6eDesign/svelte-calendar/commit/ecb37340a1d1dd14243414ce1074d200eb20e04a))
+
+
+### Features
+
+* add startOfWeekIndex prop and update props documentation ([73de1d4](https://github.com/6eDesign/svelte-calendar/commit/73de1d4c93580e9e226b590397456f7569b727e7))
+
 ## [3.0.39](https://github.com/6eDesign/svelte-calendar/compare/v3.0.38...v3.0.39) (2021-09-19)
 
 
