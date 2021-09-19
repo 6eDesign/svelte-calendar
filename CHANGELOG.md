@@ -1,3 +1,10 @@
+## [3.0.37](https://github.com/6eDesign/svelte-calendar/compare/v3.0.36...v3.0.37) (2021-09-19)
+
+
+### Bug Fixes
+
+* bugfix - un-enlarge day when picker closes ([290e8cc](https://github.com/6eDesign/svelte-calendar/commit/290e8ccc19a73b928ca8bb3798ca4e7fdf80fe3b))
+
 ## [3.0.36](https://github.com/6eDesign/svelte-calendar/compare/v3.0.35...v3.0.36) (2021-09-19)
 
 
