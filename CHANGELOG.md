@@ -1,3 +1,10 @@
+## [3.0.36](https://github.com/6eDesign/svelte-calendar/compare/v3.0.35...v3.0.36) (2021-09-19)
+
+
+### Bug Fixes
+
+* add shouldEnlargeDay and enlargeDay (FKA showDay) to store; disable enlargeDay on InlineCalendar ([f6767ed](https://github.com/6eDesign/svelte-calendar/commit/f6767eddd52a4d66afbadf8c72c79355fd399d51))
+
 ## [3.0.35](https://github.com/6eDesign/svelte-calendar/compare/v3.0.34...v3.0.35) (2021-09-19)
 
 
