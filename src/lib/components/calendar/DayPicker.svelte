@@ -24,7 +24,10 @@
 		store.setDay(day || $store.selected);
 		if (!$store.shouldEnlargeDay) return store.selectDay();
 		store.enlargeDay();
-		setTimeout(() => store.selectDay(), duration + 60);
+		setTimeout(() => {
+			store.selectDay();
+			store.enlargeDay(false);
+		}, duration + 60);
 	};
 
 	const KEY_MAPPINGS = {
