@@ -15,12 +15,12 @@
 		},
 		{
 			name: 'start',
-			defaultVal: 'new Date()',
+			defaultVal: "dayjs().add(-100, 'year').toDate()",
 			description: 'The minimum date a user can select.'
 		},
 		{
 			name: 'end',
-			defaultVal: "dayjs(start).add('year', 1).toDate()",
+			defaultVal: "dayjs(start).add(100, 'year').toDate()",
 			description: 'The maximum date a user can select.'
 		},
 		{
