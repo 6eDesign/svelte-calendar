@@ -1,3 +1,10 @@
+## [3.0.39](https://github.com/6eDesign/svelte-calendar/compare/v3.0.38...v3.0.39) (2021-09-19)
+
+
+### Bug Fixes
+
+* update props documentation ([926f7a6](https://github.com/6eDesign/svelte-calendar/commit/926f7a6835fb1a5e8f7f4a2cb06f1dc8f786cf95))
+
 ## [3.0.38](https://github.com/6eDesign/svelte-calendar/compare/v3.0.37...v3.0.38) (2021-09-19)
 
 
