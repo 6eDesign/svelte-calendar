@@ -14,9 +14,10 @@
 	export let end = calendarDefaults.end;
 	export let format = calendarDefaults.format;
 	export let formatted;
-	export let store = datepickerStore.get({ selected, start, end });
 	export let theme = {};
 	export let defaultTheme = undefined;
+	export let startOfWeekIndex = 0;
+	export let store = datepickerStore.get({ selected, start, end, startOfWeekIndex });
 
 	const focused = writable(false);
 

@@ -9,13 +9,17 @@
 	import scrollable from '$lib/directives/scrollable';
 	import { scrollStep } from '$lib/config/scroll';
 
+	const store = getContext(storeContextKey);
+
 	const duration = 450;
 
 	const legend = Array(7)
 		.fill(0)
-		.map((d, i) => dayjs().day(i).format('ddd'));
-
-	const store = getContext(storeContextKey);
+		.map((d, i) =>
+			dayjs()
+				.day(($store.startOfWeekIndex + i) % 7)
+				.format('ddd')
+		);
 
 	const add = (amount) => () => store.add(amount, 'day');
 

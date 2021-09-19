@@ -14,10 +14,17 @@
 	export let start = calendarDefaults.start;
 	export let end = calendarDefaults.end;
 	export let format = calendarDefaults.format;
-	export let formatted;
-	export let store = datepickerStore.get({ selected, start, end, shouldEnlargeDay: true });
+	export let formatted = '';
 	export let theme = {};
 	export let defaultTheme = undefined;
+	export let startOfWeekIndex = 0;
+	export let store = datepickerStore.get({
+		selected,
+		start,
+		end,
+		shouldEnlargeDay: true,
+		startOfWeekIndex
+	});
 
 	setContext(storeContextKey, store);
 	setContext(

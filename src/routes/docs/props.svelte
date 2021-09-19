@@ -30,20 +30,32 @@
 				'A `dayjs` format expression.  Used when updating the read-only `formatted` prop.'
 		},
 		{
+			name: 'startOfWeekIndex',
+			defaultVal: '0',
+			description:
+				'Which date.getDay() should be considered the start of the week (eg: 1 would indicate week should start on Monday)'
+		},
+		{
 			name: 'formatted',
-			defaultVal: 'undefined;',
+			defaultVal: 'undefined',
 			description:
 				'Readonly prop which provides a formatted version of the currently-selected date.'
 		},
 		{
 			name: 'store',
-			defaultVal: 'datepickerStore.get({ selected, start, end })',
+			defaultVal: 'datepickerStore.get({ selected, start, end, startOfWeekIndex })',
 			description: 'Readonly prop which provides access to the internal store.'
 		},
 		{
 			name: 'theme',
 			defaultVal: '{}',
 			description: `An object containing theme/style overrides for the component.  See <a href="${base}/docs/theme-editor/light">theme-editor documentation</a>`
+		},
+		{
+			name: 'defaultTheme',
+			defaultVal: 'undefined',
+			description:
+				'The default theme to extend with the `theme` prop.  When this prop is not set the `light` theme will be used by default.'
 		}
 	];
 </script>

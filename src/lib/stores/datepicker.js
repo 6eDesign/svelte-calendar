@@ -12,7 +12,7 @@ const pipe = (...fns) => (val) => fns.reduce((accum, fn) => fn(accum), val);
 
 const zeroDay = (date) => dayjs(date).startOf('day').toDate();
 
-const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
+const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = false }) => {
 	const { subscribe, set, update } = writable({
 		open: false,
 		hasChosen: false,
@@ -25,17 +25,21 @@ const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
 		month: selected.getMonth(),
 		day: selected.getDate(),
 		activeView: 'days',
-		activeViewDirection: 1
+		activeViewDirection: 1,
+		startOfWeekIndex
 	});
 
 	return {
 		set,
 		subscribe,
+		getState() {
+			return getFromStore({ subscribe });
+		},
 		enlargeDay(enlargeDay = true) {
 			update((state) => ({ ...state, enlargeDay }));
 		},
 		getSelectableVector(date) {
-			const { start, end } = getFromStore({ subscribe });
+			const { start, end } = this.getState();
 			if (date < start) return -1;
 			if (date > end) return 1;
 			return 0;
@@ -50,7 +54,8 @@ const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
 		clampValue(day, clampable) {
 			const vector = this.getSelectableVector(day.toDate());
 			if (vector === 0) return day;
-			const boundary = dayjs(getFromStore({ subscribe })[vector === 1 ? 'end' : 'start']);
+			const boundaryKey = vector === 1 ? 'end' : 'start';
+			const boundary = dayjs(this.getState()[boundaryKey]);
 			return clampable.reduce((day, type) => day[type](boundary[type]()), day);
 		},
 		add(amount, unit, clampable = []) {
@@ -97,6 +102,7 @@ const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
 			this.close({ hasChosen: true });
 		},
 		getCalendarPage(month, year) {
+			const { startOfWeekIndex } = this.getState();
 			let last = { date: new Date(year, month, 1), outsider: false };
 			const days = [];
 
@@ -107,7 +113,7 @@ const get = ({ selected, start, end, shouldEnlargeDay = false }) => {
 				last = { date, outsider: false };
 			}
 
-			while (days[0].date.getDay()) {
+			while (days[0].date.getDay() !== startOfWeekIndex) {
 				const date = new Date(days[0].date);
 				date.setDate(days[0].date.getDate() - 1);
 				days.unshift({
