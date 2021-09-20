@@ -68,11 +68,16 @@
 
 <style>
 	.grid {
+		overflow: hidden;
+		height: 100%;
 		display: grid;
 	}
 	.grid > * {
-		grid-row: 1;
-		grid-column: 1;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		transition-property: none !important;
 	}
 </style>
