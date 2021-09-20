@@ -25,9 +25,9 @@
 		text-align: left;
 		background: var(--sc-theme-calendar-colors-background-hover);
 		margin: 0 auto;
+		display: grid;
 	}
-	div,
-	div * {
+	* {
 		transition: all 180ms cubic-bezier(1, -0.055, 0.135, 1.07);
 	}
 	button {

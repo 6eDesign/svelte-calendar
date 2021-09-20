@@ -14,12 +14,18 @@
 		index = Math.max(0, Math.min(itemCount - 1, index + amount));
 	};
 
+	const getCached = (index) => $visibleData.find(({ index: i }) => i === index)?.data || get(index);
+
+	let inRange = [-Infinity, Infinity];
+	const initialized = writable(false);
 	const dim = writable({ w: 0, h: 0 });
 	const offset = spring(0, { stiffness, damping });
+
 	export const visibleData = derived(
-		[dim, offset],
-		([{ w, h }, $o]) => {
-			if (!w || !h || !intiailized) return [];
+		[dim, offset, initialized],
+		([{ w, h }, $o, $initialized]) => {
+			if (!w || !h || !$initialized) return [];
+			if ($o < inRange[0] || $o > inRange[1]) return $visibleData;
 			const cellHeight = h / cellCount;
 			const start = Math.max(-1, Math.floor((-1 * $o) / cellHeight) - 1);
 			const baseOffset = $o % cellHeight;
@@ -28,25 +34,26 @@
 				.map((_, i) => {
 					const index = i + start;
 					const pos = baseOffset + (i - 1) * cellHeight;
-					// don't recalculate unnecessarily
-					if ($visibleData?.[i]?.index === index) return { ...$visibleData[i], pos };
 					if (index < 0 || index >= itemCount) return undefined;
-					return { data: get(index), pos, index };
+					return { data: getCached(index), pos, index };
 				})
 				.filter(Boolean);
 		},
 		[]
 	);
 
-	let intiailized = false;
+	const updateOffset = (o) => {
+		inRange = [o, $offset].sort((a, b) => a - b);
+		offset.set(o, { hard: !$initialized });
+	};
 
 	$: type = vertical ? 'rows' : 'columns';
 	$: gridStyle = `grid-template-${type}: repeat(${cellCount}, 1fr);`;
 	$: {
 		if ($dim.w && $dim.h) {
-			const newOffset = ((-1 * $dim.h) / cellCount) * index;
-			offset.set(+newOffset.toFixed(2), { hard: !intiailized });
-			if (!intiailized) intiailized = true;
+			const newOffset = ($dim.h / cellCount) * index * -1;
+			updateOffset(+newOffset.toFixed(3));
+			if (!$initialized) initialized.set(true);
 		}
 	}
 </script>
