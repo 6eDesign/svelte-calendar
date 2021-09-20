@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/6eDesign/svelte-calendar/compare/v3.1.1...v3.1.2) (2021-09-20)
+
+
+### Bug Fixes
+
+* firefox performance issue ([8d4e037](https://github.com/6eDesign/svelte-calendar/commit/8d4e03701200cc369666b92d0000b5497bfa934e))
+
 ## [3.1.1](https://github.com/6eDesign/svelte-calendar/compare/v3.1.0...v3.1.1) (2021-09-20)
 
 
