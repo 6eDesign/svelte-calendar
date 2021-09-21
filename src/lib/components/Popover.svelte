@@ -96,5 +96,6 @@
 		top: 50%;
 		left: 50%;
 		z-index: 10;
+		overflow: hidden;
 	}
 </style>
