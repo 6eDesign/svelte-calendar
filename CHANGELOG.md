@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/6eDesign/svelte-calendar/compare/v3.1.2...v3.1.3) (2021-09-21)
+
+
+### Bug Fixes
+
+* css tweak to prevent overflow ([9197fb6](https://github.com/6eDesign/svelte-calendar/commit/9197fb6aa0b9ec481a6d7fd7b5e05b166d53420c))
+
 ## [3.1.2](https://github.com/6eDesign/svelte-calendar/compare/v3.1.1...v3.1.2) (2021-09-20)
 
 
