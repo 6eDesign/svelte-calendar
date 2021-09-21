@@ -1,3 +1,10 @@
+## [3.1.4](https://github.com/6eDesign/svelte-calendar/compare/v3.1.3...v3.1.4) (2021-09-21)
+
+
+### Bug Fixes
+
+* add FiniteGrid, update prettier/readme ([e578881](https://github.com/6eDesign/svelte-calendar/commit/e57888131b91b2770e340ab73c60cb3daa362692))
+
 ## [3.1.3](https://github.com/6eDesign/svelte-calendar/compare/v3.1.2...v3.1.3) (2021-09-21)
 
 
