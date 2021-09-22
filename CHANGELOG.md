@@ -1,3 +1,10 @@
+## [3.1.5](https://github.com/6eDesign/svelte-calendar/compare/v3.1.4...v3.1.5) (2021-09-22)
+
+
+### Bug Fixes
+
+* export grids ([41e8612](https://github.com/6eDesign/svelte-calendar/commit/41e8612137afc75269f078137aeddc5743d25cd0))
+
 ## [3.1.4](https://github.com/6eDesign/svelte-calendar/compare/v3.1.3...v3.1.4) (2021-09-21)
 
 
