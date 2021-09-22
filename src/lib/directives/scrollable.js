@@ -1,10 +1,12 @@
-import { scrollStep } from '$lib/config/scroll';
+import { scrollStep } from '../config/scroll';
 
-export default (node, { y: yi = 0, step = scrollStep, maxSteps = Infinity }) => {
+export default (node, opts) => {
+	let { y: yi = 0, step = scrollStep } = opts;
 	let lastTouch = 0;
 	let y = yi;
 
 	const updateY = (val) => {
+		const { maxSteps = Infinity } = opts;
 		y = Math.max(0, Math.min(maxSteps * step, val));
 	};
 

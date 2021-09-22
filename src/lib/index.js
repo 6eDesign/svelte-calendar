@@ -8,6 +8,8 @@ import Swappable from './components/generic/Swappable.svelte';
 import Scrollable from './components/generic/Scrollable.svelte';
 import InfiniteGrid from './components/generic/InfiniteGrid.svelte';
 import FiniteGrid from './components/generic/FiniteGrid.svelte';
+import scrollable from './directives/scrollable';
+import Theme from './components/generic/Theme.svelte';
 import * as themes from './config/theme';
 
 export {
@@ -21,5 +23,7 @@ export {
 	CrossfadeProvider,
 	Scrollable,
 	Swappable,
-	themes
+	Theme,
+	themes,
+	scrollable
 };
