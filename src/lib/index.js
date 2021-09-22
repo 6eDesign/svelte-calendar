@@ -6,11 +6,15 @@ import Crossfade from './components/generic/crossfade/Crossfade.svelte';
 import CrossfadeProvider from './components/generic/crossfade/CrossfadeProvider.svelte';
 import Swappable from './components/generic/Swappable.svelte';
 import Scrollable from './components/generic/Scrollable.svelte';
+import InfiniteGrid from './components/generic/InfiniteGrid.svelte';
+import FiniteGrid from './components/generic/FiniteGrid.svelte';
 import * as themes from './config/theme';
 
 export {
 	Datepicker,
 	InlineCalendar,
+	InfiniteGrid,
+	FiniteGrid,
 	Popover,
 	Calendar,
 	Crossfade,
