@@ -1,3 +1,10 @@
+## [3.1.6](https://github.com/6eDesign/svelte-calendar/compare/v3.1.5...v3.1.6) (2021-09-22)
+
+
+### Bug Fixes
+
+* bug fix for cellCount !== 1 in InfiniteGrid + additional exports ([8aa5ee2](https://github.com/6eDesign/svelte-calendar/commit/8aa5ee29e6eae882e4b9f6bd8565978536901114))
+
 ## [3.1.5](https://github.com/6eDesign/svelte-calendar/compare/v3.1.4...v3.1.5) (2021-09-22)
 
 
