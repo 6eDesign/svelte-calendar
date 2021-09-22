@@ -8,11 +8,13 @@
 	import Calendar from '$lib/components/calendar/Calendar.svelte';
 	import CrossfadeBoundary from './generic/crossfade/CrossfadeBoundary.svelte';
 	import { calendar as calendarDefaults } from '$lib/config/defaults';
+	import Swappable from './generic/Swappable.svelte';
 
 	export let selected = calendarDefaults.selected;
 	export let start = calendarDefaults.start;
 	export let end = calendarDefaults.end;
 	export let format = calendarDefaults.format;
+	export let locale = 'en';
 	export let formatted = '';
 	export let theme = {};
 	export let defaultTheme = undefined;
@@ -30,22 +32,25 @@
 	const getFocusSetter = (bool) => () => focused.set(bool);
 
 	$: selected = $store.selected;
+	$: dayjs.locale(locale);
 	$: formatted = dayjs(selected).format(format);
 </script>
 
-<CrossfadeBoundary>
-	<Theme {defaultTheme} {theme} let:style>
-		<div
-			{style}
-			on:focus={getFocusSetter(true)}
-			on:blur={getFocusSetter(false)}
-			on:mouseover={getFocusSetter(true)}
-			on:mouseout={getFocusSetter(false)}
-		>
-			<Calendar />
-		</div>
-	</Theme>
-</CrossfadeBoundary>
+<Swappable value={locale}>
+	<CrossfadeBoundary>
+		<Theme {defaultTheme} {theme} let:style>
+			<div
+				{style}
+				on:focus={getFocusSetter(true)}
+				on:blur={getFocusSetter(false)}
+				on:mouseover={getFocusSetter(true)}
+				on:mouseout={getFocusSetter(false)}
+			>
+				<Calendar />
+			</div>
+		</Theme>
+	</CrossfadeBoundary>
+</Swappable>
 
 <style>
 	div {

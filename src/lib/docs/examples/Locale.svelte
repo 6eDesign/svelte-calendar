@@ -4,22 +4,17 @@
 	import 'dayjs/locale/ar-dz.js';
 	import 'dayjs/locale/he.js';
 	import dayjs from 'dayjs';
-	import { InlineCalendar, Swappable, themes } from '../../index';
+	import { InlineCalendar, themes } from '../../index';
 	import { onDestroy } from 'svelte';
 
 	const locales = ['en', 'es', 'zh-cn', 'ar-dz', 'he'];
 
 	let locale = 'es';
 
-	$: dayjs.locale(locale);
-
 	onDestroy(() => dayjs.locale('en'));
 </script>
 
-<!-- note: Locale is not reactive -->
-<Swappable value={{ locale }} vertical={false}>
-	<InlineCalendar theme={themes.dark} />
-</Swappable>
+<InlineCalendar theme={themes.dark} {locale} />
 
 <div class="button-group">
 	{#each locales as loc}
