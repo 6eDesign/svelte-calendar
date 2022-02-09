@@ -59,8 +59,15 @@ const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = fa
 			return clampable.reduce((day, type) => day[type](boundary[type]()), day);
 		},
 		add(amount, unit, clampable = []) {
+         const { start, end } = this.getState();
 			update(({ month, year, day, ...state }) => {
-				const d = this.clampValue(dayjs(new Date(year, month, day)).add(amount, unit), clampable);
+				let d = this.clampValue(dayjs(new Date(year, month, day)).add(amount, unit), clampable);
+            if (d.isBefore(start)) {
+               d = dayjs(start);
+            }
+            else if (d.isAfter(end)) {
+               d = dayjs(end);
+            }
 				if (!this.isSelectable(d.toDate())) return { ...state, year, month, day };
 				return {
 					...state,
