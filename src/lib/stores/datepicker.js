@@ -44,6 +44,12 @@ const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = fa
 			if (date > end) return 1;
 			return 0;
 		},
+        getClosestDate(date) {
+            const { start, end } = this.getState();
+			if (date < start) return start;
+			if (date > end) return end;
+            return date;
+        },
 		isSelectable(date, clamping = []) {
 			const vector = this.getSelectableVector(date);
 			if (vector === 0) return true;
@@ -60,8 +66,8 @@ const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = fa
 		},
 		add(amount, unit, clampable = []) {
 			update(({ month, year, day, ...state }) => {
-				const d = this.clampValue(dayjs(new Date(year, month, day)).add(amount, unit), clampable);
-				if (!this.isSelectable(d.toDate())) return { ...state, year, month, day };
+				let d = this.clampValue(dayjs(new Date(year, month, day)).add(amount, unit), clampable);
+				if (!this.isSelectable(d.toDate())) d = dayjs(this.getClosestDate(d.toDate()));
 				return {
 					...state,
 					month: d.month(),
