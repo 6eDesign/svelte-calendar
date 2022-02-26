@@ -32,7 +32,7 @@
     "prettier-plugin-svelte": "^2.2.0",
     "prism-svelte": "^0.4.7",
     "prism-themes": "^1.8.0",
-    "prismjs": "^1.24.1",
+    "prismjs": "^1.27.0",
     "svelte": "3.38.0",
     "svelte-preprocess": "^4.8.0",
     "svelte2tsx": "^0.4.6",
