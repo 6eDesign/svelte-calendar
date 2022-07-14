@@ -7,7 +7,12 @@
 	import CrossfadeProvider from '$lib/components/generic/crossfade/CrossfadeProvider.svelte';
 	import MonthPicker from '$lib/components/calendar/MonthPicker.svelte';
 	import YearPicker from '$lib/components/calendar/YearPicker.svelte';
+	import {createEventDispatcher} from 'svelte';
 
+	let dispatch = createEventDispatcher();
+	const dayClick = () =>{
+		dispatch('dayClicked',store);
+	}
 	const store = getContext(storeContextKey);
 </script>
 
@@ -17,7 +22,7 @@
 		<div class="contents">
 			{#if $store.activeView === 'days'}
 				<ViewTransitionEffect>
-					<DayPicker />
+					<DayPicker on:dayClicked={dayClick} />
 				</ViewTransitionEffect>
 			{:else if $store.activeView === 'months'}
 				<ViewTransitionEffect>
