@@ -8,7 +8,9 @@
 	import Calendar from '$lib/components/calendar/Calendar.svelte';
 	import CrossfadeBoundary from './generic/crossfade/CrossfadeBoundary.svelte';
 	import { calendar as calendarDefaults } from '$lib/config/defaults';
+	import {createEventDispatcher} from 'svelte';
 
+	let dispatch = createEventDispatcher();
 	export let selected = calendarDefaults.selected;
 	export let start = calendarDefaults.start;
 	export let end = calendarDefaults.end;
@@ -31,6 +33,9 @@
 
 	$: selected = $store.selected;
 	$: formatted = dayjs(selected).format(format);
+	const dayClick = () =>{
+		dispatch('dayClicked',store);
+	}
 </script>
 
 <CrossfadeBoundary>
@@ -42,7 +47,7 @@
 			on:mouseover={getFocusSetter(true)}
 			on:mouseout={getFocusSetter(false)}
 		>
-			<Calendar />
+			<Calendar  on:dayClicked={dayClick} />
 		</div>
 	</Theme>
 </CrossfadeBoundary>

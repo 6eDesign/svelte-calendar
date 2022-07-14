@@ -9,6 +9,9 @@
 	import Calendar from '$lib/components/calendar/Calendar.svelte';
 	import { fade } from 'svelte/transition';
 	import { calendar as calendarDefaults } from '$lib/config/defaults';
+	import {createEventDispatcher} from 'svelte';
+
+	let dispatch = createEventDispatcher();
 
 	export let selected = calendarDefaults.selected;
 	export let start = calendarDefaults.start;
@@ -34,6 +37,9 @@
 
 	$: selected = $store.selected;
 	$: formatted = dayjs(selected).format(format);
+	const dayClick = () =>{
+		dispatch('dayClicked',store);
+	}
 </script>
 
 <Theme {defaultTheme} {theme} let:style>
@@ -45,7 +51,7 @@
 			</div>
 		</slot>
 		<svelte:fragment slot="contents">
-			<Calendar />
+			<Calendar  on:dayClicked={dayClick} />
 		</svelte:fragment>
 	</Popover>
 </Theme>

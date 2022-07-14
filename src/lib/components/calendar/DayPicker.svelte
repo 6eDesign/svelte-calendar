@@ -8,10 +8,13 @@
 	import Crossfade from '../generic/crossfade/Crossfade.svelte';
 	import scrollable from '$lib/directives/scrollable';
 	import { scrollStep } from '$lib/config/scroll';
+	import {createEventDispatcher} from 'svelte';
 
+	let dispatch = createEventDispatcher();
 	const store = getContext(storeContextKey);
 
 	const duration = 450;
+
 
 	const legend = Array(7)
 		.fill(0)
@@ -24,6 +27,7 @@
 	const add = (amount) => () => store.add(amount, 'day');
 
 	const select = (day) => () => {
+		dispatch('dayClicked',store);
 		if (!store.isSelectable(day)) return;
 		store.setDay(day || $store.selected);
 		if (!$store.shouldEnlargeDay) return store.selectDay();
