@@ -9,6 +9,7 @@
 
 	// @example(quickStart, QuickStart.svelte)
 	// @example(startAndEnd, StartAndEnd.svelte)
+	// @example(blockedDays, BlockedDays.svelte)
 	// @example(inlineCalendar, InlineCalendar.svelte)
 	// @example(darkTheme, DarkTheme.svelte)
 	// @example(customTheme, CustomTheme.svelte)
@@ -29,6 +30,11 @@
 			title: 'Start & End',
 			component: startAndEnd.component,
 			code: startAndEnd.code
+		},
+		{
+			title: 'Blocked Days',
+			component: blockedDays.component,
+			code: blockedDays.code
 		},
 		{
 			title: 'Inline Calendar',

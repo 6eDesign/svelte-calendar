@@ -1,3 +1,8 @@
+## [3.2.0](https://github.com/6eDesign/svelte-calendar/compare/v3.1.6...v3.2.0) (2022-10-10)
+
+### Feature ADD
+* Added the posibility to block specific dates. 
+
 ## [3.1.6](https://github.com/6eDesign/svelte-calendar/compare/v3.1.5...v3.1.6) (2021-09-22)
 
 

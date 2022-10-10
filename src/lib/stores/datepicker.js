@@ -12,13 +12,15 @@ const pipe = (...fns) => (val) => fns.reduce((accum, fn) => fn(accum), val);
 
 const zeroDay = (date) => dayjs(date).startOf('day').toDate();
 
-const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = false }) => {
+const get = ({ selected, start, end, disabledDates = [], format, startOfWeekIndex = 0, shouldEnlargeDay = false }) => {
 	const { subscribe, set, update } = writable({
 		open: false,
 		hasChosen: false,
 		selected,
 		start: zeroDay(start),
 		end: zeroDay(end),
+		disabledDates,
+		format,
 		shouldEnlargeDay,
 		enlargeDay: false,
 		year: selected.getFullYear(),
@@ -39,9 +41,10 @@ const get = ({ selected, start, end, startOfWeekIndex = 0, shouldEnlargeDay = fa
 			update((state) => ({ ...state, enlargeDay }));
 		},
 		getSelectableVector(date) {
-			const { start, end } = this.getState();
+			const { start, end, disabledDates, format } = this.getState();
 			if (date < start) return -1;
 			if (date > end) return 1;
+			if( disabledDates.includes(dayjs(date).format(format)) ) return -1;
 			return 0;
 		},
 		isSelectable(date, clamping = []) {
