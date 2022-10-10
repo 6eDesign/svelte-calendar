@@ -13,6 +13,7 @@
 	export let selected = calendarDefaults.selected;
 	export let start = calendarDefaults.start;
 	export let end = calendarDefaults.end;
+	export let disabledDates = calendarDefaults.disabledDates;
 	export let format = calendarDefaults.format;
 	export let formatted = '';
 	export let theme = {};
@@ -22,6 +23,8 @@
 		selected,
 		start,
 		end,
+		disabledDates,
+		format,
 		shouldEnlargeDay: true,
 		startOfWeekIndex
 	});
